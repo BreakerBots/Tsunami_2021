@@ -1,0 +1,52 @@
+/* Main.css */
+
+html, body {
+	overflow: hidden;
+	margin: 0;
+}
+
+.mdc-tab__ripple::before, .mdc-tab__ripple::after {
+	background-color: #edb038 !important;
+	transition: opacity 0.4s cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+.mdc-tab__ripple:hover::before {
+	opacity: 0.1 !important;
+}
+
+.mdc-tab__ripple.mdc-ripple-upgraded {
+	--mdc-ripple-fg-opacity: 0.4 !important;
+}
+
+#tabs {
+	width: 100vw !important;
+	height: calc(100vh - 64px) !important;
+	margin-top: 64px !important;
+}
+
+	#tabs > .tab {
+		display: none;
+	}
+
+		#tabs > .tab.active {
+			display: block;
+			padding-top: 10px;
+			height: 100% !important;
+		}
+
+.breaker-scrollbar::-webkit-scrollbar {
+	height: 10px;
+	width: 10px;
+}
+
+.breaker-scrollbar::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+.breaker-scrollbar::-webkit-scrollbar-thumb {
+	background-color: #f7c156;
+}
+
+	.breaker-scrollbar::-webkit-scrollbar-thumb:hover {
+		background-color: #efc36b;
+	}

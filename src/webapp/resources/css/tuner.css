@@ -1,0 +1,60 @@
+/* Tuner.css */
+
+#tuner-container {
+	width: 100vw;
+	height: 100%;
+	display: flex;
+	justify-content: space-around;
+	position: relative;
+	background: white;
+}
+
+	#tuner-container > #inputBox {
+		width: 30%;
+		height: calc(100%-180px) !important;
+		padding: 10px;
+		border-top: 10px solid #b90013;
+		border-right: 10px solid #b90013;
+		border-bottom: 10px solid #b90013;
+		border-radius: 0 5px 5px 0;
+		z-index: 1;
+		position: relative;
+		background: white;
+		overflow-y: auto;
+	}
+
+	#tuner-container > #outputBox {
+		width: 70%;
+		height: 100%;
+	}
+
+.tuner-input-element-parent {
+	margin: 10px 0 0 0;
+	width: 100%;
+}
+	.tuner-input-element-parent > .mdc-text-field {
+		width: 100%;
+	}
+
+#outputBox {
+	height: calc(100%-100px) !important;
+	overflow-y: auto;
+}
+
+#tunerOutputValues {
+	display: flex;
+	margin: 0 0 40px 20px;
+	flex-wrap: wrap;
+}
+
+.tuner-value-output-element-parent {
+	margin: 20px 0 0 20px;
+	min-width: 75px;
+}
+
+#outputBoxTopBar {
+	display: flex;
+	justify-content: space-between;
+	width: calc(100% - 20px);
+	margin: 0 20px 0 0;
+}
