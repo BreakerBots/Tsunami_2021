@@ -58,9 +58,9 @@ public class DefaultPathNew extends AutoPath {
 				new Position(12.5, -2.5, 180),
 				new Position(7.5, 0, 180)
 			));
-		add(new DriveTrajectoryAction(false, false,//back to 0,0! idk if needed.
+		add(new DriveTrajectoryAction(false, true,//back to 0,0! idk if needed.
 				new Position(7.5, 0, 180),
-				new Position(0, 0, 180)
+				new Position(30, 0, 180)
 			));
 	}
 }
