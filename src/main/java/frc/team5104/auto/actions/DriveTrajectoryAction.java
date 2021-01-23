@@ -40,7 +40,17 @@ public class DriveTrajectoryAction extends AutoPathAction {
 	private DifferentialDriveWheelSpeeds m_prevSpeeds;
 	private double m_prevTime;
 
+	public DriveTrajectoryAction(Position offset, boolean isReversed, Position... waypoints) {
+		this(offset, false, isReversed, waypoints);
+	}
 	public DriveTrajectoryAction(boolean plotTrajectory, boolean isReversed, Position... waypoints) {
+		this(new Position(0, 0, 0), plotTrajectory, isReversed, waypoints);
+	}
+	public DriveTrajectoryAction(Position offset, boolean plotTrajectory, boolean isReversed, Position... waypoints) {
+		for (Position waypoint : waypoints) {
+			waypoint.subtract(offset);
+		}
+
 		m_feedforward = new SimpleMotorFeedforward(
 				Constants.DRIVE_KS,
 				Constants.DRIVE_KV,

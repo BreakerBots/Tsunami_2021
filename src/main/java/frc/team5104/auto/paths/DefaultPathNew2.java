@@ -11,8 +11,8 @@ import frc.team5104.auto.actions.ShootAction;
 import frc.team5104.auto.actions.ZeroTurretAction;
 
 
-public class DefaultPathNew extends AutoPath {
-	public DefaultPathNew() {//if it needs to reverse change all to true
+public class DefaultPathNew2 extends AutoPath {
+	public DefaultPathNew2() {//if it needs to reverse change all to true
 		add(new DriveTrajectoryAction(false, false,
 				new Position(0, 0, 0),
 				new Position(7.5, 2.5, -60)

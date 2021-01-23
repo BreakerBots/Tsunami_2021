@@ -3,16 +3,11 @@ package frc.team5104.auto.paths;
 
 import frc.team5104.auto.AutoPath;
 import frc.team5104.auto.Position;
-import frc.team5104.auto.actions.DriveStopAction;
 import frc.team5104.auto.actions.DriveTrajectoryAction;
-import frc.team5104.auto.actions.IdleAction;
-import frc.team5104.auto.actions.IntakeAction;
-import frc.team5104.auto.actions.ShootAction;
-import frc.team5104.auto.actions.ZeroTurretAction;
 
 
-public class DefaultPathNew extends AutoPath {
-	public DefaultPathNew() {//if it needs to reverse change all to true
+public class GooderDefaultPathNew extends AutoPath {
+	public GooderDefaultPathNew() {//if it needs to reverse change all to true
 		add(new DriveTrajectoryAction(false, false,
 				new Position(0, 0, 0),
 				new Position(7.5, 2.5, -60)

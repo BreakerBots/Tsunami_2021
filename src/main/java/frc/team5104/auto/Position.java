@@ -1,13 +1,13 @@
 package frc.team5104.auto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import frc.team5104.util.BreakerMath;
 import frc.team5104.util.Units;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** 
  * A wrapper class for Pose2d that converts between meters and feet.
@@ -23,7 +23,8 @@ public class Position {
 			poseMeters.getRotation().getDegrees()
 		);
 	}
-	
+
+	public Position(double xFeet, double yFeet) { this(xFeet, yFeet, 0); }
 	public Position(double xFeet, double yFeet, double degrees) {
 		this.xFeet = xFeet;
 		this.yFeet = yFeet;
@@ -41,7 +42,13 @@ public class Position {
 	public double getDegrees() {
 		return degrees;
 	}
-	
+
+	public void subtract(Position offset) {
+		this.xFeet -= offset.getXFeet();
+		this.yFeet -= offset.getYFeet();
+		this.degrees -= offset.getDegrees();
+	}
+
 	public Pose2d toPose2dFeet() {
 		return new Pose2d(
 				xFeet,
