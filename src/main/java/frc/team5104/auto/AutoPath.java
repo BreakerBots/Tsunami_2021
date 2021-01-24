@@ -21,7 +21,8 @@ public abstract class AutoPath {
 
 	public void plot() {
 		for (AutoPathAction action : pathActions) {
-			action.plot();
+			if (action != null)
+				action.plot();
 		}
 	}
 }

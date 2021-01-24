@@ -80,7 +80,7 @@ public class Robot extends RobotController.BreakerRobot {
 	public void testLoop() {
 		Superstructure.setSystemState(SystemState.DISABLED);
 		Drive.stop();
-		CompressorController.start(); 
+		CompressorController.start();
 	}
 	
 	//Main

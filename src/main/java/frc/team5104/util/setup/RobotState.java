@@ -1,5 +1,6 @@
 package frc.team5104.util.setup;
 
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.Timer;
 
 public class RobotState {
@@ -36,4 +37,5 @@ public class RobotState {
 	public static RobotMode getLastMode() { return lastMode; }
 	public static double getDeltaTime() { return deltaTime; }
 	public static double getTimeSinceEnabled() { return timer.get(); }
+	public static boolean isSimulation() { return HALUtil.getHALRuntimeType() != 0; }
 }

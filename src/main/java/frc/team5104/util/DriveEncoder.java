@@ -25,7 +25,7 @@ public class DriveEncoder {
 	public double getVelocityFeetSecond() {
 		return talonVelToFeetPerSecond(getVelocityRaw());
 	} 
-	public int getVelocityRaw() {
+	public double getVelocityRaw() {
 		return talon.getSelectedSensorVelocity();
 	}
 	
@@ -36,7 +36,7 @@ public class DriveEncoder {
 	public double getPositionFeet() {
 		return ticksToFeet(getPositionRaw());
 	}
-	public int getPositionRaw() {
+	public double getPositionRaw() {
 		return talon.getSelectedSensorPosition();
 	}
 	
