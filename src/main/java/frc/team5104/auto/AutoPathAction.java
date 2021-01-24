@@ -14,4 +14,7 @@ public abstract class AutoPathAction {
 	
 	/** Called when the action is finished being run */
 	public abstract void end();
+
+	/** Plot stuff on the Webapp Plotter */
+    public void plot() { }
 }

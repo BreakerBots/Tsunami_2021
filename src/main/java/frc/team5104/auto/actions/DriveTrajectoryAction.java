@@ -17,12 +17,11 @@ import frc.team5104.auto.AutoPathAction;
 import frc.team5104.auto.Odometry;
 import frc.team5104.auto.Position;
 import frc.team5104.subsystems.Drive;
-import frc.team5104.util.Units;
-import frc.team5104.util.console;
 import frc.team5104.util.DriveSignal;
 import frc.team5104.util.DriveSignal.DriveUnit;
 import frc.team5104.util.Plotter;
-import frc.team5104.util.Plotter.Color;
+import frc.team5104.util.Units;
+import frc.team5104.util.console;
 import frc.team5104.util.console.c;
 
 /**
@@ -40,13 +39,10 @@ public class DriveTrajectoryAction extends AutoPathAction {
 	private DifferentialDriveWheelSpeeds m_prevSpeeds;
 	private double m_prevTime;
 
+	public DriveTrajectoryAction(boolean isReversed, Position... waypoints) {
+		this(new Position(0, 0, 0), isReversed, waypoints);
+	}
 	public DriveTrajectoryAction(Position offset, boolean isReversed, Position... waypoints) {
-		this(offset, false, isReversed, waypoints);
-	}
-	public DriveTrajectoryAction(boolean plotTrajectory, boolean isReversed, Position... waypoints) {
-		this(new Position(0, 0, 0), plotTrajectory, isReversed, waypoints);
-	}
-	public DriveTrajectoryAction(Position offset, boolean plotTrajectory, boolean isReversed, Position... waypoints) {
 		for (Position waypoint : waypoints) {
 			waypoint.subtract(offset);
 		}
@@ -83,17 +79,16 @@ public class DriveTrajectoryAction extends AutoPathAction {
 				config
 			);
 		
-		//plot trajectory on plotter
-		if (plotTrajectory) {
-			Plotter.plotAll(Position.fromStates(m_trajectory.getStates()), Color.RED);
-		}
-
 		m_follower = new RamseteController(
 				Constants.AUTO_CORRECTION_FACTOR, 
 				Constants.AUTO_DAMPENING_FACTOR
 			);
 		m_leftController = new PIDController(Constants.DRIVE_KP, 0, Constants.DRIVE_KD);
 		m_rightController = new PIDController(Constants.DRIVE_KP, 0, Constants.DRIVE_KD);
+	}
+
+	public void plot() {
+		Plotter.plotAll(Position.fromStates(m_trajectory.getStates()), Plotter.Color.RED);
 	}
 
 	public void init() {

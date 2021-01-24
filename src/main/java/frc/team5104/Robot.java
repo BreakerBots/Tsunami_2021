@@ -4,7 +4,6 @@ package frc.team5104;
 import frc.team5104.Superstructure.SystemState;
 import frc.team5104.auto.AutoManager;
 import frc.team5104.auto.Odometry;
-import frc.team5104.auto.paths.SixBall_Right;
 import frc.team5104.subsystems.*;
 import frc.team5104.teleop.CompressorController;
 import frc.team5104.teleop.DriveController;
@@ -50,7 +49,8 @@ public class Robot extends RobotController.BreakerRobot {
 		Odometry.init();
 		Limelight.init();
 		CompressorController.stop();
-		AutoManager.setTargetPath(new SixBall_Right());
+		//AutoManager.setTargetPath(new SixBall_Right());
+		//AutoManager.getTargetPath().plot();
 		SubsystemManager.debug();
 	}
 	

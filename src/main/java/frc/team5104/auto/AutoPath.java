@@ -18,4 +18,10 @@ public abstract class AutoPath {
 		pathActions[pathActionsLength] = action;
 		pathActionsLength++;
 	}
+
+	public void plot() {
+		for (AutoPathAction action : pathActions) {
+			action.plot();
+		}
+	}
 }

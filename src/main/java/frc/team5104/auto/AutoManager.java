@@ -33,6 +33,9 @@ public class AutoManager {
 		console.log(c.AUTO, "Setting target auto path to: " + path.getClass().getSimpleName());
 		targetPath = path;
 	}
+	public static AutoPath getTargetPath() {
+		return targetPath;
+	}
 	
 	//Update
 	public static void update() {
