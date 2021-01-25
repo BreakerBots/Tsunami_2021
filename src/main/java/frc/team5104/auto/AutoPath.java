@@ -3,9 +3,7 @@ package frc.team5104.auto;
 
 import frc.team5104.Constants;
 
-/**
- *
- */
+/** a framework for all paths inside frc.team5104.auto.paths */
 public abstract class AutoPath {
 
 	/** Run the path, holding the thread until it is finished.

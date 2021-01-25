@@ -45,13 +45,44 @@ The robot code is separated into multiple different sections or "packages" locat
     - `RobotSim.java`: the start of the code for simulation, otherwise the same as `Robot.java`
     - `Superstructure.java`: the master statemachine for the robot
 - `frc.team5104.auto`: contains all necessary non-robot specific files for autonomous to function
-- `frc.team5104.auto.actions`: contains all actions that can be run in autonomous
+  - `AutoAction.java`: a framework for all actions inside `frc.team5104.auto.actions`
+  - `AutoManager.java`: manages the running of an autonomous path
+  - `AutoPath.java`: a framework for all paths inside `frc.team5104.auto.paths`
+  - `Odometry.java`: keeps of the position of the robot relative to the field (in x, y, angle)
+  - `Position.java`: a class that helps store a field-relative position in feet
+- `frc.team5104.auto.actions`: contains all actions that can be run in autonomous. 
+  Actions are pieces of paths such as running a trajectory or entering intake mode.
 - `frc.team5104.auto.paths`: contains all paths that can be run in autonomous
-- `frc.team5104.subsystems`: contains all subsystems on the robot
-- `frc.team5104.teleop`: contains all the teleop controllers for the robot
-- `frc.team5104.util`: contains all utility files for the robot
-- `frc.team5104.util.managers`: contains all managers (SubsystemManager, TeleopControllerManager) for the robot
-and corresponding files
+  Paths are a series of actions that work together to form an autonomous routine.
+- `frc.team5104.subsystems`: contains all subsystems on the robot. Subsystems are smaller sections of the robot
+  that usually consistent of a few sensors, motors, and/or pneumatic piston.
+- `frc.team5104.teleop`: contains all the teleop controllers for the robot. Teleop controllers are controllers
+  that run during teleop code, they translate user input (from Controls.java) into method calls to Subsystems directly
+  are through the Superstructure first.
+- `frc.team5104.util`: contains all utility files for the robot. Utility files are files that can help reduce
+  duplicate code and ease in development of many of other things. Below are some noteable examples but there
+  are far more inside the package.
+  - `console.java`: use this class as an alternative for `System.out.println`. It handles file logging, time tracking,
+  print locations, and makes logging significantly easier. This method works similar to `console.log()` in javascript.
+  - `BreakerMath.java`: has some useful math functions, feel free to add-on to this file
+  - `LatchedBoolean.java`: detects when a boolean changes from `true to false`, `false to true`, or both.
+  - `MovingAverage.java`: averages values while input feeds in. This can be useful to de-noise sensor input.
+  - `Plotter.java`: plots points on the BreakerBoard plotter (see `Webapp.java`)
+  - `Tuner.java`: adds inputs or outputs to the BreakerBoard tuner (see `Webapp.java`)
+  - `Units.java`: has many useful unit conversions, feel free to add-on to this file
+  - `Webapp.java`: hosts the BreakerBoard Webapp. The webapp consists of two sections: Tuner and Plotter. The tuner
+    is a realtime graph that display outputs from the code in graphical form and/or text form. The tuner also allows
+    for inputs to be taken in a string form (can be casted to numbers) that allows for extremely fast realtime PID tuning.
+    The plotter uses the Desmos API to plot points on a graph. This allows for trajectory graphing and real-time trajectory
+    tracking.
+  - `XboxController.java`: allows for separation of controls objects (see `Controls.java`) and processes complex 
+    user input from an xbox controller including double clicking, holding buttons, and complex axis adjustment with
+    `BezierCurve.java` and `Deadband.java`.
+- `frc.team5104.util.managers`: contains all managers for the robot and corresponding files
+  - `Subsystem.java`: a framework for all subsystem classes located inside `frc.team5104.subsystems`
+  - `SubsystemManager.java`: a manager that handles all function calls from `Robot.java` to all the attached subsystems
+  - `TeleopController.java`: a framework for teleop controllers located inside `frc.team5104.teleop`
+  - `TeleopControllerManager.java`: a manager that handles all function calls from `Robot.java` to all the selected teleop controllers
 - `frc.team5104.util.setup`: contains backend files for the robot code
     - `Main.java`: the actual start of the code. Simply starts `RobotController.java`
     - `RobotController.java`: extends `RobotBase.java` and handles all calls to `Robot.java`

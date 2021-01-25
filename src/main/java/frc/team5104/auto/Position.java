@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** 
- * A wrapper class for Pose2d that converts between meters and feet.
+ * A class that helps store a field-relative position in feet
  * */
 public class Position {
 

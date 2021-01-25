@@ -2,7 +2,7 @@
 package frc.team5104.auto;
 
 /**
- * A Single BreakerCommand (ind. peices of a path)
+ * A framework for all actions inside frc.team5104.auto.actions
  */
 public abstract class AutoAction {
 	/** Called when action is started to be run */

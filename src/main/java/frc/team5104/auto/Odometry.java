@@ -9,11 +9,7 @@ import frc.team5104.util.Units;
 import frc.team5104.util.console;
 import frc.team5104.util.console.c;
 
-/**
- * A wrapper class for keeping track of the the robots position.
- * Gets called from AutoManager.java for updating
- * and initializing/resetings from Robot.java
- */
+/** keeps of the position of the robot relative to the field (in x, y, angle) */
 public class Odometry {
 	private static DifferentialDriveOdometry odometry;
 	

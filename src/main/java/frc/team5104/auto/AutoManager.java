@@ -8,7 +8,7 @@ import frc.team5104.util.console;
 import frc.team5104.util.console.c;
 import frc.team5104.util.setup.RobotState;
 
-/** Basically just handles a separate thread for autonomous. The path is updated in "AutoPathScheduler" */
+/** manages the running of an autonomous path */
 public class AutoManager {
 	private static boolean plottingEnabled;
 	private static AutoPath targetPath;
