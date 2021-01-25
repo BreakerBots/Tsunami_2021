@@ -1,28 +1,27 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package frc.team5104.auto;
 
+import frc.team5104.Constants;
+
 /**
- * A Collection of BreakerCommands (The Entire Path)
- * Ran through the BreakerCommandScheduler
+ *
  */
 public abstract class AutoPath {
-	
-	/** The Actions for the path */
-	public AutoPathAction[] pathActions = new AutoPathAction[30];
-	
-	/** The number of Actions in the path */
-	public int pathActionsLength = 0;
-	
-	/** Add an action to the Path */
-	public void add(AutoPathAction action) {
-		pathActions[pathActionsLength] = action;
-		pathActionsLength++;
-	}
 
-	public void plot() {
-		for (AutoPathAction action : pathActions) {
-			if (action != null)
-				action.plot();
+	/** Run the path, holding the thread until it is finished.
+	 * @warning DO NOT CALL IN MAIN THREAD */
+	public abstract void start();
+
+	/** Runs an action, holding the thread until it is finished.
+	 * @warning DO NOT CALL IN MAIN THREAD
+	 * @return passthroughs value from action */
+	public boolean run(AutoAction action) {
+		action.init();
+		while (!action.update()) {
+			try { Thread.sleep(1000 / Constants.MAIN_LOOP_SPEED); }
+			catch (InterruptedException e) { e.printStackTrace(); }
 		}
+		action.end();
+		return action.getValue();
 	}
 }

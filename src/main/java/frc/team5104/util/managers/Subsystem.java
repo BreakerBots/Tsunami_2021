@@ -22,6 +22,12 @@ public abstract class Subsystem {
 	
 	/** Called when robots boots up; initialize devices here */
 	public abstract void init();
+
+	/** Called when robots boots up in simulation; initialize devices here.
+	 * @default calls normal init() method */
+	public void initSim() {
+		init();
+	}
 	
 	/** Called whenever the robot becomes enabled or disabled. Stop motors here. */
 	public abstract void disabled();

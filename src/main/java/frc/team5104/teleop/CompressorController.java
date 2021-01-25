@@ -28,14 +28,16 @@ public class CompressorController extends TeleopController {
 	}
 	
 	public static void stop() {
-		compressor.stop();
+		if (compressor != null)
+			compressor.stop();
 	}
 	
 	public static void start() {
-		compressor.start();
+		if (compressor != null)
+			compressor.start();
 	}
 
 	public static boolean isRunning() {
-		return compressor.enabled();
+		return (compressor != null) ? compressor.enabled() : false;
 	}
 }

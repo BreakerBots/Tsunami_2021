@@ -7,9 +7,7 @@ package frc.team5104.util.setup;
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.team5104.Simulation;
 
 public final class Main {
 	private Main() { 
@@ -17,8 +15,6 @@ public final class Main {
 	}
 	
 	public static void main(String... args) {
-		if (HALUtil.getHALRuntimeType() == 0)
-			RobotBase.startRobot(RobotController::new);
-		else new Simulation();
+		RobotBase.startRobot(RobotController::new);
 	}
 }

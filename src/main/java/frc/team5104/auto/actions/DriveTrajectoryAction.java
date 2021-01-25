@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import frc.team5104.Constants;
-import frc.team5104.auto.AutoPathAction;
+import frc.team5104.auto.AutoAction;
+import frc.team5104.auto.AutoManager;
 import frc.team5104.auto.Odometry;
 import frc.team5104.auto.Position;
 import frc.team5104.subsystems.Drive;
@@ -27,7 +28,7 @@ import frc.team5104.util.console.c;
 /**
  * Follow a trajectory using the Breaker Trajectory Follower (Ramses Follower)
  */
-public class DriveTrajectoryAction extends AutoPathAction {
+public class DriveTrajectoryAction extends AutoAction {
 
 	private final Timer m_timer = new Timer();
 	private final Trajectory m_trajectory;
@@ -54,7 +55,7 @@ public class DriveTrajectoryAction extends AutoPathAction {
 			);
 
 		m_kinematics = new DifferentialDriveKinematics(
-				Units.feetToMeters(Constants.DRIVE_WHEEL_BASE_WIDTH)
+				Units.feetToMeters(Constants.DRIVE_TRACK_WIDTH)
 			);
 
 		// Create a voltage constraint to ensure we don't accelerate too fast
@@ -85,6 +86,9 @@ public class DriveTrajectoryAction extends AutoPathAction {
 			);
 		m_leftController = new PIDController(Constants.DRIVE_KP, 0, Constants.DRIVE_KD);
 		m_rightController = new PIDController(Constants.DRIVE_KP, 0, Constants.DRIVE_KD);
+
+		if (AutoManager.plottingEnabled())
+			Plotter.plotAll(Position.fromStates(m_trajectory.getStates()), Plotter.Color.RED);
 	}
 
 	public void plot() {
@@ -143,13 +147,11 @@ public class DriveTrajectoryAction extends AutoPathAction {
 		m_prevTime = curTime;
 		m_prevSpeeds = targetWheelSpeeds;
 
-		Drive.set(
-			new DriveSignal(
-					leftFeedforward + leftFeedback, 
-					rightFeedforward + rightFeedback, 
-					true, DriveUnit.VOLTAGE
-			)
-		);
+		Drive.set(new DriveSignal(
+				leftFeedforward + leftFeedback,
+				rightFeedforward + rightFeedback,
+				true, DriveUnit.VOLTAGE
+		));
 
 		return m_timer.hasPeriodPassed(m_trajectory.getTotalTimeSeconds());
 	}

@@ -3,66 +3,58 @@ package frc.team5104.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.PigeonIMU;
-
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.util.Units;
 import frc.team5104.Constants;
 import frc.team5104.Ports;
-import frc.team5104.util.DriveSignal;
-import frc.team5104.util.Tuner;
-import frc.team5104.util.DriveEncoder;
+import frc.team5104.util.*;
 import frc.team5104.util.managers.Subsystem;
+import frc.team5104.util.setup.RobotState;
 
 public class Drive extends Subsystem {
-	private static TalonFX falconL1, falconL2, falconR1, falconR2;
+	private static BaseTalon falconL1, falconL2, falconR1, falconR2;
+	private static DifferentialDrivetrainSim drivetrainSim;
 	private static DriveEncoder leftEncoder, rightEncoder;
-	private static PigeonIMU gyro;
+	private static Gyro gyro;
 	
 	//Update
-	private static DriveSignal currentDriveSignal = new DriveSignal();
+	private static DriveSignal signal = new DriveSignal();
 	public void update() {
-		//Competition Debugging
-		if (Constants.AT_COMP) {
-			Tuner.setTunerOutput("Drive Left Side", currentDriveSignal.leftSpeed);
-			Tuner.setTunerOutput("Drive Right Side", currentDriveSignal.rightSpeed);
+		if (signal.unit == DriveSignal.DriveUnit.VOLTAGE) {
+			setMotors(
+				signal.leftSpeed / falconL1.getBusVoltage(),
+				signal.rightSpeed / falconR1.getBusVoltage(),
+				ControlMode.PercentOutput,
+				signal.leftFeedForward,
+				signal.rightFeedForward
+			);
 		}
-			
-		switch (currentDriveSignal.unit) {
-			case PERCENT_OUTPUT: {
-				setMotors(
-						currentDriveSignal.leftSpeed, 
-						currentDriveSignal.rightSpeed, 
-						ControlMode.PercentOutput,
-						currentDriveSignal.leftFeedForward,
-						currentDriveSignal.rightFeedForward
-					);
-				break;
-			}
-			case FEET_PER_SECOND: {
-				setMotors(
-						DriveEncoder.feetPerSecondToTalonVel(currentDriveSignal.leftSpeed), 
-						DriveEncoder.feetPerSecondToTalonVel(currentDriveSignal.rightSpeed), 
-						ControlMode.Velocity,
-						currentDriveSignal.leftFeedForward,
-						currentDriveSignal.rightFeedForward
-					);
-				break;
-			}
-			case VOLTAGE: {
-				setMotors(
-						currentDriveSignal.leftSpeed / getLeftGearboxVoltage(),
-						currentDriveSignal.rightSpeed / getRightGearboxVoltage(),
-						ControlMode.PercentOutput,
-						currentDriveSignal.leftFeedForward,
-						currentDriveSignal.rightFeedForward
-					);
-				break;
-			}
-			case STOP:
-				stopMotors();
-				break;
+		else {
+			stopMotors();
 		}
-		currentDriveSignal = new DriveSignal();
+
+		if (RobotState.isSimulation())
+			updateSim();
+		signal = new DriveSignal();
+	}
+	public void updateSim() {
+		((TalonSRXSim) falconL1).update();
+		((TalonSRXSim) falconR1).update();
+
+		drivetrainSim.setInputs(
+				falconL1.getMotorOutputVoltage(),
+				falconR1.getMotorOutputVoltage()
+		);
+		drivetrainSim.update(0.02);
+
+		((DriveEncoderSim) leftEncoder).set(drivetrainSim.getLeftPositionMeters(), drivetrainSim.getLeftVelocityMetersPerSecond());
+		((DriveEncoderSim) rightEncoder).set(drivetrainSim.getRightPositionMeters(), drivetrainSim.getRightVelocityMetersPerSecond());
+		gyro.set(-drivetrainSim.getHeading().getDegrees());
 	}
 	
 	//Internal Functions
@@ -76,20 +68,14 @@ public class Drive extends Subsystem {
 	}
 	
 	//External Functions
-	public static void set(DriveSignal signal) { currentDriveSignal = signal; }
-	public static void stop() { currentDriveSignal = new DriveSignal(); }
-	public static double getLeftGearboxVoltage() { return falconL1.getBusVoltage(); }
-	public static double getRightGearboxVoltage() { return falconR1.getBusVoltage(); }
-	public static double getLeftGearboxOutputVoltage() { return falconL1.getMotorOutputVoltage(); }
-	public static double getRightGearboxOutputVoltage() { return falconR1.getMotorOutputVoltage(); }
+	public static void set(DriveSignal signal) { Drive.signal = signal; }
+	public static void stop() { signal = new DriveSignal(); }
 	public static void resetGyro() {
 		if (gyro != null)
-			gyro.setFusedHeading(0);
+			gyro.reset();
 	}
 	public static double getGyro() {
-		if (gyro != null)
-			return gyro.getFusedHeading() * (Constants.COMP_BOT ? 1 : 1);
-		else return 0;
+		return (gyro == null) ? 0 : gyro.get();
 	}
 	public static void resetEncoders() {
 		if (leftEncoder != null) {
@@ -103,6 +89,12 @@ public class Drive extends Subsystem {
 	public static DriveEncoder getRightEncoder() {
 		return rightEncoder;
 	}
+	public static void reset() {
+		resetGyro();
+		resetEncoders();
+		if (RobotState.isSimulation())
+			drivetrainSim.setPose(new Pose2d());
+	}
 	
 	//Config
 	public void init() {
@@ -110,7 +102,7 @@ public class Drive extends Subsystem {
 		falconL2 = new TalonFX(Ports.DRIVE_MOTOR_L2);
 		falconR1 = new TalonFX(Ports.DRIVE_MOTOR_R1);
 		falconR2 = new TalonFX(Ports.DRIVE_MOTOR_R2);
-		gyro = new PigeonIMU(Ports.DRIVE_GYRO);
+		gyro = new Gyro.GyroPigeon(Ports.DRIVE_GYRO);
 		leftEncoder = new DriveEncoder(falconL1);
 		rightEncoder = new DriveEncoder(falconR1);
 		
@@ -129,12 +121,37 @@ public class Drive extends Subsystem {
 		falconR2.setInverted(true);
 		
 		stopMotors();
-		resetGyro();
-		resetEncoders();
+		reset();
+	}
+	public void initSim() {
+		falconL1 = new TalonSRXSim(Ports.DRIVE_MOTOR_L1);
+		falconR1 = new TalonSRXSim(Ports.DRIVE_MOTOR_R1);
+		leftEncoder = new DriveEncoderSim((TalonSRXSim) falconL1);
+		rightEncoder = new DriveEncoderSim((TalonSRXSim) falconR1);
+		gyro = new Gyro.GyroSim();
+
+		if (!RobotState.isSimulation())
+			falconR1.setInverted(true);
+
+		drivetrainSim = new DifferentialDrivetrainSim(
+				LinearSystemId.identifyDrivetrainSystem(
+						1.98, //TODO: GET ACTUAL MEASUREMENT
+						0.2, //TODO: GET ACTUAL MEASUREMENT
+						1.5, //TODO: GET ACTUAL MEASUREMENT
+						0.3), //TODO: GET ACTUAL MEASUREMENT
+				DCMotor.getFalcon500(2),
+				Constants.DRIVE_TICKS_PER_REV / 2048.0,
+				edu.wpi.first.wpilibj.util.Units.feetToMeters(Constants.DRIVE_TRACK_WIDTH),
+				Units.feetToMeters(Constants.DRIVE_WHEEL_DIAMETER) / 2.0,
+				null//VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005) //TODO: GET ACTUAL MEASUREMENT
+		);
+
+		stopMotors();
+		reset();
 	}
 	
 	//Reset
 	public void disabled() {
-		currentDriveSignal = new DriveSignal();
+		signal = new DriveSignal();
 	}
 }

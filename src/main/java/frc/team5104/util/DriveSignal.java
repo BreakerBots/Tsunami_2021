@@ -10,8 +10,6 @@ public class DriveSignal {
 	 * voltage: similar to percentOutput but instead of -1 to 1 its -currentVoltage to currentVoltage (usually ~12V)
 	 */
 	public static enum DriveUnit {
-		FEET_PER_SECOND,
-		PERCENT_OUTPUT,
 		VOLTAGE,
 		STOP
 	}
@@ -26,14 +24,6 @@ public class DriveSignal {
 	
 	public DriveSignal() {
 		this(0, 0, true, DriveUnit.STOP);
-	}
-	
-	public DriveSignal(double leftSpeed, double rightSpeed, boolean isHighGear) {
-		this(leftSpeed, rightSpeed, isHighGear, DriveUnit.PERCENT_OUTPUT);
-	}
-	
-	public DriveSignal(double leftSpeed, double rightSpeed, DriveUnit unit) {
-		this(leftSpeed, rightSpeed, true, DriveUnit.PERCENT_OUTPUT);
 	}
 	
 	public DriveSignal(double leftSpeed, double rightSpeed, boolean isHighGear, DriveUnit unit) {

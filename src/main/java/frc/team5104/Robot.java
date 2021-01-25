@@ -4,6 +4,7 @@ package frc.team5104;
 import frc.team5104.Superstructure.SystemState;
 import frc.team5104.auto.AutoManager;
 import frc.team5104.auto.Odometry;
+import frc.team5104.auto.paths.ExamplePath;
 import frc.team5104.subsystems.*;
 import frc.team5104.teleop.CompressorController;
 import frc.team5104.teleop.DriveController;
@@ -37,6 +38,9 @@ public class Robot extends RobotController.BreakerRobot {
 			new Climber(),
 			new Paneler()
 		);
+		SubsystemManager.debug(
+
+		);
 		TeleopControllerManager.useTeleopControllers(
 			new DriveController(),
 			new SuperstructureController(),
@@ -49,9 +53,8 @@ public class Robot extends RobotController.BreakerRobot {
 		Odometry.init();
 		Limelight.init();
 		CompressorController.stop();
-		//AutoManager.setTargetPath(new SixBall_Right());
-		//AutoManager.getTargetPath().plot();
-		SubsystemManager.debug();
+		AutoManager.setTargetPath(new ExamplePath());
+		AutoManager.enabledPlotting();
 	}
 	
 	//Teleop 
@@ -103,7 +106,7 @@ public class Robot extends RobotController.BreakerRobot {
 		if (RobotState.getMode() == RobotMode.DISABLED) {
 			Drive.resetEncoders();
 			Drive.resetGyro();
-			Odometry.resetWithoutWaiting();
+			Odometry.reset();
 		}
 	}
 }

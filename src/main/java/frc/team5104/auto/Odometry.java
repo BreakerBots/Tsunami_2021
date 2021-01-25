@@ -15,28 +15,31 @@ import frc.team5104.util.console.c;
  * and initializing/resetings from Robot.java
  */
 public class Odometry {
-	private static DifferentialDriveOdometry m_odometry;
+	private static DifferentialDriveOdometry odometry;
 	
 	public static void init() {
-		Drive.resetEncoders();
-		Drive.resetGyro();
-		m_odometry = new DifferentialDriveOdometry(new Rotation2d());
+		Drive.reset();
+		odometry = new DifferentialDriveOdometry(new Rotation2d());
 		console.log(c.AUTO, "Initialized Odometry");
 	}
 	
 	public static void update() {
-		m_odometry.update(
+		if (odometry != null) {
+			odometry.update(
 				Rotation2d.fromDegrees(-Drive.getGyro()),
 				Drive.getLeftEncoder().getPositionMeters(),
 				Drive.getRightEncoder().getPositionMeters()
 			);
+		}
 	}
 	
 	public static Pose2d getPose2dMeters() {
-		return m_odometry.getPoseMeters();
+		return (odometry == null) ? null : odometry.getPoseMeters();
 	}
 	
 	public static Position getPositionFeet() {
+		if (odometry == null)
+			return new Position(0, 0, 0);
 		return new Position(
 				Units.metersToFeet(getPose2dMeters().getTranslation().getX()),
 				Units.metersToFeet(getPose2dMeters().getTranslation().getY()),
@@ -48,19 +51,22 @@ public class Odometry {
 		return new DifferentialDriveWheelSpeeds(
 				Drive.getLeftEncoder().getVelocityMetersSecond(),
 				Drive.getRightEncoder().getVelocityMetersSecond()
-			);
+		);
+	}
+	
+	public static void resetHold() {
+		if (odometry != null) {
+			reset();
+			try { Thread.sleep(10); } catch (Exception e) { }
+			reset();
+			console.log(c.AUTO, "Reset Odometry at " + getPose2dMeters());
+		}
 	}
 	
 	public static void reset() {
-		resetWithoutWaiting();
-		try { Thread.sleep(10); } catch (Exception e) { }
-		resetWithoutWaiting();
-		console.log(c.AUTO, "Reset Odometry at " + getPose2dMeters());
-	}
-	
-	public static void resetWithoutWaiting() {
-		Drive.resetEncoders();
-		Drive.resetGyro();
-		m_odometry.resetPosition(new Pose2d(), Rotation2d.fromDegrees(-Drive.getGyro()));
+		if (odometry != null) {
+			Drive.reset();
+			odometry.resetPosition(new Pose2d(), Rotation2d.fromDegrees(-Drive.getGyro()));
+		}
 	}
 }

@@ -3,11 +3,11 @@ package frc.team5104.auto.actions;
 
 import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.FlywheelState;
-import frc.team5104.auto.AutoPathAction;
+import frc.team5104.auto.AutoAction;
 import frc.team5104.util.console;
 import frc.team5104.util.console.c;
 
-public class ChargeFlywheelAction extends AutoPathAction {
+public class ChargeFlywheelAction extends AutoAction {
     public ChargeFlywheelAction() {
     	
     }

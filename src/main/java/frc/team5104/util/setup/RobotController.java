@@ -1,13 +1,15 @@
 /*BreakerBots Robotics Team 2019*/
 package frc.team5104.util.setup;
 
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import frc.team5104.Constants;
 import frc.team5104.Robot;
+import frc.team5104.RobotSim;
 import frc.team5104.util.CrashLogger;
 import frc.team5104.util.CrashLogger.Crash;
 import frc.team5104.util.console;
@@ -23,13 +25,16 @@ public class RobotController extends RobotBase {
 	//Init Robot
 	public void startCompetition() {
 		HAL.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Iterative);
-		console.logFile.start();
+		if (!RobotState.isSimulation())
+			console.logFile.start();
 		console.sets.create("RobotInit");
 		if (Constants.ROBOT_NAME.length() < 4)
 			console.error("Please deploy robot.txt with the correct robot name!");
 		console.log(c.MAIN, t.INFO, "Initializing " + Constants.ROBOT_NAME + " Code...");
-		
-		robot = new Robot();
+
+		if (RobotState.isSimulation())
+			robot = new RobotSim();
+		else robot = new Robot();
 		
 		HAL.observeUserProgramStarting();
 		
@@ -43,7 +48,7 @@ public class RobotController extends RobotBase {
 			try {
 				loop();
 			} catch (Exception e) {
-				CrashLogger.logCrash(new Crash("main", e));
+				CrashLogger.logCrash(new Crash("robot", e));
 			}
 			
 			//Wait to make loop correct time
@@ -77,14 +82,17 @@ public class RobotController extends RobotBase {
 		try {
 			if (RobotState.getLastMode() != RobotState.getMode()) {
 				if (RobotState.getMode() == RobotMode.DISABLED) {
-					console.logFile.end();
+					if (!RobotState.isSimulation())
+						console.logFile.end();
 					robot.mainStop();
 					RobotState.resetTimer();
 					RobotState.startTimer();
 				}
 				else if (RobotState.getLastMode() == RobotMode.DISABLED) {
-					console.logFile.end();
-					console.logFile.start();
+					if (!RobotState.isSimulation()) {
+						console.logFile.end();
+						console.logFile.start();
+					}
 					robot.mainStart();
 				}
 			}
@@ -162,7 +170,13 @@ public class RobotController extends RobotBase {
 			}
 			default: break;
 		}
-		
+
+		LiveWindow.setEnabled(RobotState.isEnabled());
+		LiveWindow.updateValues();
+		if (RobotState.isSimulation()) {
+			HAL.simPeriodicBefore();
+			HAL.simPeriodicAfter();
+		}
 		RobotState.setLastMode(RobotState.getMode());
 	}
 	

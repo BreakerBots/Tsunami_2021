@@ -2,14 +2,15 @@
 package frc.team5104;
 
 import frc.team5104.util.Filer;
+import frc.team5104.util.setup.RobotState;
 
 public class Constants {
 	//Main
 	public static final boolean OVERWRITE_NON_MATCH_LOGS = true;
 	public static final boolean OVERWRITE_MATCH_LOGS = false;
 	public static final int MAIN_LOOP_SPEED = 50;
-	public static final boolean AT_COMP = true;
-	public static final String ROBOT_NAME = Filer.readFile(Filer.HOME_PATH + "robot.txt");
+	public static final boolean AT_COMP = false;
+	public static final String ROBOT_NAME = RobotState.isSimulation() ? "Tsunami" : Filer.readFile(Filer.HOME_PATH + "robot.txt");
 	public static final boolean COMP_BOT = ROBOT_NAME.contains("Tsunami");
 	public static final double LIMELIGHT_ANGLE = 50.0;
 	public static final boolean LIMELIGHT_DEFAULT_OFF = true;
@@ -18,7 +19,7 @@ public class Constants {
 	//Drive
 	public static final double DRIVE_WHEEL_DIAMETER = 0.5; //ft
 	public static final double DRIVE_TICKS_PER_REV = 2048.0 * (50.0/8.0) * (46.0/24.0);
-	public static final double DRIVE_WHEEL_BASE_WIDTH = 2.0589795990198065; //ft
+	public static final double DRIVE_TRACK_WIDTH = 2.0589795990198065; //ft
 	public static final double DRIVE_KP = 1;//0.153;
 	public static final double DRIVE_KD = 0;
 	public static final double DRIVE_KS = COMP_BOT ? 0.162 : 0.151;
@@ -28,8 +29,7 @@ public class Constants {
 	public static final double AUTO_MAX_ACCEL = 4;
 	public static final double AUTO_CORRECTION_FACTOR = 1; //>0
 	public static final double AUTO_DAMPENING_FACTOR  = 0.5; //0-1
-	public static final boolean AUTO_PLOT_ODOMETRY = true;
-	
+
 	//Flywheel
 	public static final boolean FLYWHEEL_OPEN_LOOP = false;
 	public static final double FLYWHEEL_RAMP_RATE_UP = 0.7;

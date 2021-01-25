@@ -7,6 +7,7 @@ import frc.team5104.util.CrashLogger.Crash;
 import frc.team5104.util.console;
 import frc.team5104.util.console.c;
 import frc.team5104.util.console.t;
+import frc.team5104.util.setup.RobotState;
 
 /** Manages the calls for all Subsystems given */
 public class SubsystemManager {
@@ -24,7 +25,9 @@ public class SubsystemManager {
 			try {
 				subsystem.attached = true;
 				subsystem.emergencyStopped = false;
-				subsystem.init();
+				if (RobotState.isSimulation())
+					subsystem.initSim();
+				else subsystem.init();
 				message += subsystem.getClass().getSimpleName() + ", ";
 			} catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
 		}

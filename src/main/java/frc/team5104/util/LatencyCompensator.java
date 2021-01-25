@@ -1,13 +1,13 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package frc.team5104.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
 import frc.team5104.util.CrashLogger.Crash;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.DoubleSupplier;
 
 public class LatencyCompensator {
 	private List<Double> values, timeStamps;
@@ -27,7 +27,7 @@ public class LatencyCompensator {
 					values.remove(0);
 				if (timeStamps.size() > 20)
 					timeStamps.remove(0);
-			} catch (Exception e) { CrashLogger.logCrash(new Crash("latency compensator", e)); }
+			} catch (Exception e) { CrashLogger.logCrash(new Crash("latency-compensator", e)); }
 		});
 		thread.startPeriodic(0.01);
 	}
