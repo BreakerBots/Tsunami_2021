@@ -5,6 +5,10 @@ html, body {
 	margin: 0;
 }
 
+* {
+	font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
 .mdc-tab__ripple::before, .mdc-tab__ripple::after {
 	background-color: #edb038 !important;
 	transition: opacity 0.4s cubic-bezier(0.2, 0, 0.2, 1);
@@ -50,3 +54,14 @@ html, body {
 	.breaker-scrollbar::-webkit-scrollbar-thumb:hover {
 		background-color: #efc36b;
 	}
+
+.mdc-top-app-bar__section--align-start {
+	-webkit-user-select: none !important;
+	-webkit-app-region: drag !important;
+}
+
+#enabledSwitch {
+	margin-left: 30px;
+	-webkit-user-select: all !important;
+	-webkit-app-region: no-drag !important;
+}

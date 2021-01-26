@@ -13,9 +13,6 @@
 	<link rel="stylesheet" href="resources/css/main.css" />
 	<link rel="stylesheet" href="resources/css/tuner.css" />
 	<link rel="stylesheet" href="resources/css/plotter.css" />
-
-	<style>
-	</style>
 </head>
 <body>
 	<!--Header-->
@@ -26,6 +23,13 @@
 				<span class="mdc-top-app-bar__title">BreakerBoard</span>
 				<img id="robotConnectedIcon" src="resources/images/no_connection.png" style="margin: 0 10px 0 15px; width: 30px; filter: invert(0.8);" />
 				<span id="robotName"></span>
+				<div id="enabledSwitch" class="mdc-switch" data-mdc-auto-init="MDCSwitch">
+					<div class="mdc-switch__track"></div>
+					<div class="mdc-switch__thumb-underlay">
+						<div class="mdc-switch__thumb"></div>
+						<input type="checkbox" id="basic-switch" class="mdc-switch__native-control" role="switch" aria-checked="false">
+					</div>
+				</div>
 			</section>
 			<section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
 				<div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar">
@@ -84,7 +88,7 @@
 							<input oninput="chartMaxLengthMs = this.value * 1000;" type="number" class="mdc-text-field__input">
 							<div class="mdc-notched-outline">
 								<div class="mdc-notched-outline__leading"></div>
-								<div class="mdc-notched-outline__notch">
+								<div class="mdc-notched-outline__notch" id="outputBoxGraphLengthMSNotch">
 									<label for="tf-outlined" class="mdc-floating-label">Graph Length (Seconds)</label>
 								</div>
 								<div class="mdc-notched-outline__trailing"></div>

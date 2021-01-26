@@ -1,0 +1,17 @@
+{
+  "name": "breakerboard",
+  "version": "1.0.0",
+  "description": "the BreakerBots Robotics Team's Webapp",
+  "main": "desktop.js",
+  "scripts": {
+    "start": "electron .",
+    "pack:osx": "electron-packager . --platform=darwin --arch=x64 --icon=./resources/images/icon.icns",
+    "pack:win": "electron-packager . --platform=win32 --arch=ia32 --icon=./resources/images/icon.ico"
+  },
+  "appname": "BreakerBoard",
+  "author": "Liam Snow",
+  "devDependencies": {
+    "electron": "^11.2.1",
+    "electron-packager": "^15.2.0"
+  }
+}

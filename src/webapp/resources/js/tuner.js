@@ -31,10 +31,9 @@ function clearChart() {
 } clearChart();
 
 //Chart Length MS
-function initChartLengthMSTextField() {
-	mdc.autoInit(document.querySelector("#outputBoxGraphLengthMs"));
-	document.querySelector("#outputBoxGraphLengthMs").MDCTextField.value = chartMaxLengthMs / 1000;
-} initChartLengthMSTextField();
+mdc.textField.MDCTextField.attachTo(document.querySelector("#outputBoxGraphLengthMs"));
+document.querySelector("#outputBoxGraphLengthMs").MDCTextField.value = chartMaxLengthMs / 1000;
+document.querySelector("#outputBoxGraphLengthMSNotch").style.width = "142.25px";
 
 //Tuner Outputs (Graph)
 const tunerOutputColors = [

@@ -7,6 +7,9 @@ gradle/
 java.iml
 .settings
 .idea/
+src/webapp/node_modules/
+.vs/
+src/webapp/.vs/
 
 # Ignore Gradle GUI config
 gradle-app.setting

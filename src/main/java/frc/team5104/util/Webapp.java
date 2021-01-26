@@ -5,6 +5,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import frc.team5104.Constants;
 import frc.team5104.util.console.c;
 import frc.team5104.util.setup.RobotState;
@@ -50,7 +51,7 @@ public class Webapp {
 			server.createContext("/tuner", new TunerHandler());
 			server.createContext("/plotter", new PlotterHandler());
 			server.createContext("/robot", new RobotHandler());
-			
+
 			//Start Server
 			server.setExecutor(null);
 			server.start();
@@ -194,16 +195,29 @@ public class Webapp {
 			t.getResponseHeaders().add("Content-Type", "application/json");
 			
 			String requestType = t.getRequestURI().toString().substring(7);
-			
+
 			//Get
 			if (requestType.equals("get")) {
 				//Send outputs
-				String response = "{\"name\":\"" + Constants.ROBOT_NAME + "\"}";
-				
+				String response = "{\"name\":\"" + Constants.ROBOT_NAME +
+						"\",\"sim\":\"" + RobotState.isSimulation() +
+						"\",\"enabled\":\"" + RobotState.isEnabled() + "\"}";
+
 				t.sendResponseHeaders(200, response.length());
 	            OutputStream os = t.getResponseBody();
 	            os.write(response.getBytes());
 	            os.close();
+			}
+
+			//Set
+			if (requestType.equals("set")) {
+				InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
+				BufferedReader br = new BufferedReader(isr);
+				String data = br.readLine();
+				data = data.substring(1, data.length() - 1);
+				String enabled = data.substring(data.indexOf("\"enabled\":\"")+11, data.length());
+				DriverStationSim.setAutonomous(true);
+				DriverStationSim.setEnabled(enabled.equals("true"));
 			}
 		}
 	}

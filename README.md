@@ -19,16 +19,19 @@ I recommend clicking on the settings icon in the top left and selecting
     - Go back to Github desktop select `Repository > Open in Command Prompt`
 2) Type `gradlew deploy` and press `enter`
 
+## Launching Webapp
+1) Open up a command prompt in the repo
+2) Run `webapp` for the desktop version
+
+Note: If you don't want to use the desktop version navigate to `http://localhost:5804` in your web browser.
+
 ## Simulating Autonomous
 1) Open up a command prompt in the repo
 2) Type `gradlew simulateJava` and press `enter`
-3) Navigate to `localhost:5804` in a browser
+3) Open the webapp (see above)
 4) Select the `Plotter` tab
-5) Go to the `Robot Simulation` GUI window that launched when you ran `simulateJava`
-6) In the `Robot State` section (top left) click on `Autonomous`
-7) You can watch the robot drive the select autonomous path realtime on your web browser
-8) To finish close the command line that launched when you ran `simulateJava` and the GUI should
-close with it.
+5) Click on the switch in the header (next to the robot name) to enable the robot
+8) To finish close the command line that launched when you ran `simulateJava`
 
 Note: If you want to change the selected auto path navigate to `frc.team5104.RobotSim`
    in IntelliJ and change the path inside the line: `AutoManager.setTargetPath(new ExamplePath());`
