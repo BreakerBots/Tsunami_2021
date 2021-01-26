@@ -10,6 +10,8 @@ java.iml
 src/webapp/node_modules/
 .vs/
 src/webapp/.vs/
+src/webapp/breakerboard-win32-ia32/
+src/webapp/breakerboard-darwin-x64/
 
 # Ignore Gradle GUI config
 gradle-app.setting
