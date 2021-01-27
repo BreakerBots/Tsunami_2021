@@ -1,7 +1,8 @@
 /*BreakerBots Robotics Team 2019*/
 package frc.team5104;
 
-import frc.team5104.util.ConstantsUtil.RobotConfig;
+import frc.team5104.util.ConstantsUtils.RobotConfig;
+import frc.team5104.util.ConstantsUtils.SubsystemConstants;
 
 public class Constants {
 	//Main
@@ -27,35 +28,41 @@ public class Constants {
 	public static final double FLYWHEEL_RAMP_RATE_UP = 0.7;
 	public static final double FLYWHEEL_RAMP_RATE_DOWN = 3;
 	public static double FLYWHEEL_RPM_TOL = 500;
-	public static final double FLYWHEEL_TICKS_PER_REV = 2048.0 * (24.0 / 44.0);
-	public static double FLYWHEEL_KP = switchOnBot(0.2, 1);//4;
-	public static double FLYWHEEL_KD = switchOnBot(0.01, 0.2);//0.4;
-	public static final double FLYWHEEL_KS = switchOnBot(0.334, 0.261);
-	public static final double FLYWHEEL_KV = switchOnBot(0.06, 0.111);
+	public static SubsystemConstants flywheel = new SubsystemConstants(
+		switchOnBot(0.2, 1), 0, switchOnBot(0.01, 0.2),
+		switchOnBot(0.334, 0.261),
+		switchOnBot(0.06, 0.111),
+		0,
+		0, 0,
+		24.0 / 44.0
+	);
 	
 	//Hood
 	public static final double HOOD_TOL = 3;
 	public static double HOOD_EQ_CONST = 0;
 	public static final double HOOD_CALIBRATE_SPEED = 0.4;
-	public static final double HOOD_TICKS_PER_REV = 4096.0 * (20.0 / 18.0) * (360.0 / 18.0);
-	public static double HOOD_KD = 0.0;
-	public static final double HOOD_KS = switchOnBot(.835, .49);
-	public static final double HOOD_KV = switchOnBot(.06, .0605);
-	public static final double HOOD_KA = switchOnBot(.00195, .00218);
-	public static final double HOOD_MAX_VEL = 200;
-	public static final double HOOD_MAX_ACC = 2000;
-	
+	public static SubsystemConstants hood = new SubsystemConstants(
+		0, 0, 0,
+		switchOnBot(.835, .49),
+		switchOnBot(.06, .0605),
+		switchOnBot(.00195, .00218),
+		200, 2000,
+		(20.0 / 18.0) * (360.0 / 18.0)
+	);
+
 	//Hopper
 	public static final double HOPPER_START_INTAKE_SPEED = 7;
 	public static final double HOPPER_START_INDEX_SPEED = 0.5;
-	public static double HOPPER_INDEX_BALL_SIZE = switchOnBot(2, 2);
+	public static double HOPPER_INDEX_BALL_SIZE = 2;
 	public static double HOPPER_INDEX_TOL = 0.05;
-	public static final double HOPPER_INDEX_TICKS_PER_REV = 2048 * (70.0/12.0);
-	public static double HOPPER_INDEX_KP = 14;
-	public static double HOPPER_INDEX_KI = 0.5;
-	public static double HOPPER_INDEX_KD = 0.25;
-	public static final double HOPPER_INDEX_KS = switchOnBot(0.308, 0.42);
 	public static double HOPPER_FEED_SPEED = 6;
+	public static SubsystemConstants hopperIndex = new SubsystemConstants(
+			14, 0.5, 0.25,
+			switchOnBot(0.308, 0.42), 0, 0,
+			0, 0,
+			70.0/12.0
+	);
+
 	
 	//Intake
 	public static final double INTAKE_SPEED = 1.0;
@@ -65,32 +72,31 @@ public class Constants {
 	//Paneler
 	public static final double PANELER_ROT_SPEED = 0.15;
 	public static final double PANELER_POS_SPEED = 0.0;
-	public static final double PANELER_TICKS_PER_REV = 4096.0 * (/*control panel*/16.0 / 2);
+	public static final double PANELER_GEARING = /*control panel*/16.0 / 2;
 	public static final double PANELER_ROTATIONS = 3;
 	public static final int PANELER_BRAKE_INT = 25;
 	
 	//Turret
 	public static final double TURRET_CALIBRATE_SPEED = 0.15;
 	public static final double TURRET_VOLT_LIMIT = 6;
-	public static final double TURRET_TICKS_PER_REV = 2048.0 / (8.0 / 60.0 /*gear*/) / (22.0 / 150.0 /*sprocket*/);
-	public static double TURRET_KP = switchOnBot(0.2, 0.2);
-	public static double TURRET_KD = switchOnBot(0.01, 0.0);
-	public static final double TURRET_KS = switchOnBot(.2/*0.258*/, 0.35);
-	public static final double TURRET_KV = 0.015;
-	public static final double TURRET_KA = switchOnBot(0.000121, 0.000384);
-	public static final double TURRET_MAX_VEL = 200;
-	public static final double TURRET_MAX_ACC = 2000;
 	public static final double TURRET_VISION_TOL = 6;
 	public static final double TURRET_SOFT_LEFT = switchOnBot(120, 110);
 	public static final double TURRET_SOFT_RIGHT = switchOnBot(-120, -120);
 	public static final double TURRET_ZERO = switchOnBot(140, 130);
+	public static SubsystemConstants turret = new SubsystemConstants(
+			switchOnBot(0.2, 0.2),
+			0,
+			switchOnBot(0.01, 0.0),
+			switchOnBot(.2/*0.258*/, 0.35),
+			0.015,
+			switchOnBot(0.000121, 0.000384),
+			200, 2000,
+			(8.0 / 60.0 /*gear*/) / (22.0 / 150.0 /*sprocket*/)
+	);
 
 	//Other
 	/** Returns "c" if this is the competition robot otherwise returns "a" */
 	public static double switchOnBot(double c, double a) {
-		return config.isCompetitionRobot ? c : a;
-	}
-	public static int switchOnBot(int c, int a) {
 		return config.isCompetitionRobot ? c : a;
 	}
 }

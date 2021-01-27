@@ -17,10 +17,10 @@ public class Intake extends Subsystem {
 	public void update() {
 		setPiston(true);
 		if (Superstructure.isEnabled()) {
-			if (Superstructure.getMode() == Mode.INTAKE) {
+			if (Superstructure.is(Mode.INTAKE)) {
 				setPercentOutput(Constants.INTAKE_SPEED);
 			}
-			else if (Superstructure.getMode() == Mode.SHOOTING) {
+			else if (Superstructure.is(Mode.SHOOTING)) {
 				setPercentOutput(Constants.INTAKE_FIRE_SPEED);
 			}
 			else setPercentOutput(-Constants.INTAKE_REJECT_SPEED);
@@ -44,7 +44,7 @@ public class Intake extends Subsystem {
 	//Config
 	public void init() {
 		if (Constants.config.isCompetitionRobot)
-			piston = new DoubleSolenoid(Ports.INTAKE_DEPLOYER_FORWARD, Ports.INTAKE_DEPLOYER_REVERSE);
+			piston = new DoubleSolenoid(Ports.INTAKE_DEPLOYER[0], Ports.INTAKE_DEPLOYER[1]);
 			
 		motor = new VictorSPX(Ports.INTAKE_MOTOR);
 		motor.configFactoryDefault();

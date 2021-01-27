@@ -20,7 +20,7 @@ public class Climber extends Subsystem {
 	public void update() {
 		if (Superstructure.isEnabled() && Superstructure.isClimbing()) {
 			setBrake(false);
-			setDeployerPiston(Superstructure.getMode() == Mode.CLIMBER_DEPLOYING);
+			setDeployerPiston(Superstructure.is(Mode.CLIMBER_DEPLOYING));
 			setPercentOutput(climberManual);
 		}
 		else {
@@ -46,8 +46,8 @@ public class Climber extends Subsystem {
 
 	//Config
 	public void init() {
-		deployerPiston = new DoubleSolenoid(Ports.CLIMBER_DEPLOYER_FORWARD, Ports.CLIMBER_DEPLOYER_REVERSE);
-		brakePiston = new DoubleSolenoid(Ports.CLIMBER_BRAKE_FORWARD, Ports.CLIMBER_BRAKE_REVERSE);
+		deployerPiston = new DoubleSolenoid(Ports.CLIMBER_DEPLOYER[0], Ports.CLIMBER_DEPLOYER[1]);
+		brakePiston = new DoubleSolenoid(Ports.CLIMBER_BRAKE[0], Ports.CLIMBER_BRAKE[1]);
 		motor = new TalonFX(Ports.CLIMBER_MOTOR);
 		motor.configFactoryDefault();
 		motor.setInverted(false);

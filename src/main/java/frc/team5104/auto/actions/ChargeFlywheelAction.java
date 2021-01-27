@@ -14,7 +14,7 @@ public class ChargeFlywheelAction extends AutoAction {
 
     public void init() {
     	console.log(c.AUTO, "charging flywheel");
-    	Superstructure.setFlywheelState(FlywheelState.SPINNING);
+    	Superstructure.set(FlywheelState.SPINNING);
     }
 
     public boolean update() {

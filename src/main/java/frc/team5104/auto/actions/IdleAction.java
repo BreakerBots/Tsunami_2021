@@ -14,7 +14,7 @@ public class IdleAction extends AutoAction {
 
     public void init() {
     	console.log(c.AUTO, "idling");
-    	Superstructure.setMode(Mode.IDLE);
+    	Superstructure.set(Mode.IDLE);
     }
 
     public boolean update() {

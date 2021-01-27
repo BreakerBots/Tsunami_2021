@@ -12,9 +12,12 @@ import frc.team5104.Superstructure.Mode;
 import frc.team5104.util.*;
 import frc.team5104.util.console.c;
 import frc.team5104.util.managers.Subsystem;
+import frc.team5104.util.Encoder.FalconIntegratedEncoder;
+
 
 public class Turret extends Subsystem {
 	private static TalonFX motor;
+	private static FalconIntegratedEncoder encoder;
 	private static PositionController controller;
 	private static LatencyCompensator compensator;
 	private static MovingAverage outputAverage;
@@ -31,8 +34,8 @@ public class Turret extends Subsystem {
 			}
 			
 			//Vision
-			else if (Superstructure.getMode() == Mode.AIMING || Superstructure.getMode() == Mode.SHOOTING) {
-				if (/*Limelight.hasTarget() &&*/ Superstructure.getMode() == Mode.AIMING) {
+			else if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
+				if (/*Limelight.hasTarget() &&*/ Superstructure.is(Mode.AIMING)) {
 					setAngle(
 						compensator.getValueInHistory(Limelight.getLatency()) - Limelight.getTargetX()
 					);
@@ -78,9 +81,9 @@ public class Turret extends Subsystem {
 		if (Constants.config.isAtCompetition) {
 			Tuner.setTunerOutput("Turret Output", motor.getMotorOutputPercent());
 			tunerFieldOrientedOffsetAdd = Tuner.getTunerInputDouble("Turret Field Oriented Offset Add", tunerFieldOrientedOffsetAdd);
-			Constants.TURRET_KP = Tuner.getTunerInputDouble("Turret KP", Constants.TURRET_KP);
-			Constants.TURRET_KD = Tuner.getTunerInputDouble("Turret KD", Constants.TURRET_KD);
-			controller.setPID(Constants.TURRET_KP, 0, Constants.TURRET_KD);
+			Constants.turret.kP = Tuner.getTunerInputDouble("Turret KP", Constants.turret.kP);
+			Constants.turret.kD = Tuner.getTunerInputDouble("Turret KD", Constants.turret.kD);
+			controller.setPID(Constants.turret.kP, 0, Constants.turret.kD);
 			return;
 		}
 
@@ -89,9 +92,9 @@ public class Turret extends Subsystem {
 		Tuner.setTunerOutput("Turret Error", controller.getLastError());
 		Tuner.setTunerOutput("Turret Angle", getAngle());
 		Tuner.setTunerOutput("Turret Target Angle", targetAngle);
-		//Constants.TURRET_KP = Tuner.getTunerInputDouble("Turret KP", Constants.TURRET_KP);
-		//Constants.TURRET_KD = Tuner.getTunerInputDouble("Turret KD", Constants.TURRET_KD);
-		//controller.setPID(Constants.TURRET_KP, 0, Constants.TURRET_KD);
+		Constants.turret.kP = Tuner.getTunerInputDouble("Turret KP", Constants.turret.kP);
+		Constants.turret.kD = Tuner.getTunerInputDouble("Turret KD", Constants.turret.kD);
+		controller.setPID(Constants.turret.kP, 0, Constants.turret.kD);
 	}
 
 	//Internal Functions
@@ -112,7 +115,7 @@ public class Turret extends Subsystem {
 		motor.set(ControlMode.Disabled, 0);
 	}
 	private void resetEncoder(double angle) {
-		motor.setSelectedSensorPosition((int) (angle / 360.0 * Constants.TURRET_TICKS_PER_REV));
+		encoder.setComponentRevs(angle / 360d);
 	}
 	private void enableSoftLimits(boolean enabled) {
 		motor.configForwardSoftLimitEnable(enabled);
@@ -122,7 +125,7 @@ public class Turret extends Subsystem {
 	//External Functions
 	public static double getAngle() {
 		if (motor == null) return 0;
-		return motor.getSelectedSensorPosition() / Constants.TURRET_TICKS_PER_REV * 360.0;
+		return encoder.getComponentRevs() * 360d;
 	}
 	public static boolean leftLimitHit() {
 		if (motor == null) return true;
@@ -143,22 +146,15 @@ public class Turret extends Subsystem {
 		motor = new TalonFX(Ports.TURRET_MOTOR);
 		motor.configFactoryDefault();
 		motor.setInverted(Constants.config.isCompetitionRobot ? false : true);
-		
-		motor.configForwardSoftLimitThreshold((int) (Constants.TURRET_TICKS_PER_REV * (Constants.TURRET_SOFT_LEFT / 360.0)));
-		motor.configReverseSoftLimitThreshold((int) (Constants.TURRET_TICKS_PER_REV * (Constants.TURRET_SOFT_RIGHT / 360.0)));
+
+		encoder = new FalconIntegratedEncoder(motor, Constants.turret.gearing);
+
+		motor.configForwardSoftLimitThreshold((int) encoder.componentRevsToTicks(Constants.TURRET_SOFT_LEFT / 360d));
+		motor.configReverseSoftLimitThreshold((int) encoder.componentRevsToTicks(Constants.TURRET_SOFT_RIGHT / 360d));
 		enableSoftLimits(false);
 		motor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled);
 		
-		controller = new PositionController(
-				Constants.TURRET_KP,
-				0,
-				Constants.TURRET_KD,
-				Constants.TURRET_MAX_VEL,
-				Constants.TURRET_MAX_ACC,
-				Constants.TURRET_KS,
-				Constants.TURRET_KV,
-				Constants.TURRET_KA
-			);
+		controller = new PositionController(Constants.turret);
 		compensator = new LatencyCompensator(() -> getAngle());
 		outputAverage = new MovingAverage(4, 0);
 		

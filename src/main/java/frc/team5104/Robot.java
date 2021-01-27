@@ -59,6 +59,7 @@ public class Robot extends RobotController.BreakerRobot {
 		TeleopControllerManager.disabled();
 	}
 	public void teleopLoop() {
+		Superstructure.enable();
 		TeleopControllerManager.update();
 	}
 	
@@ -70,6 +71,7 @@ public class Robot extends RobotController.BreakerRobot {
 		AutoManager.disabled();
 	}
 	public void autoLoop() {
+		Superstructure.enable();
 		AutoManager.update();
 	}
 	

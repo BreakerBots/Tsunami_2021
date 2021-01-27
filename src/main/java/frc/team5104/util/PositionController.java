@@ -9,13 +9,17 @@ public class PositionController {
 	private ProfiledPIDController pid;
 	private SimpleMotorFeedforward ff;
 	private double lastVelocity, lastPIDOutput, lastFFOutput, lastOutput, lastPosition, lastTarget;
-	
+
+	public PositionController(ConstantsUtils.SubsystemConstants constants) {
+		this(constants.kP, constants.kI, constants.kD, constants.maxVelocity, constants.maxAccel,
+				constants.kS, constants.kV, constants.kA);
+	}
 	public PositionController(double kP, double kI, double kD, double maxVel, 
 			double maxAccel, double kS, double kV, double kA) {
 		pid = new ProfiledPIDController(kP, kI, kD, new Constraints(maxVel, maxAccel));
 		ff = new SimpleMotorFeedforward(kS, kV, kA);
 	}
-	
+
 	public double calculate(double currentPosition, double targetPosition) {
 		lastPIDOutput = pid.calculate(currentPosition, targetPosition);
 		lastFFOutput = ff.calculate(
@@ -36,6 +40,9 @@ public class PositionController {
 	
 	public void setPID(double kP, double kI, double kD) {
 		pid.setPID(kP, kI, kD);
+	}
+	public void setP(double kP) {
+		pid.setPID(kP, pid.getI(), pid.getD());
 	}
 	
 	public void setProfiling(double maxVel, double maxAccel) {

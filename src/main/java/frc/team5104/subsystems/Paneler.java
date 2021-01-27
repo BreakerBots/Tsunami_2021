@@ -15,10 +15,12 @@ import frc.team5104.util.ColorSensor;
 import frc.team5104.util.ColorSensor.PanelColor;
 import frc.team5104.util.console;
 import frc.team5104.util.managers.Subsystem;
+import frc.team5104.util.Encoder.MagEncoder;
 
 public class Paneler extends Subsystem {
 	private static ColorSensor sensor;
 	private static TalonSRX motor;
+	private static MagEncoder encoder;
 	private static DoubleSolenoid piston;
 	private static boolean complete;
 	private static int end;
@@ -27,7 +29,7 @@ public class Paneler extends Subsystem {
 	public void update() {
 		if (Superstructure.isEnabled()) {
 			//deploying
-			if (Superstructure.getMode() == Mode.PANEL_DEPLOYING) {
+			if (Superstructure.is(Mode.PANEL_DEPLOYING)) {
 				complete = false;
 				end = 0;
 				setPiston(true);
@@ -36,9 +38,9 @@ public class Paneler extends Subsystem {
 			}
 	
 			//paneling
-			else if (Superstructure.getMode() == Mode.PANELING) {
+			else if (Superstructure.is(Mode.PANELING)) {
 				//rotation
-				if (Superstructure.getPanelState() == PanelState.ROTATION) {
+				if (Superstructure.is(PanelState.ROTATION)) {
 					console.log(getPanelRotations());
 					if (getPanelRotations() >= Constants.PANELER_ROTATIONS && end < Constants.PANELER_BRAKE_INT) {
 						setPercentOutput(0);
@@ -64,7 +66,7 @@ public class Paneler extends Subsystem {
 				}
 			}
 			//idle
-			else if (Superstructure.getMode() == Mode.IDLE) {
+			else if (Superstructure.is(Mode.IDLE)) {
 				stop();
 				setPiston(false);
 			}
@@ -94,11 +96,10 @@ public class Paneler extends Subsystem {
 		return sensor.getNearestColor();
 	}
 	private void resetEncoder() {
-		motor.setSelectedSensorPosition(0);
+		encoder.reset();
 	}
 	private String readFMS() {
-		String FMS = DriverStation.getInstance().getGameSpecificMessage();
-		return FMS;
+		return DriverStation.getInstance().getGameSpecificMessage();
 	}
 
 	//External Functions
@@ -106,19 +107,20 @@ public class Paneler extends Subsystem {
 		return complete;
 	}
 	public static double getPanelRotations() {
-		return motor.getSelectedSensorPosition() / Constants.PANELER_TICKS_PER_REV;
+		return encoder.getComponentRevs();
 	}
 
 	//Config
 	public void init() {
 		sensor = new ColorSensor(I2C.Port.kOnboard);
-		piston = new DoubleSolenoid(Ports.PANELER_DEPLOYER_FORWARD, Ports.PANELER_DEPLOYER_REVERSE);
+		piston = new DoubleSolenoid(Ports.PANELER_DEPLOYER[0], Ports.PANELER_DEPLOYER[1]);
 		motor = new TalonSRX(Ports.PANELER_MOTOR);
 		motor.configOpenloopRamp(0.25);
 		motor.configFactoryDefault();
 		motor.setInverted(Constants.config.isCompetitionRobot ? true : false);
 		motor.setSensorPhase(Constants.config.isCompetitionRobot ? true : false);
 		motor.configNeutralDeadband(0);
+		encoder = new MagEncoder(motor, Constants.PANELER_GEARING);
 		resetEncoder();
 	}
 

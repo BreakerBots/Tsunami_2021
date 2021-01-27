@@ -14,12 +14,12 @@ public class ShootAction extends AutoAction {
 
     public void init() {
     	console.log(c.AUTO, "firing!");
-    	Superstructure.setMode(Mode.AIMING);
+    	Superstructure.set(Mode.AIMING);
     }
 
     public boolean update() {
     	//exit when hopper is empty
-    	return Superstructure.getMode() == Mode.IDLE;
+    	return Superstructure.is(Mode.IDLE);
     }
 
     public void end() {

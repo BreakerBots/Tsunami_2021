@@ -12,9 +12,11 @@ import frc.team5104.Superstructure.Target;
 import frc.team5104.util.*;
 import frc.team5104.util.console.c;
 import frc.team5104.util.managers.Subsystem;
+import frc.team5104.util.Encoder.MagEncoder;
 
 public class Hood extends Subsystem {
 	private static TalonSRX motor;
+	private static MagEncoder encoder;
 	private static MovingAverage visionFilter;
 	private static PositionController controller;
 	private static double targetAngle = 0;
@@ -29,13 +31,13 @@ public class Hood extends Subsystem {
 			}
 			
 			//Low
-			else if (Superstructure.getTarget() == Target.LOW) {
+			else if (Superstructure.is(Target.LOW)) {
 				setAngle(40);
 			}
 			
 			//Vision
-			else if (Superstructure.getMode() == Mode.AIMING || Superstructure.getMode() == Mode.SHOOTING) {
-				if (/*Limelight.hasTarget() && */Superstructure.getMode() == Mode.AIMING) {
+			else if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
+				if (/*Limelight.hasTarget() && */Superstructure.is(Mode.AIMING)) {
 					visionFilter.update(Limelight.getTargetY());
 					setAngle(getTargetVisionAngle());
 				}
@@ -82,19 +84,18 @@ public class Hood extends Subsystem {
 		Tuner.setTunerOutput("Hood PID", controller.getLastPIDOutput());
 		Tuner.setTunerOutput("Hood KP", getKP());
 		Tuner.setTunerOutput("Hood Limit", backLimitHit());
-		Constants.HOOD_KD = Tuner.getTunerInputDouble("Hood KD", Constants.HOOD_KD);
+		Constants.hood.kD = Tuner.getTunerInputDouble("Hood KD", Constants.hood.kD);
 		//tunerTargetAngle = Tuner.getTunerInputDouble("Hood Target Vision Angle", 10);
 	}
 
 	//Internal Functions
 	private void setAngle(double degrees) {
 		targetAngle = BreakerMath.clamp(degrees, -1, 40);
-		controller.setPID(getKP(), 0, Constants.HOOD_KD);
+		controller.setP(getKP());
 		setVoltage(controller.calculate(getAngle(), targetAngle));
 	}
 	private void setVoltage(double volts) {
-		volts = BreakerMath.clamp(volts, -6, 6); //TODO DELETE ME!!
-		setPercentOutput(volts / motor.getBusVoltage());
+		setPercentOutput(BreakerMath.clamp(volts, -6, 6) / motor.getBusVoltage());
 	}
 	private void setPercentOutput(double percent) {
 		motor.set(ControlMode.PercentOutput, percent);
@@ -103,7 +104,7 @@ public class Hood extends Subsystem {
 		motor.set(ControlMode.Disabled, 0);
 	}
 	private void resetEncoder() {
-		motor.setSelectedSensorPosition(0);
+		encoder.reset();
 	}
 	private double getKP() {
 		double x = getAngle();
@@ -113,7 +114,7 @@ public class Hood extends Subsystem {
 	//External Functions
 	public static double getAngle() {
 		if (motor == null) return 0;
-		return motor.getSelectedSensorPosition() / Constants.HOOD_TICKS_PER_REV * 360.0;
+		return encoder.getComponentRevs() * 360d;
 	}
 	public static boolean backLimitHit() {
 		if (motor == null) return true;
@@ -139,21 +140,15 @@ public class Hood extends Subsystem {
 		motor.configFactoryDefault();
 		motor.setInverted(Constants.config.isCompetitionRobot ? true : false);
 		motor.setSensorPhase(Constants.config.isCompetitionRobot ? false : true);
-		
+
+		encoder = new MagEncoder(motor, Constants.hood.gearing);
+
 		motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
-		motor.configForwardSoftLimitThreshold((int) (Constants.HOOD_TICKS_PER_REV * (38.0 / 360.0)));
+		motor.configForwardSoftLimitThreshold((int) encoder.componentRevsToTicks(38 / 360d));
 		motor.configForwardSoftLimitEnable(false);
 		
-		controller = new PositionController(
-				getKP(),
-				0,
-				Constants.HOOD_KD,
-				Constants.HOOD_MAX_VEL,
-				Constants.HOOD_MAX_ACC,
-				Constants.HOOD_KS,
-				Constants.HOOD_KV,
-				Constants.HOOD_KA
-			);
+		controller = new PositionController(Constants.hood);
+		controller.setP(getKP());
 		visionFilter = new MovingAverage(3, 0);
 		
 		console.log(c.HOOD, "ready to calibrate!");

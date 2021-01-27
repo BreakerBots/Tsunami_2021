@@ -14,7 +14,7 @@ public class IntakeAction extends AutoAction {
 
     public void init() {
     	console.log(c.AUTO, "intaking!");
-    	Superstructure.setMode(Mode.INTAKE);
+    	Superstructure.set(Mode.INTAKE);
     }
 
     public boolean update() {

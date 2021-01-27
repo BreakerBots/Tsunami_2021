@@ -26,7 +26,7 @@ public class Superstructure {
 	
 	private static Mode mode = Mode.IDLE;
 	private static PanelState panelState = PanelState.ROTATION;
-	private static FlywheelState shooterWheelState = FlywheelState.STOPPED;
+	private static FlywheelState flywheelState = FlywheelState.STOPPED;
 	private static Target target = Target.HIGH;
 	private static boolean isEnabled;
 	private static long systemStateStart = System.currentTimeMillis();
@@ -38,21 +38,21 @@ public class Superstructure {
 	
 	//External Functions
 	public static long getTimeInSystemState() { return System.currentTimeMillis() - systemStateStart; }
-	public static Mode getMode() { return mode; }
-	public static void setMode(Mode mode) { Superstructure.mode = mode; }
+	public static boolean is(Mode mode) { return mode == Superstructure.mode; }
+	public static void set(Mode mode) { Superstructure.mode = mode; }
 	public static boolean isEnabled() { return isEnabled; }
 	public static boolean isDisabled() { return !isEnabled; }
 	public static void enable() { isEnabled = true; }
 	public static void disable() { isEnabled = false; }
 
-	public static void setPanelState(PanelState panelState) { Superstructure.panelState = panelState; }
-	public static PanelState getPanelState() { return panelState; }
-	public static void setFlywheelState(FlywheelState shooterWheelState) { Superstructure.shooterWheelState = shooterWheelState; }
-	public static FlywheelState getFlywheelState() { return shooterWheelState; }
-	public static void setTarget(Target target) { Superstructure.target = target; }
-	public static Target getTarget() { return target; }
-	public static boolean isClimbing() { return getMode() == Mode.CLIMBER_DEPLOYING || getMode() == Mode.CLIMBING; }
-	public static boolean isPaneling() { return getMode() == Mode.PANEL_DEPLOYING || getMode() == Mode.PANELING; }
+	public static void set(PanelState panelState) { Superstructure.panelState = panelState; }
+	public static boolean is(PanelState panelState) { return panelState == Superstructure.panelState; }
+	public static void set(FlywheelState shooterWheelState) { Superstructure.flywheelState = shooterWheelState; }
+	public static boolean is(FlywheelState flywheelState) { return flywheelState == Superstructure.flywheelState; }
+	public static void set(Target target) { Superstructure.target = target; }
+	public static boolean is(Target target) { return target == Superstructure.target; }
+	public static boolean isClimbing() { return is(Mode.CLIMBER_DEPLOYING) || is(Mode.CLIMBING); }
+	public static boolean isPaneling() { return is(Mode.PANEL_DEPLOYING) || is(Mode.PANELING); }
 	
 	//Loop
 	protected static void update() {
@@ -62,45 +62,45 @@ public class Superstructure {
 		}
 		
 		//Exit Paneling
-		if (Superstructure.getMode() == Mode.PANELING && Paneler.isFinished()) {
-			Superstructure.setMode(Mode.IDLE);
+		if (Superstructure.is(Mode.PANELING) && Paneler.isFinished()) {
+			Superstructure.set(Mode.IDLE);
 			console.log(c.SUPERSTRUCTURE, "finished paneling... idling");
 		}
 		
 		//Exit Intake
-		if (getMode() == Mode.INTAKE && Hopper.isFull()) {
-			setMode(Mode.IDLE);
+		if (is(Mode.INTAKE) && Hopper.isFull()) {
+			set(Mode.IDLE);
 			console.log(c.SUPERSTRUCTURE, "hopper full... idling");
 		}
 		
 		//Exit Shooting
-		if (getMode() == Mode.SHOOTING && !Hopper.isFullAverage() && Hopper.hasFedAverage()) {
-			setMode(Mode.IDLE);
-			setFlywheelState(FlywheelState.STOPPED);
+		if (is(Mode.SHOOTING) && !Hopper.isFullAverage() && Hopper.hasFedAverage()) {
+			set(Mode.IDLE);
+			set(FlywheelState.STOPPED);
 			console.log(c.SUPERSTRUCTURE, "done shooting... idling");
 		}
 		
 		//Start Shooting after done Aiming
-		if (flywheelOnTarget.get(Flywheel.isSpedUp()) && getMode() == Mode.AIMING)
+		if (flywheelOnTarget.get(Flywheel.isSpedUp()) && is(Mode.AIMING))
 			console.log(c.FLYWHEEL, "sped up");
-		if (hoodOnTarget.get(Hood.onTarget()) && getMode() == Mode.AIMING)
+		if (hoodOnTarget.get(Hood.onTarget()) && is(Mode.AIMING))
 			console.log(c.HOOD, "on target");
-		if (turretOnTarget.get(Turret.onTarget()) && getMode() == Mode.AIMING)
+		if (turretOnTarget.get(Turret.onTarget()) && is(Mode.AIMING))
 			console.log(c.TURRET, "on target");
-		readyToFire.update(getMode() == Mode.AIMING && Flywheel.isSpedUp() && Turret.onTarget() && Hood.onTarget() && Limelight.hasTarget());
-		if (getMode() == Mode.AIMING && readyToFire.getBooleanOutput()) {
-			setMode(Mode.SHOOTING);
+		readyToFire.update(is(Mode.AIMING) && Flywheel.isSpedUp() && Turret.onTarget() && Hood.onTarget() && Limelight.hasTarget());
+		if (is(Mode.AIMING) && readyToFire.getBooleanOutput()) {
+			set(Mode.SHOOTING);
 			console.log(c.SUPERSTRUCTURE, "finished aiming... shooting");
 		}
 		
 		//Spin Flywheel while Shooting
-		if (getMode() == Mode.SHOOTING || getMode() == Mode.AIMING) {
-			setFlywheelState(FlywheelState.SPINNING);
+		if (is(Mode.SHOOTING) || is(Mode.AIMING)) {
+			set(FlywheelState.SPINNING);
 		}
 		
 		//Limelight
-		if (limelightOn.get(getMode() == Mode.AIMING || getMode() == Mode.SHOOTING)) {
-			if (getMode() == Mode.AIMING || getMode() == Mode.SHOOTING)
+		if (limelightOn.get(is(Mode.AIMING) || is(Mode.SHOOTING))) {
+			if (is(Mode.AIMING) || is(Mode.SHOOTING))
 				Limelight.setLEDMode(LEDMode.ON);
 			else if (Limelight.defaultOff)
 				Limelight.setLEDMode(LEDMode.OFF);
@@ -110,10 +110,10 @@ public class Superstructure {
 	//Reset
 	protected static void reset() {
 		console.log(c.SUPERSTRUCTURE, "Resetting Superstructure!");
-		setMode(Mode.IDLE);
-		setPanelState(PanelState.ROTATION);
-		setFlywheelState(FlywheelState.STOPPED);
-		setTarget(Target.HIGH);
+		set(Mode.IDLE);
+		set(PanelState.ROTATION);
+		set(FlywheelState.STOPPED);
+		set(Target.HIGH);
 		readyToFire.reset();
 	}
 }

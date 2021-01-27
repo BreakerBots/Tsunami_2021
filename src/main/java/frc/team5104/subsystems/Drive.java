@@ -28,7 +28,7 @@ public class Drive extends Subsystem {
 	//Update
 	private static DriveSignal signal = new DriveSignal();
 	public void update() {
-		if (signal.unit == DriveSignal.DriveUnit.VOLTAGE) {
+		if (RobotState.isEnabled() && signal.unit == DriveSignal.DriveUnit.VOLTAGE) {
 			setMotors(
 				signal.leftSpeed / falconL1.getBusVoltage(),
 				signal.rightSpeed / falconR1.getBusVoltage(),

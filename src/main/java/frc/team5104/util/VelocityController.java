@@ -7,14 +7,17 @@ public class VelocityController {
 	private PIDController pid;
 	private SimpleMotorFeedforward ff;
 	private double lastPIDOutput, lastFFOutput, lastOutput;
-	
+
+	public VelocityController(ConstantsUtils.SubsystemConstants constants) {
+		this(constants.kP, constants.kI, constants.kD, constants.kS, constants.kV, constants.kA);
+	}
 	public VelocityController(double kP, double kI, double kD,
 			double kS, double kV, double kA) {
 		pid = new PIDController(kP, kI, kD);
 		ff = new SimpleMotorFeedforward(kS, kV, kA);
 	}
-	
-	public double calculate(double currentVelocity, double targetVelocity) {
+
+    public double calculate(double currentVelocity, double targetVelocity) {
 		lastPIDOutput = pid.calculate(currentVelocity, targetVelocity);
 		lastFFOutput = ff.calculate(
 				targetVelocity,

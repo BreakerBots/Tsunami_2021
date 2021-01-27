@@ -6,37 +6,36 @@ import frc.team5104.Constants;
 import frc.team5104.Ports;
 import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.FlywheelState;
-import frc.team5104.util.BreakerMath;
-import frc.team5104.util.MovingAverage;
-import frc.team5104.util.Tuner;
-import frc.team5104.util.VelocityController;
+import frc.team5104.util.*;
 import frc.team5104.util.managers.Subsystem;
+import frc.team5104.util.Encoder.FalconIntegratedEncoder;
 
 public class Flywheel extends Subsystem {
 	private static TalonFX motor1, motor2;
-	private static MovingAverage avgRPMS;
+	private static FalconIntegratedEncoder encoder;
+	private static MovingAverage avgRPM;
 	private static VelocityController controller;
 	
 	//Loop
 	public void update() {
-		if (Superstructure.isEnabled() && Superstructure.getFlywheelState() == FlywheelState.SPINNING) {
+		if (Superstructure.isEnabled() && Superstructure.is(FlywheelState.SPINNING)) {
 			setRampRate(Constants.FLYWHEEL_RAMP_RATE_UP);
 			if (Constants.FLYWHEEL_OPEN_LOOP)
 				setPercentOutput(1.0);
-			else setSpeed(getTargetRPMS());
+			else setSpeed(getTargetRPM());
 		}
 		else {
 			setRampRate(Constants.FLYWHEEL_RAMP_RATE_DOWN);
 			stop();
 		}
 		
-		avgRPMS.update(getRPMS());
+		avgRPM.update(getRPM());
 	}
 
 	//Debugging
 	public void debug() {
-		Tuner.setTunerOutput("Flywheel RPM", getRPMS());
-		Tuner.setTunerOutput("Flywheel ARPM", getAvgRPMS());
+		Tuner.setTunerOutput("Flywheel RPM", getRPM());
+		Tuner.setTunerOutput("Flywheel ARPM", getAvgRPM());
 		Tuner.setTunerOutput("Flywheel FF", controller.getLastFFOutput());
 		Tuner.setTunerOutput("Flywheel PID", controller.getLastPIDOutput());
 		Tuner.setTunerOutput("Flywheel Out", controller.getLastOutput());
@@ -45,15 +44,15 @@ public class Flywheel extends Subsystem {
 		Tuner.setTunerOutput("Flywheel Current 2", motor2.getSupplyCurrent());
 		Tuner.setTunerOutput("Flywheel Voltage 1", motor1.getMotorOutputVoltage());
 		Tuner.setTunerOutput("Flywheel Voltage 2", motor2.getMotorOutputVoltage());
-		Constants.FLYWHEEL_KP = Tuner.getTunerInputDouble("Flywheel KP", Constants.FLYWHEEL_KP);
-		Constants.FLYWHEEL_KD = Tuner.getTunerInputDouble("Flywheel KD", Constants.FLYWHEEL_KD);
+		Constants.flywheel.kP = Tuner.getTunerInputDouble("Flywheel KP", Constants.flywheel.kP);
+		Constants.flywheel.kD = Tuner.getTunerInputDouble("Flywheel KD", Constants.flywheel.kD);
 		Constants.FLYWHEEL_RPM_TOL = Tuner.getTunerInputDouble("Flywheel Tol", Constants.FLYWHEEL_RPM_TOL);
-		controller.setPID(Constants.FLYWHEEL_KP, 0, Constants.FLYWHEEL_KD);
+		controller.setPID(Constants.flywheel.kP, 0, Constants.flywheel.kD);
 	}
 	
 	//Internal Functions
-	private void setSpeed(double rpms) {
-		setVoltage(controller.calculate(getRPMS() / 60.0, rpms / 60.0));
+	private void setSpeed(double rpm) {
+		setVoltage(controller.calculate(encoder.getComponentRPS(), rpm / 60d));
 	}
 	private void setVoltage(double volts) {
 		motor1.set(ControlMode.PercentOutput, volts / motor1.getBusVoltage());
@@ -72,26 +71,17 @@ public class Flywheel extends Subsystem {
 	}
 	
 	//External Functions
-	public static double getRPMS() {
-		if (motor1 == null)
-			return 0;
-		return motor1.getSelectedSensorVelocity() / Constants.FLYWHEEL_TICKS_PER_REV * 60.0 * 10.0;
+	public static double getRPM() {
+		return (motor1 == null) ? 0 : encoder.getComponentRPM();
 	}
-	public static double getAvgRPMS() {
-		if (motor1 == null)
-			return 0;
-		return avgRPMS.getDoubleOutput();
+	public static double getAvgRPM() {
+		return (motor1 == null) ? 0 : avgRPM.getDoubleOutput();
 	}
-	public static double getTargetRPMS() {
-		if (Hood.isTrenchMode())
-			return 11000;
-		else return 9000;
+	public static double getTargetRPM() {
+		return (Hood.isTrenchMode()) ? 11000 : 9000;
 	}
 	public static boolean isSpedUp() {
-		if (motor1 == null)
-			return true;
-		return BreakerMath.roughlyEquals(
-				getAvgRPMS(), getTargetRPMS(), 
+		return (motor1 == null) ? true : BreakerMath.roughlyEquals(getAvgRPM(), getTargetRPM(),
 				Constants.FLYWHEEL_RPM_TOL * Constants.SUPERSTRUCTURE_TOL_SCALAR);
 	}
 	
@@ -105,19 +95,14 @@ public class Flywheel extends Subsystem {
 		motor2.configFactoryDefault();
 		motor2.follow(motor1);
 		motor2.setInverted(true);
+
+		encoder = new FalconIntegratedEncoder(motor1, Constants.flywheel.gearing);
 		
 		setRampRate(Constants.FLYWHEEL_RAMP_RATE_UP);
 		
-		controller = new VelocityController(
-				Constants.FLYWHEEL_KP,
-				0,
-				Constants.FLYWHEEL_KD,
-				Constants.FLYWHEEL_KS,
-				Constants.FLYWHEEL_KV,
-				0
-			);
+		controller = new VelocityController(Constants.flywheel);
 		
-		avgRPMS = new MovingAverage(50, 0);
+		avgRPM = new MovingAverage(50, 0);
 	}
 
 	//Reset

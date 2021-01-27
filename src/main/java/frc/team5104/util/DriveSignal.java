@@ -3,12 +3,6 @@ package frc.team5104.util;
 
 /** A simple class for sending/saving drive-train movement signals. */
 public class DriveSignal {
-	/**
-	 * Unit that the left & right speeds can be in.
-	 * feetPerSecond: uses PID directly on the talons to achieve the specified velocity
-	 * percentOutput: directly set the percent output on the talons [from -1 (full speed reverse) to 1 (full speed forward)]
-	 * voltage: similar to percentOutput but instead of -1 to 1 its -currentVoltage to currentVoltage (usually ~12V)
-	 */
 	public static enum DriveUnit {
 		VOLTAGE,
 		STOP
