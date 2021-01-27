@@ -1,12 +1,12 @@
 /*BreakerBots Robotics Team 2019*/
 package frc.team5104.util;
 
-import java.util.ArrayList;
-
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.team5104.util.XboxController.Button.ButtonType;
 import frc.team5104.util.console.c;
+
+import java.util.ArrayList;
 
 public class XboxController {
 	private static ArrayList<XboxController> controllers = new ArrayList<XboxController>();
@@ -58,29 +58,25 @@ public class XboxController {
 	public static boolean isConnected(int port) { return HAL.getJoystickIsXbox((byte) port) == 1; }
 	
 	//Buttons
-	public static Button getButton(int slot, XboxController controller1, 
-			XboxController controller2) {
+	public static Button getButton(int slot, XboxController controller1, XboxController controller2) {
 		return new DoubleButton(
 				controller1.getButton(slot),
 				controller2.getButton(slot)
 			);
 	}
-	public static Button getHoldButton(int slot, XboxController controller1, 
-			XboxController controller2) {
+	public static Button getHoldButton(int slot, XboxController controller1, XboxController controller2) {
 		return new DoubleButton(
 				controller1.getHoldButton(slot),
 				controller2.getHoldButton(slot)
 			);
 	}
-	public static Button getHoldTimeButton(int slot, int holdTime, XboxController controller1, 
-			XboxController controller2) {
+	public static Button getHoldTimeButton(int slot, int holdTime, XboxController controller1, XboxController controller2) {
 		return new DoubleButton(
 				controller1.getHoldTimeButton(slot, holdTime),
 				controller2.getHoldTimeButton(slot, holdTime)
 			);
 	}
-	public static Button getDoubleClickButton(int slot, int killOffTime, XboxController controller1, 
-			XboxController controller2) {
+	public static Button getDoubleClickButton(int slot, int killOffTime, XboxController controller1, XboxController controller2) {
 		return new DoubleButton(
 				controller1.getDoubleClickButton(slot, killOffTime),
 				controller2.getDoubleClickButton(slot, killOffTime)
@@ -248,6 +244,30 @@ public class XboxController {
 	}
 	
 	//Axis'
+	public static Axis getAxis(int slot, XboxController controller1, XboxController controller2) {
+		return new DoubleAxis(
+				controller1.getAxis(slot),
+				controller2.getAxis(slot)
+		);
+	}
+	public static Axis getAxis(int slot, Deadband deadband, XboxController controller1, XboxController controller2) {
+		return new DoubleAxis(
+				controller1.getAxis(slot, deadband),
+				controller2.getAxis(slot, deadband)
+		);
+	}
+	public static Axis getAxis(int slot, Deadband deadband, BezierCurve curve, XboxController controller1, XboxController controller2) {
+		return new DoubleAxis(
+				controller1.getAxis(slot, deadband, curve),
+				controller2.getAxis(slot, deadband, curve)
+		);
+	}
+	public static Axis getAxis(int slot, Deadband deadband, BezierCurve curve, boolean reversed, XboxController controller1, XboxController controller2) {
+		return new DoubleAxis(
+				controller1.getAxis(slot, deadband, curve, reversed),
+				controller2.getAxis(slot, deadband, curve, reversed)
+		);
+	}
 	public Axis getAxis(int slot) { return getAxis(slot, null); }
 	public Axis getAxis(int slot, Deadband deadband) { return getAxis(slot, deadband, null); }
 	public Axis getAxis(int slot, Deadband deadband, BezierCurve curve) { return getAxis(slot, deadband, curve, false); }
@@ -295,6 +315,19 @@ public class XboxController {
 		RIGHT_TRIGGER = 3,
 		RIGHT_JOYSTICK_X = 4, 
 		RIGHT_JOYSTICK_Y = 5;
+	}
+	public static class DoubleAxis extends Axis {
+		private Axis axis1, axis2;
+
+		public DoubleAxis(Axis axis1, Axis axis2) {
+			super(0, 0, null, null,false);
+			this.axis1 = axis1;
+			this.axis2 = axis2;
+		}
+
+		public double get() {
+			return axis1.get() + axis2.get();
+		}
 	}
 	
 	//Rumbles

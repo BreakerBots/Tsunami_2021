@@ -184,7 +184,7 @@ public class Webapp {
 			//Get
 			if (requestType.equals("get")) {
 				//Send outputs
-				String response = "{\"name\":\"" + Constants.ROBOT_NAME +
+				String response = "{\"name\":\"" + Constants.config.robotName +
 						"\",\"sim\":\"" + RobotState.isSimulation() +
 						"\",\"enabled\":\"" + RobotState.isEnabled() + "\"}";
 

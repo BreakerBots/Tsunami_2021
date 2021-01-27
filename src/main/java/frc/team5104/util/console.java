@@ -1,21 +1,24 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package frc.team5104.util;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
-import frc.team5104.Constants;
-
 /**
  * <h1>Console</h1>
  * A class for handling logging/printing
  */
 public class console {
+
+	public static final boolean OVERWRITE_NON_MATCH_LOGS = true;
+	public static final boolean OVERWRITE_MATCH_LOGS = false;
+
 	/** Categories for Logging */
 	public static enum c { 
 		TELEOP,
@@ -229,7 +232,7 @@ public class console {
 					String fileName;
 					
 					//File Name
-					if (hasFMS ? Constants.OVERWRITE_MATCH_LOGS : Constants.OVERWRITE_NON_MATCH_LOGS)
+					if (hasFMS ? OVERWRITE_MATCH_LOGS : OVERWRITE_NON_MATCH_LOGS)
 						fileName = "log.txt";
 					else
 						fileName = DateTimeFormatter.ofPattern("MM-dd-yyyy_HH-mm").format(LocalDateTime.now()) + ".txt";

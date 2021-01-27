@@ -78,7 +78,7 @@ public class Hopper extends Subsystem {
 	//Debugging
 	public void debug() {
 		//Competition Debugging
-		if (Constants.AT_COMP) {
+		if (Constants.config.isAtCompetition) {
 			Tuner.setTunerOutput("Hopper Mid Output", middleMotor.getMotorOutputPercent());
 			Constants.HOPPER_INDEX_BALL_SIZE = Tuner.getTunerInputDouble("Hopper Mid Ball Size", Constants.HOPPER_INDEX_BALL_SIZE);
 			return;
@@ -160,18 +160,18 @@ public class Hopper extends Subsystem {
 	public void init() {
 		startMotor = new VictorSPX(Ports.HOPPER_START_MOTOR);
 		startMotor.configFactoryDefault();
-		startMotor.setInverted(Constants.COMP_BOT ? false : true);
+		startMotor.setInverted(Constants.config.isCompetitionRobot ? false : true);
 
 		feederMotor = new VictorSPX(Ports.HOPPER_FEEDER_MOTOR);
 		feederMotor.configFactoryDefault();
-		feederMotor.setInverted(Constants.COMP_BOT ? false : true);
+		feederMotor.setInverted(Constants.config.isCompetitionRobot ? false : true);
 		
 		middleMotor = new TalonFX(Ports.HOPPER_MIDDLE_MOTOR);
 		middleMotor.configFactoryDefault();
 		middleMotor.setInverted(true);
 
-		entrySensor = new Sensor(PortType.ANALOG, Ports.HOPPER_SENSOR_START, Constants.COMP_BOT ? false : true);
-		endSensor = new Sensor(PortType.ANALOG, Ports.HOPPER_SENSOR_END, Constants.COMP_BOT ? false : true);
+		entrySensor = new Sensor(PortType.ANALOG, Ports.HOPPER_SENSOR_START, Constants.config.isCompetitionRobot ? false : true);
+		endSensor = new Sensor(PortType.ANALOG, Ports.HOPPER_SENSOR_END, Constants.config.isCompetitionRobot ? false : true);
 		
 		entrySensorLatch = new LatchedBoolean(LatchedBooleanMode.RISING);
 		isFullAverage = new MovingAverage(200, 0);

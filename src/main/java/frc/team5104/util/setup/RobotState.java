@@ -4,8 +4,10 @@ import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.Timer;
 
 public class RobotState {
-	
-	//State Machine
+
+
+
+    //State Machine
 	public static enum RobotMode {
 		DISABLED, TELEOP, AUTONOMOUS, TEST
 	}; 
@@ -36,6 +38,8 @@ public class RobotState {
 	public static boolean isDisabled() { return !isEnabled(); }
 	public static RobotMode getMode() { return currentMode; }
 	public static RobotMode getLastMode() { return lastMode; }
+	public static int getLoopHz() { return (int) (1000.0 / getLoopPeriod()); }
+	public static int getLoopPeriod() { return (int) RobotController.loopPeriod; }
 	public static double getDeltaTime() { return deltaTime; }
 	public static double getTimeSinceEnabled() { return timer.get(); }
 	public static boolean isSimulation() { return HALUtil.getHALRuntimeType() != 0; }

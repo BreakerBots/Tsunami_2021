@@ -45,7 +45,7 @@ public class Robot extends RobotController.BreakerRobot {
 		Webapp.run();
 		Plotter.reset();
 		Odometry.init();
-		Limelight.init();
+		Limelight.init(true);
 		CompressorController.stop();
 		AutoManager.setTargetPath(new ExamplePath());
 		AutoManager.enabledPlotting();

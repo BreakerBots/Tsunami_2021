@@ -75,7 +75,7 @@ public class Turret extends Subsystem {
 	//Debugging
 	public void debug() {
 		//Competition Debugging
-		if (Constants.AT_COMP) {
+		if (Constants.config.isAtCompetition) {
 			Tuner.setTunerOutput("Turret Output", motor.getMotorOutputPercent());
 			tunerFieldOrientedOffsetAdd = Tuner.getTunerInputDouble("Turret Field Oriented Offset Add", tunerFieldOrientedOffsetAdd);
 			Constants.TURRET_KP = Tuner.getTunerInputDouble("Turret KP", Constants.TURRET_KP);
@@ -126,7 +126,7 @@ public class Turret extends Subsystem {
 	}
 	public static boolean leftLimitHit() {
 		if (motor == null) return true;
-		else if (Constants.COMP_BOT)
+		else if (Constants.config.isCompetitionRobot)
 			return motor.isFwdLimitSwitchClosed() == 1;
 		return motor.isRevLimitSwitchClosed() == 1;
 	}
@@ -142,7 +142,7 @@ public class Turret extends Subsystem {
 	public void init() {
 		motor = new TalonFX(Ports.TURRET_MOTOR);
 		motor.configFactoryDefault();
-		motor.setInverted(Constants.COMP_BOT ? false : true);
+		motor.setInverted(Constants.config.isCompetitionRobot ? false : true);
 		
 		motor.configForwardSoftLimitThreshold((int) (Constants.TURRET_TICKS_PER_REV * (Constants.TURRET_SOFT_LEFT / 360.0)));
 		motor.configReverseSoftLimitThreshold((int) (Constants.TURRET_TICKS_PER_REV * (Constants.TURRET_SOFT_RIGHT / 360.0)));

@@ -22,15 +22,15 @@ public class Ports {
 	
 	//Intake
 	public static final int INTAKE_MOTOR = 19;
-	public static final int INTAKE_DEPLOYER_FORWARD = Constants.COMP_BOT ? 2 : 7;
-	public static final int INTAKE_DEPLOYER_REVERSE = Constants.COMP_BOT ? 3 : 6;
+	public static final int INTAKE_DEPLOYER_FORWARD = Constants.switchOnBot(2, 7);
+	public static final int INTAKE_DEPLOYER_REVERSE = Constants.switchOnBot(3, 6);
 	
 	//Hopper
 	public static final int HOPPER_START_MOTOR = 20;  
 	public static final int HOPPER_MIDDLE_MOTOR = 21;
 	public static final int HOPPER_FEEDER_MOTOR = 22; 
-	public static final int HOPPER_SENSOR_START = Constants.COMP_BOT ? 0 : 1;
-	public static final int HOPPER_SENSOR_END = Constants.COMP_BOT ? 1 : 0;
+	public static final int HOPPER_SENSOR_START = Constants.switchOnBot(0, 1);
+	public static final int HOPPER_SENSOR_END = Constants.switchOnBot(1, 0);
 					
 	//Climber
 	public static final int CLIMBER_MOTOR = 23;
@@ -41,6 +41,6 @@ public class Ports {
 	
 	//Paneler
 	public static final int PANELER_MOTOR = 26;
-	public static final int PANELER_DEPLOYER_FORWARD = Constants.COMP_BOT ? 4 : 3;
-	public static final int PANELER_DEPLOYER_REVERSE = Constants.COMP_BOT ? 5 : 2;
+	public static final int PANELER_DEPLOYER_FORWARD = Constants.switchOnBot(4, 3);
+	public static final int PANELER_DEPLOYER_REVERSE = Constants.switchOnBot(5, 2);
 }

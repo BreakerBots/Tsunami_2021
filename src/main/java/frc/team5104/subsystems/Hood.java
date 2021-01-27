@@ -69,7 +69,7 @@ public class Hood extends Subsystem {
 	
 	//Debugging
 	public void debug() {
-		if (Constants.AT_COMP) {
+		if (Constants.config.isAtCompetition) {
 			Tuner.setTunerOutput("Hood Output", motor.getMotorOutputPercent());
 			Constants.HOOD_EQ_CONST = Tuner.getTunerInputDouble("Hood Eq Const", Constants.HOOD_EQ_CONST);
 			return;
@@ -137,8 +137,8 @@ public class Hood extends Subsystem {
 	public void init() {
 		motor = new TalonSRX(Ports.HOOD_MOTOR);
 		motor.configFactoryDefault();
-		motor.setInverted(Constants.COMP_BOT ? true : false);
-		motor.setSensorPhase(Constants.COMP_BOT ? false : true);
+		motor.setInverted(Constants.config.isCompetitionRobot ? true : false);
+		motor.setSensorPhase(Constants.config.isCompetitionRobot ? false : true);
 		
 		motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
 		motor.configForwardSoftLimitThreshold((int) (Constants.HOOD_TICKS_PER_REV * (38.0 / 360.0)));

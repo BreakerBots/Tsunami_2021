@@ -4,11 +4,11 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Notifier;
-import frc.team5104.Constants;
 import frc.team5104.util.LatchedBoolean.LatchedBooleanMode;
 import frc.team5104.util.console.c;
 
 public class Limelight {
+	public static boolean defaultOff;
 	private static NetworkTable table;
 	private static LatchedBoolean connected = new LatchedBoolean(LatchedBooleanMode.RISING);
 	private static Notifier limelightThread;
@@ -41,11 +41,12 @@ public class Limelight {
 		else console.warn(c.VISION, "limelight is not connected");
 	}
 
-	public static void init() {
+	public static void init(boolean defaultOff) {
+		Limelight.defaultOff = defaultOff;
 		table = NetworkTableInstance.getDefault().getTable("limelight");
 		limelightThread = new Notifier(() -> {
 			if (connected.get(isConnected())) {
-				if (Constants.LIMELIGHT_DEFAULT_OFF)
+				if (defaultOff)
 					setLEDMode(LEDMode.OFF);
 				else setLEDMode(LEDMode.ON);
 				setEntry("camMode", 0);

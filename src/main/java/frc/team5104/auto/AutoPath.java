@@ -1,7 +1,7 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package frc.team5104.auto;
 
-import frc.team5104.Constants;
+import frc.team5104.util.setup.RobotState;
 
 /** a framework for all paths inside frc.team5104.auto.paths */
 public abstract class AutoPath {
@@ -16,7 +16,7 @@ public abstract class AutoPath {
 	public boolean run(AutoAction action) {
 		action.init();
 		while (!action.update()) {
-			try { Thread.sleep(1000 / Constants.MAIN_LOOP_SPEED); }
+			try { Thread.sleep(RobotState.getLoopPeriod()); }
 			catch (InterruptedException e) { e.printStackTrace(); }
 		}
 		action.end();

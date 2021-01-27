@@ -116,8 +116,8 @@ public class Paneler extends Subsystem {
 		motor = new TalonSRX(Ports.PANELER_MOTOR);
 		motor.configOpenloopRamp(0.25);
 		motor.configFactoryDefault();
-		motor.setInverted(Constants.COMP_BOT ? true : false);
-		motor.setSensorPhase(Constants.COMP_BOT ? true : false);
+		motor.setInverted(Constants.config.isCompetitionRobot ? true : false);
+		motor.setSensorPhase(Constants.config.isCompetitionRobot ? true : false);
 		motor.configNeutralDeadband(0);
 		resetEncoder();
 	}

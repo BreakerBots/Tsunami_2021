@@ -105,6 +105,6 @@ public class SuperstructureController extends TeleopController {
 				console.log(c.SUPERSTRUCTURE, "deploying climber!!!!");
 			}
 		}
-		Climber.climberManual = Controls.CLIMBER_WINCH.get() + Controls.CLIMBER_WINCH_OP.get();
+		Climber.climberManual = Controls.CLIMBER_WINCH.get();
 	}
 }

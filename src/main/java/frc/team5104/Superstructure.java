@@ -57,7 +57,7 @@ public class Superstructure {
 	//Loop
 	protected static void update() {
 		//Competition Debugging
-		if (Constants.AT_COMP) {
+		if (Constants.config.isAtCompetition) {
 			Constants.SUPERSTRUCTURE_TOL_SCALAR = Tuner.getTunerInputDouble("Superstructure Tolerance Scalar", Constants.SUPERSTRUCTURE_TOL_SCALAR);
 		}
 		
@@ -102,7 +102,7 @@ public class Superstructure {
 		if (limelightOn.get(getMode() == Mode.AIMING || getMode() == Mode.SHOOTING)) {
 			if (getMode() == Mode.AIMING || getMode() == Mode.SHOOTING)
 				Limelight.setLEDMode(LEDMode.ON);
-			else if (Constants.LIMELIGHT_DEFAULT_OFF)
+			else if (Limelight.defaultOff)
 				Limelight.setLEDMode(LEDMode.OFF);
 		}
 	}

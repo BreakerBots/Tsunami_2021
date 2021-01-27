@@ -9,8 +9,6 @@ import frc.team5104.util.XboxController.Button;
 
 /** All the controls for the robot */
 public class Controls {
-	public enum Driver { ANNEKA, LIAM }
-	public static Driver currentDriver = Driver.LIAM;
 	public static XboxController driver = XboxController.create(0);
 	public static XboxController operator = XboxController.create(1);
 	
@@ -19,11 +17,8 @@ public class Controls {
 	public static final Button COMPRESSOR_TOGGLE = XboxController.getButton(Button.MENU, operator, driver);
 	
 	//Drive
-	public static final BezierCurve liamTurnCurve = new BezierCurve(.8, .32, .75, .27),
-									annekaTurnCurve = new BezierCurve(.8, .32, .75, .27);
-	public static final Axis DRIVE_TURN = driver.getAxis(Axis.LEFT_JOYSTICK_X, new Deadband(0.08), 
-		currentDriver == Driver.LIAM ? liamTurnCurve : annekaTurnCurve
-	);
+	public static final Axis DRIVE_TURN = driver.getAxis(Axis.LEFT_JOYSTICK_X, new Deadband(0.08),
+															new BezierCurve(.8, .32, .75, .27));
 	public static final Axis DRIVE_FORWARD = driver.getAxis(Axis.RIGHT_TRIGGER, new Deadband(0.01));
 	public static final Axis DRIVE_REVERSE = driver.getAxis(Axis.LEFT_TRIGGER, new Deadband(0.01));
 	public static final Button DRIVE_KICKSTAND = driver.getButton(Button.LEFT_JOYSTICK_PRESS);
@@ -45,6 +40,5 @@ public class Controls {
 	
 	//Climb
 	public static final Button CLIMBER_DEPLOY = XboxController.getButton(Button.RIGHT_JOYSTICK_PRESS, operator, driver);
-	public static final Axis CLIMBER_WINCH = driver.getAxis(Axis.RIGHT_JOYSTICK_Y, new Deadband(0.08));
-	public static final Axis CLIMBER_WINCH_OP = operator.getAxis(Axis.RIGHT_JOYSTICK_Y, new Deadband(0.08));
+	public static final Axis CLIMBER_WINCH = operator.getAxis(Axis.RIGHT_JOYSTICK_Y, new Deadband(0.08));
 }

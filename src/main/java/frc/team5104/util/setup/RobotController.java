@@ -18,19 +18,18 @@ import frc.team5104.util.console.t;
 import frc.team5104.util.setup.RobotState.RobotMode;
 
 public class RobotController extends RobotBase {
-	//Modes
+	static final double loopPeriod = 20;
 	private BreakerRobot robot;
-	private final double loopPeriod = 20;
-	
+
 	//Init Robot
 	public void startCompetition() {
 		HAL.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Iterative);
 		if (!RobotState.isSimulation())
 			console.logFile.start();
 		console.sets.create("RobotInit");
-		if (Constants.ROBOT_NAME.length() < 4)
+		if (Constants.config.robotName.length() < 4)
 			console.error("Please deploy robot.txt with the correct robot name!");
-		console.log(c.MAIN, t.INFO, "Initializing " + Constants.ROBOT_NAME + " Code...");
+		console.log(c.MAIN, t.INFO, "Initializing " + Constants.config.robotName + " Code...");
 
 		if (RobotState.isSimulation())
 			robot = new RobotSim();
