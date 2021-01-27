@@ -2,12 +2,10 @@ package frc.team5104.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
 import frc.team5104.Constants;
 import frc.team5104.Ports;
 import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.FlywheelState;
-import frc.team5104.Superstructure.SystemState;
 import frc.team5104.util.BreakerMath;
 import frc.team5104.util.MovingAverage;
 import frc.team5104.util.Tuner;
@@ -21,9 +19,7 @@ public class Flywheel extends Subsystem {
 	
 	//Loop
 	public void update() {
-		if ((Superstructure.getSystemState() == SystemState.AUTOMATIC || 
-			Superstructure.getSystemState() == SystemState.MANUAL) &&
-			Superstructure.getFlywheelState() == FlywheelState.SPINNING) {
+		if (Superstructure.isEnabled() && Superstructure.getFlywheelState() == FlywheelState.SPINNING) {
 			setRampRate(Constants.FLYWHEEL_RAMP_RATE_UP);
 			if (Constants.FLYWHEEL_OPEN_LOOP)
 				setPercentOutput(1.0);

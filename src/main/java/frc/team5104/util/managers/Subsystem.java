@@ -13,10 +13,14 @@ public abstract class Subsystem {
 	
 	/** Called periodically from the robot loop */
 	public abstract void update();
-	
+
+	/** Called periodically from the robot loop (along with update() and fastUpdate()) while in simulation
+	 * @default nothing */
+	public void updateSim() { }
+
 	/** Called periodically at 100hz always */
 	public void fastUpdate() { }
-	
+
 	/** Called periodically while the subsystem is in debug mode */
 	public void debug() { }
 	
@@ -24,7 +28,8 @@ public abstract class Subsystem {
 	public abstract void init();
 
 	/** Called when robots boots up in simulation; initialize devices here.
-	 * @default calls normal init() method */
+	 * @warning this replaces init() while in simulation
+	 * @default calls init() method */
 	public void initSim() {
 		init();
 	}

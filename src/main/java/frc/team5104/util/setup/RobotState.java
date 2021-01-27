@@ -33,6 +33,7 @@ public class RobotState {
 	
 	//External Functions
 	public static boolean isEnabled() { return currentMode != RobotMode.DISABLED; }
+	public static boolean isDisabled() { return !isEnabled(); }
 	public static RobotMode getMode() { return currentMode; }
 	public static RobotMode getLastMode() { return lastMode; }
 	public static double getDeltaTime() { return deltaTime; }

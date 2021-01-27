@@ -4,20 +4,13 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import frc.team5104.Constants;
 import frc.team5104.Ports;
 import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.Mode;
-import frc.team5104.Superstructure.SystemState;
 import frc.team5104.Superstructure.Target;
-import frc.team5104.util.PositionController;
-import frc.team5104.util.Tuner;
-import frc.team5104.util.console;
+import frc.team5104.util.*;
 import frc.team5104.util.console.c;
-import frc.team5104.util.Limelight;
-import frc.team5104.util.BreakerMath;
-import frc.team5104.util.MovingAverage;
 import frc.team5104.util.managers.Subsystem;
 
 public class Hood extends Subsystem {
@@ -28,14 +21,8 @@ public class Hood extends Subsystem {
 
 	//Loop
 	public void update() {
-		//Competition Debugging
-		if (Constants.AT_COMP) {
-			Tuner.setTunerOutput("Hood Output", motor.getMotorOutputPercent());
-			Constants.HOOD_EQ_CONST = Tuner.getTunerInputDouble("Hood Eq Const", Constants.HOOD_EQ_CONST);
-		}
-		
 		//Automatic
-		if (Superstructure.getSystemState() == SystemState.AUTOMATIC) {
+		if (Superstructure.isEnabled()) {
 			//Calibrating
 			if (isCalibrating()) {
 				setPercentOutput(-Constants.HOOD_CALIBRATE_SPEED);
@@ -60,9 +47,11 @@ public class Hood extends Subsystem {
 		}
 			
 		//Disabled
-		else stop();
+		else {
+			stop();
+		}
 	}
-	
+
 	//Fast Loop
 	public void fastUpdate() {
 		//Exit Calibrating
@@ -80,6 +69,12 @@ public class Hood extends Subsystem {
 	
 	//Debugging
 	public void debug() {
+		if (Constants.AT_COMP) {
+			Tuner.setTunerOutput("Hood Output", motor.getMotorOutputPercent());
+			Constants.HOOD_EQ_CONST = Tuner.getTunerInputDouble("Hood Eq Const", Constants.HOOD_EQ_CONST);
+			return;
+		}
+
 		Tuner.setTunerOutput("Hood Limelight Y", Limelight.getTargetY());
 		Tuner.setTunerOutput("Hood Angle", getAngle());
 		Tuner.setTunerOutput("Hood Output", controller.getLastOutput());

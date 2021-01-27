@@ -2,7 +2,6 @@ package frc.team5104.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -12,10 +11,9 @@ import frc.team5104.Ports;
 import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.Mode;
 import frc.team5104.Superstructure.PanelState;
-import frc.team5104.Superstructure.SystemState;
 import frc.team5104.util.ColorSensor;
-import frc.team5104.util.console;
 import frc.team5104.util.ColorSensor.PanelColor;
+import frc.team5104.util.console;
 import frc.team5104.util.managers.Subsystem;
 
 public class Paneler extends Subsystem {
@@ -27,8 +25,7 @@ public class Paneler extends Subsystem {
 	
 	//Loop
 	public void update() {
-		if (Superstructure.getSystemState() == SystemState.MANUAL ||
-			Superstructure.getSystemState() == SystemState.AUTOMATIC) {
+		if (Superstructure.isEnabled()) {
 			//deploying
 			if (Superstructure.getMode() == Mode.PANEL_DEPLOYING) {
 				complete = false;

@@ -12,7 +12,6 @@ import frc.team5104.util.setup.RobotState;
 
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.util.Scanner;
 
 /**
  * Hosts the BreakerBoard (WebApp) through the RoboRIO.
@@ -20,26 +19,12 @@ import java.util.Scanner;
  * @version 2.6
  */
 public class Webapp {
-	private static final int port = 5804; //has to be between 5800-5810 (5800,5801 for limelight)
-	private static final double version = 2.6;
+	private static final int port = 5804; //has to be [5802-5810]
 	private static HttpServer server;
 
 	@SuppressWarnings("resource")
 	public static boolean run() {
 		try {
-			//Check Version
-			if (!RobotState.isSimulation()) {
-				try {
-					Scanner scan = new Scanner(new File(getBaseUrl() + "version.txt"));
-					if (!scan.hasNextLine() || !scan.nextLine().equals("BreakerBots WebApp Version " + version))
-						throw new Exception();
-					scan.close();
-				} catch (Exception e) {
-					console.log(e);
-					throw new Exception("Invalid Version... Redeploy WebApp");
-				}
-			}
-			
 			//Setup Server
 			server = HttpServer.create(new InetSocketAddress(port), 0);
 			

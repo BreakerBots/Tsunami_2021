@@ -2,13 +2,11 @@ package frc.team5104.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import frc.team5104.Constants;
 import frc.team5104.Ports;
 import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.Mode;
-import frc.team5104.Superstructure.SystemState;
 import frc.team5104.util.managers.Subsystem;
 
 public class Intake extends Subsystem {
@@ -18,8 +16,7 @@ public class Intake extends Subsystem {
 	//Loop
 	public void update() {
 		setPiston(true);
-		if (Superstructure.getSystemState() == SystemState.AUTOMATIC ||
-			Superstructure.getSystemState() == SystemState.MANUAL) {
+		if (Superstructure.isEnabled()) {
 			if (Superstructure.getMode() == Mode.INTAKE) {
 				setPercentOutput(Constants.INTAKE_SPEED);
 			}

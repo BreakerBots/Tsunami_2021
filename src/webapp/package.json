@@ -1,6 +1,6 @@
 {
   "name": "breakerboard",
-  "version": "1.0.0",
+  "version": "2.6",
   "description": "the BreakerBots Robotics Team's Webapp",
   "main": "desktop.js",
   "scripts": {

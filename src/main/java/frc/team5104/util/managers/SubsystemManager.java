@@ -76,6 +76,8 @@ public class SubsystemManager {
 					subsystem.disabled();
 				else {
 					subsystem.update();
+					if (RobotState.isSimulation())
+						subsystem.updateSim();
 					if (subsystem.debugging)
 						subsystem.debug();
 				}

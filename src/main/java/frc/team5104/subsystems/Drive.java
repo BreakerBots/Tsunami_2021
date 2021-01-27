@@ -12,7 +12,10 @@ import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.team5104.Constants;
 import frc.team5104.Ports;
-import frc.team5104.util.*;
+import frc.team5104.util.DriveEncoder;
+import frc.team5104.util.DriveSignal;
+import frc.team5104.util.Gyro;
+import frc.team5104.util.TalonSRXSim;
 import frc.team5104.util.managers.Subsystem;
 import frc.team5104.util.setup.RobotState;
 
@@ -38,8 +41,6 @@ public class Drive extends Subsystem {
 			stopMotors();
 		}
 
-		if (RobotState.isSimulation())
-			updateSim();
 		signal = new DriveSignal();
 	}
 	public void updateSim() {
@@ -52,8 +53,8 @@ public class Drive extends Subsystem {
 		);
 		drivetrainSim.update(0.02);
 
-		((DriveEncoderSim) leftEncoder).set(drivetrainSim.getLeftPositionMeters(), drivetrainSim.getLeftVelocityMetersPerSecond());
-		((DriveEncoderSim) rightEncoder).set(drivetrainSim.getRightPositionMeters(), drivetrainSim.getRightVelocityMetersPerSecond());
+		((DriveEncoder.DriveEncoderSim) leftEncoder).set(drivetrainSim.getLeftPositionMeters(), drivetrainSim.getLeftVelocityMetersPerSecond());
+		((DriveEncoder.DriveEncoderSim) rightEncoder).set(drivetrainSim.getRightPositionMeters(), drivetrainSim.getRightVelocityMetersPerSecond());
 		gyro.set(-drivetrainSim.getHeading().getDegrees());
 	}
 	
@@ -126,8 +127,8 @@ public class Drive extends Subsystem {
 	public void initSim() {
 		falconL1 = new TalonSRXSim(Ports.DRIVE_MOTOR_L1);
 		falconR1 = new TalonSRXSim(Ports.DRIVE_MOTOR_R1);
-		leftEncoder = new DriveEncoderSim((TalonSRXSim) falconL1);
-		rightEncoder = new DriveEncoderSim((TalonSRXSim) falconR1);
+		leftEncoder = new DriveEncoder.DriveEncoderSim((TalonSRXSim) falconL1);
+		rightEncoder = new DriveEncoder.DriveEncoderSim((TalonSRXSim) falconR1);
 		gyro = new Gyro.GyroSim();
 
 		if (!RobotState.isSimulation())
@@ -152,6 +153,6 @@ public class Drive extends Subsystem {
 	
 	//Reset
 	public void disabled() {
-		signal = new DriveSignal();
+		stop();
 	}
 }

@@ -2,13 +2,11 @@ package frc.team5104.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.team5104.Ports;
 import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.Mode;
-import frc.team5104.Superstructure.SystemState;
 import frc.team5104.util.managers.Subsystem;
 
 public class Climber extends Subsystem {
@@ -20,9 +18,7 @@ public class Climber extends Subsystem {
 	
 	//Loop
 	public void update() {
-//		motor.set(TalonFXControlMode.MusicTone, Math.random() * 400);
-		if ((Superstructure.getSystemState() == SystemState.AUTOMATIC ||
-			Superstructure.getSystemState() == SystemState.MANUAL) && Superstructure.isClimbing()) {
+		if (Superstructure.isEnabled() && Superstructure.isClimbing()) {
 			setBrake(false);
 			setDeployerPiston(Superstructure.getMode() == Mode.CLIMBER_DEPLOYING);
 			setPercentOutput(climberManual);

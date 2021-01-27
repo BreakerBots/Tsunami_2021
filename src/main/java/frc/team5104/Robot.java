@@ -1,7 +1,6 @@
 /*BreakerBots Robotics Team 2020*/
 package frc.team5104;
 
-import frc.team5104.Superstructure.SystemState;
 import frc.team5104.auto.AutoManager;
 import frc.team5104.auto.Odometry;
 import frc.team5104.auto.paths.ExamplePath;
@@ -9,16 +8,11 @@ import frc.team5104.subsystems.*;
 import frc.team5104.teleop.CompressorController;
 import frc.team5104.teleop.DriveController;
 import frc.team5104.teleop.SuperstructureController;
-import frc.team5104.util.Limelight;
-import frc.team5104.util.Plotter;
-import frc.team5104.util.Webapp;
-import frc.team5104.util.XboxController;
-import frc.team5104.util.console;
+import frc.team5104.util.*;
 import frc.team5104.util.managers.SubsystemManager;
 import frc.team5104.util.managers.TeleopControllerManager;
 import frc.team5104.util.setup.RobotController;
 import frc.team5104.util.setup.RobotState;
-import frc.team5104.util.setup.RobotState.RobotMode;
 
 public class Robot extends RobotController.BreakerRobot {
 	public Robot() {
@@ -81,8 +75,8 @@ public class Robot extends RobotController.BreakerRobot {
 	
 	//Test
 	public void testLoop() {
-		Superstructure.setSystemState(SystemState.DISABLED);
 		Drive.stop();
+		Superstructure.disable();
 		CompressorController.start();
 	}
 	
@@ -103,9 +97,8 @@ public class Robot extends RobotController.BreakerRobot {
 		SubsystemManager.update();
 		XboxController.update();
 		
-		if (RobotState.getMode() == RobotMode.DISABLED) {
-			Drive.resetEncoders();
-			Drive.resetGyro();
+		if (RobotState.isDisabled()) {
+			Drive.reset();
 			Odometry.reset();
 		}
 	}

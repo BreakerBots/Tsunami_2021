@@ -5,21 +5,12 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
 import frc.team5104.Constants;
 import frc.team5104.Ports;
 import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.Mode;
-import frc.team5104.Superstructure.SystemState;
-import frc.team5104.util.PositionController;
-import frc.team5104.util.Tuner;
-import frc.team5104.util.console;
+import frc.team5104.util.*;
 import frc.team5104.util.console.c;
-import frc.team5104.util.LatencyCompensator;
-import frc.team5104.util.BreakerMath;
-import frc.team5104.util.Filer;
-import frc.team5104.util.Limelight;
-import frc.team5104.util.MovingAverage;
 import frc.team5104.util.managers.Subsystem;
 
 public class Turret extends Subsystem {
@@ -31,17 +22,8 @@ public class Turret extends Subsystem {
 	
 	//Loop
 	public void update() {
-		//Competition Debugging
-		if (Constants.AT_COMP) {
-			Tuner.setTunerOutput("Turret Output", motor.getMotorOutputPercent());
-			tunerFieldOrientedOffsetAdd = Tuner.getTunerInputDouble("Turret Field Oriented Offset Add", tunerFieldOrientedOffsetAdd);
-			Constants.TURRET_KP = Tuner.getTunerInputDouble("Turret KP", Constants.TURRET_KP);
-			Constants.TURRET_KD = Tuner.getTunerInputDouble("Turret KD", Constants.TURRET_KD);
-			controller.setPID(Constants.TURRET_KP, 0, Constants.TURRET_KD);
-		}
-		
 		//Automatic
-		if (Superstructure.getSystemState() == SystemState.AUTOMATIC) {
+		if (Superstructure.isEnabled()) {
 			//Calibrating
 			if (isCalibrating()) {
 				enableSoftLimits(false);
@@ -92,6 +74,16 @@ public class Turret extends Subsystem {
 	
 	//Debugging
 	public void debug() {
+		//Competition Debugging
+		if (Constants.AT_COMP) {
+			Tuner.setTunerOutput("Turret Output", motor.getMotorOutputPercent());
+			tunerFieldOrientedOffsetAdd = Tuner.getTunerInputDouble("Turret Field Oriented Offset Add", tunerFieldOrientedOffsetAdd);
+			Constants.TURRET_KP = Tuner.getTunerInputDouble("Turret KP", Constants.TURRET_KP);
+			Constants.TURRET_KD = Tuner.getTunerInputDouble("Turret KD", Constants.TURRET_KD);
+			controller.setPID(Constants.TURRET_KP, 0, Constants.TURRET_KD);
+			return;
+		}
+
 		Tuner.setTunerOutput("Turret FF", controller.getLastFFOutput());
 		Tuner.setTunerOutput("Turret PID", controller.getLastPIDOutput());
 		Tuner.setTunerOutput("Turret Error", controller.getLastError());

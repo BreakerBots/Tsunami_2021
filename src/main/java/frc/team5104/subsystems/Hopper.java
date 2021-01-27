@@ -3,21 +3,15 @@ package frc.team5104.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
 import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.team5104.Constants;
 import frc.team5104.Ports;
 import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.Mode;
-import frc.team5104.Superstructure.SystemState;
-import frc.team5104.util.LatchedBoolean;
+import frc.team5104.util.*;
 import frc.team5104.util.LatchedBoolean.LatchedBooleanMode;
-import frc.team5104.util.MovingAverage;
-import frc.team5104.util.Sensor;
 import frc.team5104.util.Sensor.PortType;
 import frc.team5104.util.console.c;
-import frc.team5104.util.Tuner;
-import frc.team5104.util.console;
 import frc.team5104.util.managers.Subsystem;
 
 public class Hopper extends Subsystem {
@@ -32,15 +26,8 @@ public class Hopper extends Subsystem {
 	
 	//Loop
 	public void update() {
-		//Competition Debugging
-		if (Constants.AT_COMP) {
-			Tuner.setTunerOutput("Hopper Mid Output", middleMotor.getMotorOutputPercent());
-			Constants.HOPPER_INDEX_BALL_SIZE = Tuner.getTunerInputDouble("Hopper Mid Ball Size", Constants.HOPPER_INDEX_BALL_SIZE);
-		}
-		
 		//Force Stopped
-		if (Superstructure.isClimbing() || Superstructure.isPaneling() ||
-			Superstructure.getSystemState() == SystemState.DISABLED) {
+		if (Superstructure.isClimbing() || Superstructure.isPaneling() || Superstructure.isDisabled()) {
 			stopAll();
 		}
 		
@@ -68,9 +55,7 @@ public class Hopper extends Subsystem {
 				setMiddle(
 					controller.calculate(getMidPosition(), targetMidPosition) + Constants.HOPPER_INDEX_KS
 				);
-				setFeeder(
-					2
-				);
+				setFeeder(2);
 			}
 			else {
 				setMiddle(0);
@@ -92,6 +77,13 @@ public class Hopper extends Subsystem {
 	
 	//Debugging
 	public void debug() {
+		//Competition Debugging
+		if (Constants.AT_COMP) {
+			Tuner.setTunerOutput("Hopper Mid Output", middleMotor.getMotorOutputPercent());
+			Constants.HOPPER_INDEX_BALL_SIZE = Tuner.getTunerInputDouble("Hopper Mid Ball Size", Constants.HOPPER_INDEX_BALL_SIZE);
+			return;
+		}
+
 		//Constants.HOPPER_INDEX_BALL_SIZE = Tuner.getTunerInputDouble("Hopper Mid Ball Size", Constants.HOPPER_INDEX_BALL_SIZE);
 		Constants.HOPPER_INDEX_KP = Tuner.getTunerInputDouble("Hopper Index KP", Constants.HOPPER_INDEX_KP);
 		Constants.HOPPER_INDEX_KI = Tuner.getTunerInputDouble("Hopper Index KI", Constants.HOPPER_INDEX_KI);
