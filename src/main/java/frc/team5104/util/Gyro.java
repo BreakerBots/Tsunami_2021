@@ -6,13 +6,15 @@ import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 
 public abstract class Gyro {
     public abstract double get();
+
     public abstract void set(double degrees);
+
     public void reset() {
         set(0);
     }
 
     public static class GyroPigeon extends Gyro {
-        private PigeonIMU gyro;
+        private final PigeonIMU gyro;
 
         public GyroPigeon(int canID) {
             gyro = new PigeonIMU(canID);
@@ -28,8 +30,8 @@ public abstract class Gyro {
     }
 
     public static class GyroSim extends Gyro {
-        private AnalogGyro gyro;
-        private AnalogGyroSim gyroSim;
+        private final AnalogGyro gyro;
+        private final AnalogGyroSim gyroSim;
 
         public GyroSim() {
             gyro = new AnalogGyro(1);

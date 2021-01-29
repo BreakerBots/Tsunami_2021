@@ -46,7 +46,7 @@ public class Hopper extends Subsystem {
 			isIndexing = !isEndSensorTripped() && (isEntrySensorTrippedAvg() || 
 					(getMidPosition() + Constants.HOPPER_INDEX_TOL) < targetMidPosition);
 			if (entrySensorLatch.get(isEntrySensorTrippedAvg())) {
-				console.log(c.HOPPER, "I gots da ball");
+				console.log(c.HOPPER, "i gots da ball");
 				targetMidPosition = Constants.HOPPER_INDEX_BALL_SIZE;
 				controller.reset();
 				resetMidEncoder();

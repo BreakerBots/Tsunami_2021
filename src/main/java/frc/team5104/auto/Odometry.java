@@ -16,7 +16,7 @@ public class Odometry {
 	public static void init() {
 		Drive.reset();
 		odometry = new DifferentialDriveOdometry(new Rotation2d());
-		console.log(c.AUTO, "Initialized Odometry");
+		console.log(c.AUTO, "initialized odometry");
 	}
 	
 	public static void update() {
@@ -55,7 +55,7 @@ public class Odometry {
 			reset();
 			try { Thread.sleep(10); } catch (Exception e) { }
 			reset();
-			console.log(c.AUTO, "Reset Odometry at " + getPose2dMeters());
+			console.log(c.AUTO, "reset odometry at " + getPose2dMeters());
 		}
 	}
 	

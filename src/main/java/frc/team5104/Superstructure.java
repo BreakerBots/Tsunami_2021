@@ -7,11 +7,7 @@ import frc.team5104.util.LatchedBoolean.LatchedBooleanMode;
 import frc.team5104.util.Limelight.LEDMode;
 import frc.team5104.util.console.c;
 
-/** 
- * The Superstructure is a massive state machine that handles the Panel, Climb, and of course, Ballz
- * The Superstructure only controls the states... its up the subsystems to figure out what to do
- * based on the state of the Superstructure.
- */
+/** The Superstructure is a massive state machine for all subsystems, except drive. */
 public class Superstructure {
 	//States and Variables
 	public enum Mode {
@@ -30,10 +26,8 @@ public class Superstructure {
 	private static Target target = Target.HIGH;
 	private static boolean isEnabled;
 	private static long systemStateStart = System.currentTimeMillis();
-	private static LatchedBoolean flywheelOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING), 
-								  hoodOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING), 
-								  turretOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING),
-								  limelightOn = new LatchedBoolean();
+	private static LatchedBoolean flywheelOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING), hoodOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING),
+								  turretOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING), limelightOn = new LatchedBoolean();
 	private static MovingAverage readyToFire = new MovingAverage(15, false);
 	
 	//External Functions
@@ -109,11 +103,17 @@ public class Superstructure {
 	
 	//Reset
 	protected static void reset() {
-		console.log(c.SUPERSTRUCTURE, "Resetting Superstructure!");
+		console.log(c.SUPERSTRUCTURE, "resetting!");
 		set(Mode.IDLE);
 		set(PanelState.ROTATION);
 		set(FlywheelState.STOPPED);
 		set(Target.HIGH);
 		readyToFire.reset();
+	}
+
+	//Init
+	protected static void init() {
+		console.log(c.SUPERSTRUCTURE, "initializing!");
+		reset();
 	}
 }

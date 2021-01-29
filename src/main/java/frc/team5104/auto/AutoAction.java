@@ -15,9 +15,6 @@ public abstract class AutoAction {
 	/** Called when the action is finished being run */
 	public abstract void end();
 
-	/** Plot stuff on the Webapp Plotter */
-    public void plot() { }
-
     /** Passes through a value */
 	public boolean getValue() { return false; }
 }

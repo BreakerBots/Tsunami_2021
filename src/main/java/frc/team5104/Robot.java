@@ -49,6 +49,7 @@ public class Robot extends RobotController.BreakerRobot {
 		CompressorController.stop();
 		AutoManager.setTargetPath(new ExamplePath());
 		AutoManager.enabledPlotting();
+		Superstructure.init();
 	}
 	
 	//Teleop 
