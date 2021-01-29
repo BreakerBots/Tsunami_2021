@@ -22,9 +22,9 @@ public class Odometry {
 	public static void update() {
 		if (odometry != null) {
 			odometry.update(
-				Rotation2d.fromDegrees(-Drive.getGyro()),
-				Drive.getLeftEncoder().getPositionMeters(),
-				Drive.getRightEncoder().getPositionMeters()
+				Rotation2d.fromDegrees(-Drive.getHeading()),
+				Drive.getDriveStateMeters()[0],
+				Drive.getDriveStateMeters()[1]
 			);
 		}
 	}
@@ -45,8 +45,8 @@ public class Odometry {
 	
 	public static DifferentialDriveWheelSpeeds getWheelSpeeds() {
 		return new DifferentialDriveWheelSpeeds(
-				Drive.getLeftEncoder().getVelocityMetersSecond(),
-				Drive.getRightEncoder().getVelocityMetersSecond()
+				Drive.getDriveStateMeters()[3],
+				Drive.getDriveStateMeters()[4]
 		);
 	}
 	
@@ -62,7 +62,7 @@ public class Odometry {
 	public static void reset() {
 		if (odometry != null) {
 			Drive.reset();
-			odometry.resetPosition(new Pose2d(), Rotation2d.fromDegrees(-Drive.getGyro()));
+			odometry.resetPosition(new Pose2d(), Rotation2d.fromDegrees(-Drive.getHeading()));
 		}
 	}
 }

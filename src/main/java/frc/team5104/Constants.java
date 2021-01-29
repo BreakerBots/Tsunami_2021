@@ -3,25 +3,23 @@ package frc.team5104;
 
 import frc.team5104.util.ConstantsUtils.RobotConfig;
 import frc.team5104.util.ConstantsUtils.SubsystemConstants;
+import frc.team5104.util.ConstantsUtils.DriveConstants;
 
 public class Constants {
 	//Main
-	public static final RobotConfig config = new RobotConfig(true, "Tsunami", "Tidal-Wave");
+	public static final RobotConfig config = new RobotConfig(false, "Tsunami", "Tidal-Wave");
 	public static double SUPERSTRUCTURE_TOL_SCALAR = 1;
 	
 	//Drive
-	public static final double DRIVE_WHEEL_DIAMETER = 0.5; //ft
-	public static final double DRIVE_TICKS_PER_REV = 2048.0 * (50.0/8.0) * (46.0/24.0);
-	public static final double DRIVE_TRACK_WIDTH = 2.0589795990198065; //ft
-	public static final double DRIVE_KP = 1;//0.153;
-	public static final double DRIVE_KD = 0;
-	public static final double DRIVE_KS = switchOnBot(0.162, 0.151);
-	public static final double DRIVE_KV = switchOnBot(3.296, 3.328);
-	public static final double DRIVE_KA = switchOnBot(0.0991, 0.135);
-	public static final double AUTO_MAX_VELOCITY = 6; //ft/s
-	public static final double AUTO_MAX_ACCEL = 4;
-	public static final double AUTO_CORRECTION_FACTOR = 1; //>0
-	public static final double AUTO_DAMPENING_FACTOR  = 0.5; //0-1
+	public static DriveConstants drive = new DriveConstants(
+			1/*0.153*/, 0,
+			switchOnBot(0.162, 0.151), switchOnBot(3.296, 3.328), switchOnBot(0.0991, 0.135),
+			0.66, 1.5, 0.3,
+			6, 4,
+			(50.0/8.0) * (46.0/24.0),
+			2.0589795990198065, //lol
+			0.5
+	);
 
 	//Flywheel
 	public static final boolean FLYWHEEL_OPEN_LOOP = false;

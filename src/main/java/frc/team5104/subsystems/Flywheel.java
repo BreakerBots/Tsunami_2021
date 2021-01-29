@@ -8,11 +8,11 @@ import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.FlywheelState;
 import frc.team5104.util.*;
 import frc.team5104.util.managers.Subsystem;
-import frc.team5104.util.Encoder.FalconIntegratedEncoder;
+import frc.team5104.util.Encoder.FalconEncoder;
 
 public class Flywheel extends Subsystem {
 	private static TalonFX motor1, motor2;
-	private static FalconIntegratedEncoder encoder;
+	private static FalconEncoder encoder;
 	private static MovingAverage avgRPM;
 	private static VelocityController controller;
 	
@@ -96,7 +96,7 @@ public class Flywheel extends Subsystem {
 		motor2.follow(motor1);
 		motor2.setInverted(true);
 
-		encoder = new FalconIntegratedEncoder(motor1, Constants.flywheel.gearing);
+		encoder = new FalconEncoder(motor1, Constants.flywheel.gearing);
 		
 		setRampRate(Constants.FLYWHEEL_RAMP_RATE_UP);
 		

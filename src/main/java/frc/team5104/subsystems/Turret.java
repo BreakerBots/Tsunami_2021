@@ -12,12 +12,12 @@ import frc.team5104.Superstructure.Mode;
 import frc.team5104.util.*;
 import frc.team5104.util.console.c;
 import frc.team5104.util.managers.Subsystem;
-import frc.team5104.util.Encoder.FalconIntegratedEncoder;
+import frc.team5104.util.Encoder.FalconEncoder;
 
 
 public class Turret extends Subsystem {
 	private static TalonFX motor;
-	private static FalconIntegratedEncoder encoder;
+	private static FalconEncoder encoder;
 	private static PositionController controller;
 	private static LatencyCompensator compensator;
 	private static MovingAverage outputAverage;
@@ -46,7 +46,7 @@ public class Turret extends Subsystem {
 			//Field Oriented Mode
 			else setAngle(
 				BreakerMath.boundDegrees180(
-					Drive.getGyro() + fieldOrientedOffset + tunerFieldOrientedOffsetAdd
+					Drive.getHeading() + fieldOrientedOffset + tunerFieldOrientedOffsetAdd
 				)
 			);
 		}
@@ -54,7 +54,7 @@ public class Turret extends Subsystem {
 		//Disabled
 		else {
 			stop();
-			targetAngle = BreakerMath.boundDegrees180(Drive.getGyro() + fieldOrientedOffset);
+			targetAngle = BreakerMath.boundDegrees180(Drive.getHeading() + fieldOrientedOffset);
 			controller.calculate(getAngle(), targetAngle);
 		}
 	}
@@ -147,7 +147,7 @@ public class Turret extends Subsystem {
 		motor.configFactoryDefault();
 		motor.setInverted(Constants.config.isCompetitionRobot ? false : true);
 
-		encoder = new FalconIntegratedEncoder(motor, Constants.turret.gearing);
+		encoder = new FalconEncoder(motor, Constants.turret.gearing);
 
 		motor.configForwardSoftLimitThreshold((int) encoder.componentRevsToTicks(Constants.TURRET_SOFT_LEFT / 360d));
 		motor.configReverseSoftLimitThreshold((int) encoder.componentRevsToTicks(Constants.TURRET_SOFT_RIGHT / 360d));

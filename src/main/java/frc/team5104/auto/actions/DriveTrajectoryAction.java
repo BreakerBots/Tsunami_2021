@@ -30,6 +30,9 @@ import frc.team5104.util.console.c;
  */
 public class DriveTrajectoryAction extends AutoAction {
 
+	public static final double CORRECTION_FACTOR = 1; //>0
+	public static final double DAMPENING_FACTOR = 0.5; //0-1
+
 	private final Timer m_timer = new Timer();
 	private final Trajectory m_trajectory;
 	private final RamseteController m_follower;
@@ -49,13 +52,13 @@ public class DriveTrajectoryAction extends AutoAction {
 		}
 
 		m_feedforward = new SimpleMotorFeedforward(
-				Constants.DRIVE_KS,
-				Constants.DRIVE_KV,
-				Constants.DRIVE_KA
+				Constants.drive.kLS,
+				Constants.drive.kLV,
+				Constants.drive.kLA
 			);
 
 		m_kinematics = new DifferentialDriveKinematics(
-				Units.feetToMeters(Constants.DRIVE_TRACK_WIDTH)
+				Units.feetToMeters(Constants.drive.trackWidth)
 			);
 
 		// Create a voltage constraint to ensure we don't accelerate too fast
@@ -68,8 +71,8 @@ public class DriveTrajectoryAction extends AutoAction {
 
 		// Create config for trajectory
 		TrajectoryConfig config = new TrajectoryConfig(
-				Units.feetToMeters(Constants.AUTO_MAX_VELOCITY), 
-				Units.feetToMeters(Constants.AUTO_MAX_ACCEL)
+				Units.feetToMeters(Constants.drive.maxVelocity),
+				Units.feetToMeters(Constants.drive.maxAccel)
 			).setKinematics(m_kinematics)
 			 .addConstraint(autoVoltageConstraint)
 			 .setReversed(isReversed);
@@ -81,11 +84,11 @@ public class DriveTrajectoryAction extends AutoAction {
 			);
 		
 		m_follower = new RamseteController(
-				Constants.AUTO_CORRECTION_FACTOR, 
-				Constants.AUTO_DAMPENING_FACTOR
+				CORRECTION_FACTOR,
+				DAMPENING_FACTOR
 			);
-		m_leftController = new PIDController(Constants.DRIVE_KP, 0, Constants.DRIVE_KD);
-		m_rightController = new PIDController(Constants.DRIVE_KP, 0, Constants.DRIVE_KD);
+		m_leftController = new PIDController(Constants.drive.kP, 0, Constants.drive.kD);
+		m_rightController = new PIDController(Constants.drive.kP, 0, Constants.drive.kD);
 
 		if (AutoManager.plottingEnabled())
 			Plotter.plotAll(Position.fromStates(m_trajectory.getStates()), Plotter.Color.RED);
@@ -150,7 +153,7 @@ public class DriveTrajectoryAction extends AutoAction {
 		Drive.set(new DriveSignal(
 				leftFeedforward + leftFeedback,
 				rightFeedforward + rightFeedback,
-				true, DriveUnit.VOLTAGE
+				DriveUnit.VOLTAGE
 		));
 
 		return m_timer.hasPeriodPassed(m_trajectory.getTotalTimeSeconds());

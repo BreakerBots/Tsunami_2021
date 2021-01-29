@@ -3,8 +3,8 @@ package frc.team5104.util;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.RobotController;
 
-public class TalonSRXSim extends WPI_TalonSRX {
-    public TalonSRXSim(int deviceNumber) {
+public class TalonSim extends WPI_TalonSRX {
+    public TalonSim(int deviceNumber) {
         super(deviceNumber);
     }
 

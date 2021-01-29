@@ -377,4 +377,99 @@ public class XboxController {
 				if (controller.port == port) controller.activeRumble = this;
 		}
 	}
+
+	//Bezier Curves
+	/** Processes bezier curves between two points.
+	 * Desmos Link: https://www.desmos.com/calculator/da8zwxpgzo */
+	public static class BezierCurve {
+		public double x1, y1, x2, y2;
+		public BezierCurve(double x1, double y1, double x2, double y2) {
+			this.x1 = x1;
+			this.y1 = y1;
+			this.x2 = x2;
+			this.y2 = y2;
+		}
+
+		/** Get value of curve at point x. Flips the curve for negative values. */
+		public double getPoint(double x) {
+			boolean tn = x < 0;
+			x = Math.abs(x);
+			double x0 = 0.0;
+			double y0 = 0.0;
+			double x3 = 1.0;
+			double y3 = 1.0;
+			x = (1-x);
+			x = 1 - (((1-x) * p(x, x0, x1, x2)) + (x * p(x, x1, x2, x3)));
+			x =	( ((1-x) * p(x, y0, y1, y2)) + (x * p(x, y1, y2, y3)) );
+			return x * (tn ? -1 : 1);
+		}
+		private double p(double x, double a, double b, double c) {
+			return ((1-x) * ((1-x) * a + (x * b))) + (x * ((1-x) * b + (x * c)));
+		}
+	}
+
+	//Deadband
+	/** A deadband cuts out areas of an input.
+	 * For example in a clipping deadband with a radius of .05, .05 would go to 0 and .06 would not change.
+	 * This class has two deadbands.
+	 *  - Clipping: in which areas will be directly cut out (r=.05: .05->0, .06->.06)
+	 *  - Slope Adjustment: in which the slope is adjusted (r=.05: .05->0, 0.06->0.01)
+	 * Desmos Link: https://www.desmos.com/calculator/xhbilptzt9 */
+	public static class Deadband {
+		//Deadband Types
+		/**
+		 * Clipping: in which areas will be directly cut out (r=.05: .05->0, .06->.06)
+		 * Slope Adjustment: in which the slope is adjusted (r=.05: .05->0, 0.06->0.01)
+		 */
+		public static enum DeadbandType {
+			CLIPPING,
+			SLOPE_ADJ,
+			NONE
+		};
+
+		//Main Getter Function
+		/**
+		 * Processes a deadband upon "x" at "radius" distance.
+		 * @param x The input value
+		 * @param radius The size of the deadband
+		 * @param type The type of deadband (clipping or slope adj)
+		 */
+		public static double get(double x, double radius, DeadbandType type) {
+			//Call function for specified deadband and send it abs(x), then undo the abs(x)
+			if (type == DeadbandType.CLIPPING)
+				return getClipping(Math.abs(x), radius) * (x > 0 ? 1 : -1);
+			if (type == DeadbandType.SLOPE_ADJ)
+				return getSlopeAdjustment(Math.abs(x), radius) * (x > 0 ? 1 : -1);
+			else return x;
+		}
+
+		//Deadband Processors
+		private static double getSlopeAdjustment(double x, double radius) {
+			double m = 1 / (1-radius);
+			double b = -m*radius;
+			if (x <= radius)
+				return 0;
+			else
+				return m*x + b;
+		}
+		private static double getClipping(double x, double radius) {
+			if (x <= radius)
+				return 0;
+			else
+				return x;
+		}
+
+		//Saved Deadband
+		double savedRadius;
+		DeadbandType savedType;
+		public Deadband() { this(0, DeadbandType.NONE); }
+		public Deadband(double radius) { this(radius, DeadbandType.SLOPE_ADJ); }
+		public Deadband(double radius, DeadbandType type) {
+			this.savedRadius = radius;
+			this.savedType = type;
+		}
+		public double get(double x) {
+			return get(x, this.savedRadius, this.savedType);
+		}
+	}
 }

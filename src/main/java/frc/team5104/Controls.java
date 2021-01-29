@@ -1,11 +1,11 @@
 /*BreakerBots Robotics Team 2020*/
 package frc.team5104;
 
-import frc.team5104.util.BezierCurve;
-import frc.team5104.util.Deadband;
+import frc.team5104.util.XboxController.Deadband;
 import frc.team5104.util.XboxController;
 import frc.team5104.util.XboxController.Axis;
 import frc.team5104.util.XboxController.Button;
+import frc.team5104.util.XboxController.BezierCurve;
 
 /** All the controls for the robot */
 public class Controls {

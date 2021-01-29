@@ -13,12 +13,12 @@ import frc.team5104.util.LatchedBoolean.LatchedBooleanMode;
 import frc.team5104.util.Sensor.PortType;
 import frc.team5104.util.console.c;
 import frc.team5104.util.managers.Subsystem;
-import frc.team5104.util.Encoder.FalconIntegratedEncoder;
+import frc.team5104.util.Encoder.FalconEncoder;
 
 public class Hopper extends Subsystem {
 	private static VictorSPX startMotor, feederMotor;
 	private static TalonFX indexMotor;
-	private static FalconIntegratedEncoder indexEncoder;
+	private static FalconEncoder indexEncoder;
 	private static Sensor entrySensor, endSensor;
 	private static LatchedBoolean entrySensorLatch;
 	private static MovingAverage isFullAverage, hasFed, entrySensorAverage;
@@ -159,7 +159,7 @@ public class Hopper extends Subsystem {
 		indexMotor = new TalonFX(Ports.HOPPER_INDEX_MOTOR);
 		indexMotor.configFactoryDefault();
 		indexMotor.setInverted(true);
-		indexEncoder = new FalconIntegratedEncoder(indexMotor, Constants.hopperIndex.gearing);
+		indexEncoder = new FalconEncoder(indexMotor, Constants.hopperIndex.gearing);
 
 		entrySensor = new Sensor(PortType.ANALOG, Ports.HOPPER_SENSOR_START, Constants.config.isCompetitionRobot ? false : true);
 		endSensor = new Sensor(PortType.ANALOG, Ports.HOPPER_SENSOR_END, Constants.config.isCompetitionRobot ? false : true);

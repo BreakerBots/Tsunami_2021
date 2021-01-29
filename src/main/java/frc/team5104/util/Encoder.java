@@ -39,7 +39,7 @@ public abstract class Encoder {
 
     //Sub Classes
     private static abstract class CTRE_Encoder extends Encoder {
-        private BaseTalon motorController;
+        BaseTalon motorController;
         public CTRE_Encoder(BaseTalon motorController, double gearing, double ticksPerRev) {
             super(gearing, ticksPerRev);
             this.motorController = motorController;
@@ -62,9 +62,24 @@ public abstract class Encoder {
         }
     }
 
-    public static class FalconIntegratedEncoder extends CTRE_Encoder {
-        public FalconIntegratedEncoder(TalonFX motorController, double gearing) {
+    public static class FalconEncoder extends CTRE_Encoder {
+        public FalconEncoder(TalonFX motorController, double gearing) {
             super(motorController, gearing, 2048);
+        }
+    }
+
+    public static class EncoderSim extends MagEncoder {
+        public EncoderSim(TalonSim motorController, double gearing) {
+            super(motorController, gearing);
+        }
+
+        public void setTicks(double ticks) {
+            ((TalonSRX) super.motorController).getSimCollection().setQuadratureRawPosition((int) ticks);
+        }
+
+        public void setTicksPosVel(double ticksPos, double ticksPer100MsVel) {
+            setTicks(ticksPos);
+            ((TalonSRX) super.motorController).getSimCollection().setQuadratureVelocity((int) ticksPer100MsVel);
         }
     }
 }
