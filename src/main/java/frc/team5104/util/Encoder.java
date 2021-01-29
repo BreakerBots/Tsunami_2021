@@ -74,12 +74,18 @@ public abstract class Encoder {
         }
 
         public void setTicks(double ticks) {
-            ((TalonSRX) super.motorController).getSimCollection().setQuadratureRawPosition((int) ticks);
+            ((TalonSRX) motorController).getSimCollection().setQuadratureRawPosition((int) ticks);
         }
 
-        public void setTicksPosVel(double ticksPos, double ticksPer100MsVel) {
-            setTicks(ticksPos);
-            ((TalonSRX) super.motorController).getSimCollection().setQuadratureVelocity((int) ticksPer100MsVel);
+        public void setTicksVel(double ticksPer100MsVel) {
+            ((TalonSRX) motorController).getSimCollection().setQuadratureVelocity((int) ticksPer100MsVel);
+        }
+
+        public void setVelocityAccelMeters(double metersPerSecond, double metersPerSecondSquared, double wheelDiameter) {
+            setTicks(componentRevsToTicks(
+                    Units.metersToFeet(metersPerSecond) / (wheelDiameter * Math.PI)));
+            setTicksVel(componentRevsToTicks(
+                    Units.metersToFeet(metersPerSecondSquared) / (wheelDiameter * Math.PI)) / 10d);
         }
     }
 }

@@ -45,8 +45,8 @@ public class Odometry {
 	
 	public static DifferentialDriveWheelSpeeds getWheelSpeeds() {
 		return new DifferentialDriveWheelSpeeds(
-				Drive.getDriveStateMeters()[3],
-				Drive.getDriveStateMeters()[4]
+				Drive.getDriveStateMeters()[2],
+				Drive.getDriveStateMeters()[3]
 		);
 	}
 	

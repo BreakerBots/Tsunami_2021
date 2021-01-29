@@ -51,8 +51,16 @@ public class Drive extends Subsystem {
 		);
 		drivetrainSim.update(0.02);
 
-		((EncoderSim) leftEncoder).setTicksPosVel(drivetrainSim.getLeftPositionMeters(), drivetrainSim.getLeftVelocityMetersPerSecond());
-		((EncoderSim) rightEncoder).setTicksPosVel(drivetrainSim.getRightPositionMeters(), drivetrainSim.getRightVelocityMetersPerSecond());
+		((EncoderSim) leftEncoder).setVelocityAccelMeters(
+				drivetrainSim.getLeftPositionMeters(),
+				drivetrainSim.getLeftVelocityMetersPerSecond(),
+				Constants.drive.wheelDiameter
+		);
+		((EncoderSim) rightEncoder).setVelocityAccelMeters(
+				drivetrainSim.getRightPositionMeters(),
+				drivetrainSim.getRightVelocityMetersPerSecond(),
+				Constants.drive.wheelDiameter
+		);
 		gyro.set(-drivetrainSim.getHeading().getDegrees());
 	}
 	
@@ -76,8 +84,8 @@ public class Drive extends Subsystem {
 		return new double[] {
 			leftEncoder.getComponentRevs() * Units.feetToMeters(Constants.drive.wheelDiameter) * Math.PI,
 			rightEncoder.getComponentRevs() * Units.feetToMeters(Constants.drive.wheelDiameter) * Math.PI,
-			leftEncoder.getComponentRevs() * Units.feetToMeters(Constants.drive.wheelDiameter) * Math.PI * 10d,
-			rightEncoder.getComponentRevs() * Units.feetToMeters(Constants.drive.wheelDiameter) * Math.PI * 10d
+			leftEncoder.getComponentRPS() * Units.feetToMeters(Constants.drive.wheelDiameter) * Math.PI,
+			rightEncoder.getComponentRPS() * Units.feetToMeters(Constants.drive.wheelDiameter) * Math.PI
 		};
 	}
 	public static void reset() {

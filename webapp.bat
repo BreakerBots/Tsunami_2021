@@ -1,6 +1,6 @@
 @echo off
 
-set app = "src\webapp\breakerboard-win32-ia32\breakerboard.exe"
+set "app=src\webapp\breakerboard-win32-ia32\breakerboard.exe"
 
 IF EXIST %app% (
 	Start "" "%app%" -i silent
