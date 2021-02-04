@@ -24,6 +24,10 @@ public class Flywheel extends Subsystem {
 				setPercentOutput(1.0);
 			else setSpeed(getTargetRPM());
 		}
+		else if (isCharacterizing()) {
+			setRampRate(Constants.FLYWHEEL_RAMP_RATE_UP);
+			//do nothing
+		}
 		else {
 			setRampRate(Constants.FLYWHEEL_RAMP_RATE_DOWN);
 			stop();
@@ -103,6 +107,8 @@ public class Flywheel extends Subsystem {
 		controller = new VelocityController(Constants.flywheel);
 		
 		avgRPM = new MovingAverage(50, 0);
+
+		configCharacterization(encoder, (double voltage) -> setVoltage(voltage));
 	}
 
 	//Reset

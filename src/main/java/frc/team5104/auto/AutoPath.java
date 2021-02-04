@@ -5,6 +5,7 @@ import frc.team5104.util.setup.RobotState;
 
 /** a framework for all paths inside frc.team5104.auto.paths */
 public abstract class AutoPath {
+	private AutoAction currentAction;
 
 	/** Run the path, holding the thread until it is finished.
 	 * @warning DO NOT CALL IN MAIN THREAD */
@@ -14,12 +15,21 @@ public abstract class AutoPath {
 	 * @warning DO NOT CALL IN MAIN THREAD
 	 * @return passthroughs value from action */
 	public boolean run(AutoAction action) {
-		action.init();
-		while (!action.update()) {
+		currentAction = action;
+		currentAction.init();
+		while (!currentAction.isFinished()) {
 			try { Thread.sleep(RobotState.getLoopPeriod()); }
-			catch (InterruptedException e) { e.printStackTrace(); }
+			catch (InterruptedException e) { }
 		}
-		action.end();
-		return action.getValue();
+		currentAction.end();
+		boolean value = currentAction.getValue();
+		currentAction = null;
+		return value;
+	}
+
+	/** Updates the current action */
+	public void update() {
+		if (currentAction != null)
+			currentAction.update();
 	}
 }

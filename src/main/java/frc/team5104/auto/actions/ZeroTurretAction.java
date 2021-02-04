@@ -19,7 +19,11 @@ public class ZeroTurretAction extends AutoAction {
     	Turret.setFieldOrientedTarget(angleToZeroTurretAt);
     }
 
-    public boolean update() {
+    public void update() {
+
+    }
+
+    public boolean isFinished() {
     	return true;
     }
 

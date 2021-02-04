@@ -17,9 +17,13 @@ public class ShootAction extends AutoAction {
     	Superstructure.set(Mode.AIMING);
     }
 
-    public boolean update() {
-    	//exit when hopper is empty
-    	return Superstructure.is(Mode.IDLE);
+    public void update() {
+
+    }
+
+    public boolean isFinished() {
+	    //exit when hopper is empty
+	    return Superstructure.is(Mode.IDLE);
     }
 
     public void end() {

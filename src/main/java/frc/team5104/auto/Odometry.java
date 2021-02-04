@@ -50,15 +50,6 @@ public class Odometry {
 		);
 	}
 	
-	public static void resetHold() {
-		if (odometry != null) {
-			reset();
-			try { Thread.sleep(10); } catch (Exception e) { }
-			reset();
-			console.log(c.AUTO, "reset odometry at " + getPose2dMeters());
-		}
-	}
-	
 	public static void reset() {
 		if (odometry != null) {
 			Drive.reset();

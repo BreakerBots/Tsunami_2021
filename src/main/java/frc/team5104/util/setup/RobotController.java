@@ -18,7 +18,6 @@ import frc.team5104.util.console.t;
 import frc.team5104.util.setup.RobotState.RobotMode;
 
 public class RobotController extends RobotBase {
-	static final double loopPeriod = 20;
 	private BreakerRobot robot;
 
 	//Init Robot
@@ -51,7 +50,7 @@ public class RobotController extends RobotBase {
 			}
 			
 			//Wait to make loop correct time
-			try { Thread.sleep(Math.round(loopPeriod - (Timer.getFPGATimestamp() - st))); } catch (Exception e) { console.error(e); }
+			try { Thread.sleep(Math.round(RobotState.loopPeriod - (Timer.getFPGATimestamp() - st))); } catch (Exception e) { }
 			
 			RobotState.setDeltaTime(Timer.getFPGATimestamp() - st);
 		}

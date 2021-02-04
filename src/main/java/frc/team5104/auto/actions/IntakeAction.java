@@ -17,7 +17,11 @@ public class IntakeAction extends AutoAction {
     	Superstructure.set(Mode.INTAKE);
     }
 
-    public boolean update() {
+    public void update() {
+
+    }
+
+    public boolean isFinished() {
     	return true;
     }
 

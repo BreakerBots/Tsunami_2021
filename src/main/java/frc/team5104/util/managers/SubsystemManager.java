@@ -39,10 +39,10 @@ public class SubsystemManager {
 				try {
 					if (!subsystem.emergencyStopped)
 						subsystem.fastUpdate();
-				} catch (Exception e) { CrashLogger.logCrash(new Crash("subsystem manager fast loop", e)); }
+				} catch (Exception e) { CrashLogger.logCrash(new Crash("subsystem-fast-loop", e)); }
 			}
 		});
-		thread.startPeriodic(0.01);
+		thread.startPeriodic(0.005);
 	}
 	
 	/** Plug in a the classes of subsystem you want to debug. */
@@ -51,12 +51,23 @@ public class SubsystemManager {
 		for (Class<? extends Subsystem> subsystemToDebug : subsystemsToDebug) {
 			for (Subsystem subsystem : targetSubsystems) {
 				try {
-					if (subsystem.getClass() == subsystemToDebug) {
+					if (subsystem.getClass() == subsystemToDebug)
 						subsystem.startDebugging();
-					}
-				} catch (Exception e) { CrashLogger.logCrash(new Crash("subsystem manager fast loop", e)); }
+				} catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
 			}
 		}
+	}
+
+	/** Returns a subsystem from a given class. Will return null if the subsystem is not attached.
+	 * @warn this method gives dangerous levels of access--avoid using this method */
+	public static Subsystem getSubsystem(Class<? extends Subsystem> targetSubsystem) {
+		for (Subsystem subsystem : targetSubsystems) {
+			try {
+				if (subsystem.getClass() == targetSubsystem)
+					return subsystem;
+			} catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
+		}
+		return null;
 	}
 	
 	/** Call when the robot becomes enabled or disabled */

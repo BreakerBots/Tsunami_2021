@@ -17,9 +17,11 @@ public class ChargeFlywheelAction extends AutoAction {
     	Superstructure.set(FlywheelState.SPINNING);
     }
 
-    public boolean update() {
-    	return true;
+    public void update() {
+
     }
+
+    public boolean isFinished() { return true; }
 
     public void end() {
     	

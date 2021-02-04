@@ -11,12 +11,10 @@ import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.team5104.Constants;
 import frc.team5104.Ports;
-import frc.team5104.util.DriveSignal;
-import frc.team5104.util.Encoder;
+import frc.team5104.util.*;
+import frc.team5104.util.DriveSignal.DriveUnit;
 import frc.team5104.util.Encoder.EncoderSim;
 import frc.team5104.util.Encoder.FalconEncoder;
-import frc.team5104.util.Gyro;
-import frc.team5104.util.TalonSim;
 import frc.team5104.util.managers.Subsystem;
 import frc.team5104.util.setup.RobotState;
 
@@ -118,7 +116,16 @@ public class Drive extends Subsystem {
 		falconR2.set(ControlMode.Follower, falconR1.getDeviceID());
 		falconR1.setInverted(true);
 		falconR2.setInverted(true);
-		
+
+		configCharacterization(
+				() -> leftEncoder.getComponentRevs(),
+				() -> leftEncoder.getComponentRPS(),
+				() -> rightEncoder.getComponentRevs(),
+				() -> rightEncoder.getComponentRPS(),
+				() -> gyro.getRadians(),
+				(Double left, Double right) -> set(new DriveSignal(left, right, DriveUnit.VOLTAGE))
+		);
+
 		stopMotors();
 		reset();
 	}
@@ -143,6 +150,15 @@ public class Drive extends Subsystem {
 				edu.wpi.first.wpilibj.util.Units.feetToMeters(Constants.drive.trackWidth),
 				Units.feetToMeters(Constants.drive.wheelDiameter) / 2.0,
 				null//VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005) //TODO: GET ACTUAL MEASUREMENT
+		);
+
+		configCharacterization(
+				() -> leftEncoder.getComponentRevs(),
+				() -> leftEncoder.getComponentRPS(),
+				() -> rightEncoder.getComponentRevs(),
+				() -> rightEncoder.getComponentRPS(),
+				() -> gyro.getRadians(),
+				(Double left, Double right) -> set(new DriveSignal(left, right, DriveUnit.VOLTAGE))
 		);
 
 		stopMotors();

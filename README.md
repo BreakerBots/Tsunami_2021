@@ -36,6 +36,20 @@ Note: If you don't want to use the desktop version navigate to `http://localhost
 Note: If you want to change the selected auto path navigate to `frc.team5104.RobotSim`
    in IntelliJ and change the path inside the line: `AutoManager.setTargetPath(new ExamplePath());`
 
+## Characterizing
+1) Install [Python 3.7](https://www.python.org/downloads/release/python-379/)
+2) Open up a command prompt in the repo
+3) Run `pip install frc-characterization`
+4) Open `Robot.java` and comment out `AutoManager.setTargetPath(...);`
+5) Under that add the line (or uncomment) `AutoManager.characterize(SUBSYSTEM.class)` and replace `SUBSYSTEM` with the name of the subsystem you want to characterize.
+6) Go back to the command line inside the repo
+7) Run `characterize` and connect to the robot
+8) Follow the instructions on the logger window
+9) Click `Save File`
+10) Close the window
+11) In the new window, choose the file: `.charactize/charactization-data.json`
+12) Double check your units and settings, then save ALL variables (you dont have to put all of them in code, but at least put them in google drive).
+
 ## Organization
 The robot code is separated into multiple different sections or "packages" located inside
 `src/main/java`. This explains what is located inside each package.

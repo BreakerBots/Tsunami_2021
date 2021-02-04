@@ -32,9 +32,7 @@ public class Robot extends RobotController.BreakerRobot {
 			new Climber(),
 			new Paneler()
 		);
-		SubsystemManager.debug(
-
-		);
+		SubsystemManager.debug( );
 		TeleopControllerManager.useTeleopControllers(
 			new DriveController(),
 			new SuperstructureController(),
@@ -49,6 +47,7 @@ public class Robot extends RobotController.BreakerRobot {
 		CompressorController.stop();
 		AutoManager.setTargetPath(new ExamplePath());
 		AutoManager.enabledPlotting();
+		//AutoManager.characterize(Drive.class);
 		Superstructure.init();
 	}
 	

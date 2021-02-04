@@ -17,7 +17,11 @@ public class IdleAction extends AutoAction {
     	Superstructure.set(Mode.IDLE);
     }
 
-    public boolean update() {
+    public void update() {
+
+    }
+
+    public boolean isFinished() {
     	return true;
     }
 

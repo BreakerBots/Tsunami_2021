@@ -19,7 +19,7 @@ public class Turret extends Subsystem {
 	private static TalonFX motor;
 	private static FalconEncoder encoder;
 	private static PositionController controller;
-	private static LatencyCompensator compensator;
+	private static LatencyCompensator latencyCompensator;
 	private static MovingAverage outputAverage;
 	private static double targetAngle = 0, fieldOrientedOffset = 0, tunerFieldOrientedOffsetAdd;
 	
@@ -32,12 +32,17 @@ public class Turret extends Subsystem {
 				enableSoftLimits(false);
 				setPercentOutput(Constants.TURRET_CALIBRATE_SPEED);
 			}
+
+			//Characterizing
+			else if (isCharacterizing()) {
+				//do nothing
+			}
 			
 			//Vision
 			else if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
 				if (/*Limelight.hasTarget() &&*/ Superstructure.is(Mode.AIMING)) {
 					setAngle(
-						compensator.getValueInHistory(Limelight.getLatency()) - Limelight.getTargetX()
+							latencyCompensator.getValueInHistory(Limelight.getLatency()) - Limelight.getTargetX()
 					);
 				}
 				else setAngle(targetAngle);
@@ -58,7 +63,7 @@ public class Turret extends Subsystem {
 			controller.calculate(getAngle(), targetAngle);
 		}
 	}
-	
+
 	//Fast Loop
 	public void fastUpdate() {
 		//Exit Calibration
@@ -73,6 +78,8 @@ public class Turret extends Subsystem {
 			resetEncoder(Constants.TURRET_ZERO);
 			enableSoftLimits(true);
 		}
+
+		latencyCompensator.update();
 	}
 	
 	//Debugging
@@ -155,9 +162,15 @@ public class Turret extends Subsystem {
 		motor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled);
 		
 		controller = new PositionController(Constants.turret);
-		compensator = new LatencyCompensator(() -> getAngle());
+		latencyCompensator = new LatencyCompensator(() -> getAngle());
 		outputAverage = new MovingAverage(4, 0);
-		
+
+		configCharacterization(
+				() -> encoder.getComponentRevs() * 360d,
+				() -> encoder.getComponentRPS() * 360d,
+				(double voltage) -> setVoltage(voltage)
+		);
+
 		//Only calibrate once per roborio boot while not.
 		if (!Filer.fileExists("/tmp/turret_calibrated.txt")) {
 			console.log(c.TURRET, "ready to calibrate!");
@@ -170,7 +183,7 @@ public class Turret extends Subsystem {
 	public void disabled() {
 		stop();
 		motor.setNeutralMode(NeutralMode.Coast);
-		compensator.reset();
+		latencyCompensator.reset();
 		outputAverage.reset();
 	}
 }

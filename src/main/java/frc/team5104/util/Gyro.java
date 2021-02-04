@@ -7,13 +7,17 @@ import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 public abstract class Gyro {
     public abstract double get();
 
+    public double getRadians() {
+        return get() * (Math.PI / 180d);
+    }
+
     public abstract void set(double degrees);
 
     public void reset() {
         set(0);
     }
 
-    public static class GyroPigeon extends Gyro {
+	public static class GyroPigeon extends Gyro {
         private final PigeonIMU gyro;
 
         public GyroPigeon(int canID) {

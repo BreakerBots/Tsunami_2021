@@ -25,9 +25,12 @@ public class HopperWaitForPickup extends AutoAction {
     	startTime = System.currentTimeMillis();
     }
 
-    public boolean update() {
+    public void update() {
         if (RobotState.isSimulation() ? false : Hopper.isEntrySensorTrippedAvg())
             intaked = true;
+    }
+
+    public boolean isFinished() {
         return intaked || (System.currentTimeMillis() >= startTime + timeoutMs);
     }
 

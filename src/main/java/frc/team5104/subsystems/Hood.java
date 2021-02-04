@@ -29,6 +29,11 @@ public class Hood extends Subsystem {
 			if (isCalibrating()) {
 				setPercentOutput(-Constants.HOOD_CALIBRATE_SPEED);
 			}
+
+			//Characterizing
+			else if (isCharacterizing()) {
+				//do nothing
+			}
 			
 			//Low
 			else if (Superstructure.is(Target.LOW)) {
@@ -153,6 +158,12 @@ public class Hood extends Subsystem {
 		
 		console.log(c.HOOD, "ready to calibrate!");
 		startCalibrating();
+
+		configCharacterization(
+			() -> encoder.getComponentRevs() * 360d,
+			() -> encoder.getComponentRPS() * 360d,
+			(double voltage) -> setVoltage(voltage)
+		);
 	}
 
 	//Reset

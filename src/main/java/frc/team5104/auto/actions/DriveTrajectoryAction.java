@@ -30,18 +30,17 @@ import frc.team5104.util.console.c;
  */
 public class DriveTrajectoryAction extends AutoAction {
 
-	public static final double CORRECTION_FACTOR = 1; //>0
-	public static final double DAMPENING_FACTOR = 0.5; //0-1
+	public static final double CORRECTION_FACTOR = 1/*1*/; //>0
+	public static final double DAMPENING_FACTOR = 0.3/*0.5*/; //0-1
 
-	private final Timer m_timer = new Timer();
-	private final Trajectory m_trajectory;
-	private final RamseteController m_follower;
-	private final SimpleMotorFeedforward m_feedforward;
-	private final DifferentialDriveKinematics m_kinematics;
-	private final PIDController m_leftController;
-	private final PIDController m_rightController;
-	private DifferentialDriveWheelSpeeds m_prevSpeeds;
-	private double m_prevTime;
+	private final Timer timer = new Timer();
+	private final Trajectory trajectory;
+	private final RamseteController follower;
+	private final SimpleMotorFeedforward feedforward;
+	private final DifferentialDriveKinematics kinematics;
+	private final PIDController leftController, rightController;
+	private DifferentialDriveWheelSpeeds lastSpeeds;
+	private double lastTime;
 
 	public DriveTrajectoryAction(boolean isReversed, Position... waypoints) {
 		this(new Position(0, 0, 0), isReversed, waypoints);
@@ -51,21 +50,21 @@ public class DriveTrajectoryAction extends AutoAction {
 			waypoint.subtract(offset);
 		}
 
-		m_feedforward = new SimpleMotorFeedforward(
+		feedforward = new SimpleMotorFeedforward(
 				Constants.drive.kLS,
 				Constants.drive.kLV,
 				Constants.drive.kLA
 			);
 
-		m_kinematics = new DifferentialDriveKinematics(
+		kinematics = new DifferentialDriveKinematics(
 				Units.feetToMeters(Constants.drive.trackWidth)
 			);
 
 		// Create a voltage constraint to ensure we don't accelerate too fast
 		DifferentialDriveVoltageConstraint autoVoltageConstraint = 
 				new DifferentialDriveVoltageConstraint(
-					m_feedforward,
-					m_kinematics,
+						feedforward,
+						kinematics,
 					10
 				);
 
@@ -73,94 +72,96 @@ public class DriveTrajectoryAction extends AutoAction {
 		TrajectoryConfig config = new TrajectoryConfig(
 				Units.feetToMeters(Constants.drive.maxVelocity),
 				Units.feetToMeters(Constants.drive.maxAccel)
-			).setKinematics(m_kinematics)
+			).setKinematics(kinematics)
 			 .addConstraint(autoVoltageConstraint)
 			 .setReversed(isReversed);
 
 		// An example trajectory to follow. All units in meters.
-		m_trajectory = TrajectoryGenerator.generateTrajectory(
+		trajectory = TrajectoryGenerator.generateTrajectory(
 				Position.toPose2dMeters(waypoints),
 				config
 			);
 		
-		m_follower = new RamseteController(
+		follower = new RamseteController(
 				CORRECTION_FACTOR,
 				DAMPENING_FACTOR
 			);
-		m_leftController = new PIDController(Constants.drive.kP, 0, Constants.drive.kD);
-		m_rightController = new PIDController(Constants.drive.kP, 0, Constants.drive.kD);
+		leftController = new PIDController(Constants.drive.kP, 0, Constants.drive.kD);
+		rightController = new PIDController(Constants.drive.kP, 0, Constants.drive.kD);
 
 		if (AutoManager.plottingEnabled())
-			Plotter.plotAll(Position.fromStates(m_trajectory.getStates()), Plotter.Color.RED);
+			Plotter.plotAll(Position.fromStates(trajectory.getStates()), Plotter.Color.RED);
 	}
 
 	public void plot() {
-		Plotter.plotAll(Position.fromStates(m_trajectory.getStates()), Plotter.Color.RED);
+		Plotter.plotAll(Position.fromStates(trajectory.getStates()), Plotter.Color.RED);
 	}
 
 	public void init() {
 		console.sets.create("RunTrajectoryTime");
 		console.log(c.AUTO, "Running Trajectory");
-		m_prevTime = 0;
-		Trajectory.State initialState = m_trajectory.sample(0);
-		m_prevSpeeds = m_kinematics.toWheelSpeeds(
+		lastTime = 0;
+		Trajectory.State initialState = trajectory.sample(0);
+		lastSpeeds = kinematics.toWheelSpeeds(
 			new ChassisSpeeds(
 				initialState.velocityMetersPerSecond, 
 				0,
 				initialState.curvatureRadPerMeter * initialState.velocityMetersPerSecond
 			)
 		);
-		m_timer.reset();
-		m_timer.start();
-		m_leftController.reset();
-		m_rightController.reset();
+		timer.reset();
+		timer.start();
+		leftController.reset();
+		rightController.reset();
 	}
 
-	public boolean update() {
-		double curTime = m_timer.get();
-		double dt = curTime - m_prevTime;
+	public void update() {
+		double curTime = timer.get();
+		double dt = curTime - lastTime;
 
-		DifferentialDriveWheelSpeeds targetWheelSpeeds = m_kinematics.toWheelSpeeds(
-			m_follower.calculate(
-				Odometry.getPose2dMeters(),
-				m_trajectory.sample(curTime)
+		DifferentialDriveWheelSpeeds targetWheelSpeeds = kinematics.toWheelSpeeds(
+				follower.calculate(
+					Odometry.getPose2dMeters(),
+					trajectory.sample(curTime)
 			)
 		);
 
-		double leftFeedforward = m_feedforward.calculate(
+		double leftFeedforward = feedforward.calculate(
 				targetWheelSpeeds.leftMetersPerSecond,
-				(targetWheelSpeeds.leftMetersPerSecond - m_prevSpeeds.leftMetersPerSecond) / dt
+				(targetWheelSpeeds.leftMetersPerSecond - lastSpeeds.leftMetersPerSecond) / dt
 			);
 
-		double rightFeedforward = m_feedforward.calculate(
+		double rightFeedforward = feedforward.calculate(
 				targetWheelSpeeds.rightMetersPerSecond,
-				(targetWheelSpeeds.rightMetersPerSecond - m_prevSpeeds.rightMetersPerSecond) / dt
+				(targetWheelSpeeds.rightMetersPerSecond - lastSpeeds.rightMetersPerSecond) / dt
 			);
 
-		double leftFeedback = m_leftController.calculate(
+		double leftFeedback = leftController.calculate(
 				Odometry.getWheelSpeeds().leftMetersPerSecond, 
 				targetWheelSpeeds.leftMetersPerSecond
 			);
 
-		double rightFeedback = m_rightController.calculate(
+		double rightFeedback = rightController.calculate(
 				Odometry.getWheelSpeeds().rightMetersPerSecond,
 				targetWheelSpeeds.rightMetersPerSecond
 			);
 
-		m_prevTime = curTime;
-		m_prevSpeeds = targetWheelSpeeds;
+		lastTime = curTime;
+		lastSpeeds = targetWheelSpeeds;
 
 		Drive.set(new DriveSignal(
 				leftFeedforward + leftFeedback,
 				rightFeedforward + rightFeedback,
 				DriveUnit.VOLTAGE
 		));
+	}
 
-		return m_timer.hasPeriodPassed(m_trajectory.getTotalTimeSeconds());
+	public boolean isFinished() {
+		return timer.hasPeriodPassed(trajectory.getTotalTimeSeconds());
 	}
 
 	public void end() {
-		m_timer.stop();
+		timer.stop();
 		Drive.stop();
 		console.log(c.AUTO, 
 				"Trajectory Finished in " + 

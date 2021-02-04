@@ -56,7 +56,7 @@ public class Constants {
     public static double HOPPER_INDEX_BALL_SIZE = 2;
     public static double HOPPER_INDEX_TOL = 0.05;
     public static double HOPPER_FEED_SPEED = 6;
-    public static SubsystemConstants hopperIndex = new SubsystemConstants(
+    public static SubsystemConstants hopperIndexer = new SubsystemConstants(
             14, 0.5, 0.25,
             switchOnBot(0.308, 0.42), 0, 0,
             0, 0,

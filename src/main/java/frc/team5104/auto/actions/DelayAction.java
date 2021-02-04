@@ -18,9 +18,10 @@ public class DelayAction extends AutoAction {
     	startTime = System.currentTimeMillis();
     }
 
-    public boolean update() {
-    	return (System.currentTimeMillis() >= startTime + delay);
+    public void update() {
     }
+
+    public boolean isFinished() { return (System.currentTimeMillis() >= startTime + delay); }
 
     public void end() {
     	

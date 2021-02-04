@@ -2,7 +2,6 @@ package frc.team5104;
 
 import frc.team5104.auto.AutoManager;
 import frc.team5104.auto.Odometry;
-import frc.team5104.auto.paths.ExamplePath;
 import frc.team5104.subsystems.Drive;
 import frc.team5104.util.Plotter;
 import frc.team5104.util.Webapp;
@@ -24,8 +23,9 @@ public class RobotSim extends RobotController.BreakerRobot {
         Webapp.run();
         Plotter.reset();
         Odometry.init();
-        AutoManager.setTargetPath(new ExamplePath());
-        AutoManager.enabledPlotting();
+        //AutoManager.setTargetPath(new ExamplePath());
+        //AutoManager.enabledPlotting();
+        AutoManager.characterize(Drive.class);
     }
 
     //Autonomous

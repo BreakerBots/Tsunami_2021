@@ -1,9 +1,7 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package frc.team5104.util;
 
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
-import frc.team5104.util.CrashLogger.Crash;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,31 +10,29 @@ import java.util.function.DoubleSupplier;
 public class LatencyCompensator {
     private final List<Double> values;
     private final List<Double> timeStamps;
-    private final Notifier thread;
     private final DoubleSupplier valueReader;
 
     public LatencyCompensator(DoubleSupplier valueReader) {
         values = new ArrayList<Double>();
         timeStamps = new ArrayList<Double>();
         this.valueReader = valueReader;
-        thread = new Notifier(() -> {
-            try {
-                values.add(this.valueReader.getAsDouble());
-                timeStamps.add(Timer.getFPGATimestamp());
-
-                if (values.size() > 20)
-                    values.remove(0);
-                if (timeStamps.size() > 20)
-                    timeStamps.remove(0);
-            } catch (Exception e) { CrashLogger.logCrash(new Crash("latency-compensator", e)); }
-        });
-        thread.startPeriodic(0.01);
     }
 
     //Reset
     public void reset() {
         values.clear();
         timeStamps.clear();
+    }
+
+    //Update
+    public void update() {
+        values.add(this.valueReader.getAsDouble());
+        timeStamps.add(Timer.getFPGATimestamp());
+
+        if (values.size() > 20)
+            values.remove(0);
+        if (timeStamps.size() > 20)
+            timeStamps.remove(0);
     }
 
     //Getters
