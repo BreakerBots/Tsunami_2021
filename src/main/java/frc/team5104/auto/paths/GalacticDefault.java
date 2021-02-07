@@ -1,14 +1,16 @@
 package frc.team5104.auto.paths;
 
 import frc.team5104.auto.AutoPath;
+import frc.team5104.auto.Odometry;
 import frc.team5104.auto.Position;
 import frc.team5104.auto.actions.DriveTrajectoryAction;
 
 public class GalacticDefault extends AutoPath {
     public void start() {
-        Position start = new Position(0, 10);
+        //Set position relative to field
+        Odometry.reset(new Position(0, 10));
 
-        run(new DriveTrajectoryAction(start, false,
+        run(new DriveTrajectoryAction(false,
                 new Position(0, 10, 0), // Start
                 new Position(7.5, 10, -90), // B3
                 new Position(7.5, 7.5, -90), // C3
@@ -17,7 +19,7 @@ public class GalacticDefault extends AutoPath {
                 new Position(15, 2.5, -90) // E6
         ));
         // Second run
-        run(new DriveTrajectoryAction(start, false, 
+        run(new DriveTrajectoryAction(false, 
                 new Position(15, 2.5, -90), // E6
                 new Position(10, 7.5, 90), // Swoop point
                 new Position(15, 12.5, -45), // A6

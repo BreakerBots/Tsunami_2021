@@ -51,9 +51,12 @@ public class Odometry {
 	}
 	
 	public static void reset() {
+		reset(new Position(0, 0, 0));
+	}
+	public static void reset(Position position) {
 		if (odometry != null) {
 			Drive.reset();
-			odometry.resetPosition(new Pose2d(), Rotation2d.fromDegrees(-Drive.getHeading()));
+			odometry.resetPosition(position.toPose2dMeters(), Rotation2d.fromDegrees(position.getDegrees()));
 		}
 	}
 }

@@ -1,21 +1,23 @@
 package frc.team5104.auto.paths;
 
 import frc.team5104.auto.AutoPath;
+import frc.team5104.auto.Odometry;
 import frc.team5104.auto.Position;
 import frc.team5104.auto.actions.DriveTrajectoryAction;
 import frc.team5104.auto.actions.HopperWaitForPickup;
 
-public class ExamplePath extends AutoPath {
+public class GalacticOptimal extends AutoPath {
     final int WAIT_TIME = 2000;
 	public void start() {
-		Position start = new Position(0, 10);
+        //Set position relative to field
+        Odometry.reset(new Position(0, 10));
 
-		run(new DriveTrajectoryAction(start, false,
+		run(new DriveTrajectoryAction( false,
 				new Position(0, 10, 0), // Start
 				new Position(7.5, 10, -90) // B3
         ));
-        if (new HopperWaitForPickup(WAIT_TIME)) {
-            run(new DriveTrajectoryAction(start, false,
+        if (run(new HopperWaitForPickup(WAIT_TIME))) {
+            run(new DriveTrajectoryAction(false,
                 new Position(7.5, 10, -90), // B3, last position
                 new Position(12.5, 5, 0), // D5
                 new Position(17.5, 10, 0), // B7
@@ -27,12 +29,12 @@ public class ExamplePath extends AutoPath {
         }
 
         else {
-            run(new DriveTrajectoryAction(start, false,
+            run(new DriveTrajectoryAction(false,
                 new Position(7.5, 10, -90), // B3, last position
                 new Position(7.5, 7.5, -90) // C3
             ));
-            if (new HopperWaitForPickup(WAIT_TIME)) {
-                run(new DriveTrajectoryAction(start, false,
+            if (run(new HopperWaitForPickup(WAIT_TIME))) {
+                run(new DriveTrajectoryAction(false,
                     new Position(7.5, 7.5, -90), // C3
                     new Position(12.5, 5, 0), // D5
                     new Position(15, 12.5, 0), // A6
@@ -43,12 +45,12 @@ public class ExamplePath extends AutoPath {
                 ));
             }
             else {
-                run(new DriveTrajectoryAction(start, false,
+                run(new DriveTrajectoryAction(false,
                     new Position(7.5, 7.5, -90), // C3, last position
                     new Position(15, 5, 0) // D6
                 ));
-                if (new HopperWaitForPickup(WAIT_TIME)) {
-                    run(new DriveTrajectoryAction(start, false,
+                if (run(new HopperWaitForPickup(WAIT_TIME))) {
+                    run(new DriveTrajectoryAction(false,
                     new Position(15, 5, 0), // D6, last position
                     new Position(20, 10, 0), // B8
                     new Position(25, 5, -45), // D10
@@ -59,7 +61,7 @@ public class ExamplePath extends AutoPath {
                     ));
                 }
                 else {
-                    run(new DriveTrajectoryAction(start, false,
+                    run(new DriveTrajectoryAction(false,
                         new Position(15, 5, 0), // D6, last position
                         new Position(15, 2.5, -90), // E6
                         new Position(10, 7.5, 90), // Swoop point

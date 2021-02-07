@@ -11,10 +11,13 @@ import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.team5104.Constants;
 import frc.team5104.Ports;
-import frc.team5104.util.*;
+import frc.team5104.util.DriveSignal;
 import frc.team5104.util.DriveSignal.DriveUnit;
+import frc.team5104.util.Encoder;
 import frc.team5104.util.Encoder.EncoderSim;
 import frc.team5104.util.Encoder.FalconEncoder;
+import frc.team5104.util.Gyro;
+import frc.team5104.util.TalonSim;
 import frc.team5104.util.managers.Subsystem;
 import frc.team5104.util.setup.RobotState;
 

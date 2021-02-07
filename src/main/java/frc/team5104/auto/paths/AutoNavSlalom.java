@@ -1,14 +1,17 @@
 package frc.team5104.auto.paths;
 
 import frc.team5104.auto.AutoPath;
+import frc.team5104.auto.Odometry;
 import frc.team5104.auto.Position;
 import frc.team5104.auto.actions.DriveTrajectoryAction;
 
 public class AutoNavSlalom extends AutoPath {
         public void start() {
-            Position start = new Position(5, 2.5);
+            //Set position relative to field
+            Odometry.reset(new Position(5, 2.5));
+
             // Start
-            run(new DriveTrajectoryAction(start, false,
+            run(new DriveTrajectoryAction(false,
                     new Position(5, 2.5, 0), // Start
                     new Position(7.8, 6.5, 80),
                     new Position(11.5, 7.6, 0),

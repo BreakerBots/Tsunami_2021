@@ -125,10 +125,10 @@ public abstract class Subsystem {
 				percentOutput,
 				lastOutputVoltage,
 				lastOutputVoltage,
-				getLeftEncoderPos.getAsDouble(),
-				getRightEncoderPos.getAsDouble(),
-				getLeftEncoderVel.getAsDouble(),
-				getRightEncoderVel.getAsDouble(),
+				getLeftEncoderPos.getAsDouble() * 0.25, //convert from rotations to edges
+				getRightEncoderPos.getAsDouble() * 0.25,
+				getLeftEncoderVel.getAsDouble() * 0.25,
+				getRightEncoderVel.getAsDouble() * 0.25,
 				getGyroAngleRadians.getAsDouble()
 		};
 

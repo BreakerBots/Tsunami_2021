@@ -43,13 +43,6 @@ public class DriveTrajectoryAction extends AutoAction {
 	private double lastTime;
 
 	public DriveTrajectoryAction(boolean isReversed, Position... waypoints) {
-		this(new Position(0, 0, 0), isReversed, waypoints);
-	}
-	public DriveTrajectoryAction(Position offset, boolean isReversed, Position... waypoints) {
-		for (Position waypoint : waypoints) {
-			waypoint.subtract(offset);
-		}
-
 		feedforward = new SimpleMotorFeedforward(
 				Constants.drive.kLS,
 				Constants.drive.kLV,
