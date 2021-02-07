@@ -1,1 +1,2 @@
 AutoManager.setTargetPath(new ExamplePath());
+L
