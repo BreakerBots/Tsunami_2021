@@ -147,6 +147,12 @@ public class DriveTrajectoryAction extends AutoAction {
 				rightFeedforward + rightFeedback,
 				DriveUnit.VOLTAGE
 		));
+
+		if (AutoManager.plottingEnabled()) {
+			Plotter.plot(Odometry.getPositionFeet().getXFeet(),
+			             Odometry.getPositionFeet().getYFeet(),
+			             Plotter.Color.ORANGE);
+		}
 	}
 
 	public boolean isFinished() {

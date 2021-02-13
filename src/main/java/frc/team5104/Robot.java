@@ -12,7 +12,6 @@ import frc.team5104.util.*;
 import frc.team5104.util.managers.SubsystemManager;
 import frc.team5104.util.managers.TeleopControllerManager;
 import frc.team5104.util.setup.RobotController;
-import frc.team5104.util.setup.RobotState;
 
 public class Robot extends RobotController.BreakerRobot {
 	public Robot() {
@@ -98,10 +97,5 @@ public class Robot extends RobotController.BreakerRobot {
 		Superstructure.update();
 		SubsystemManager.update();
 		XboxController.update();
-		
-		if (RobotState.isDisabled()) {
-			Drive.reset();
-			Odometry.reset();
-		}
 	}
 }

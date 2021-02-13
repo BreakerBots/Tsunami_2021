@@ -15,7 +15,6 @@ public class AutoManager {
 
 	//Enabled/Disabled
 	public static void enabled() {
-		Odometry.reset();
 		if (Characterizer.isRunning()) {
 			Characterizer.enabled();
 		}
@@ -69,11 +68,6 @@ public class AutoManager {
 
 		//update odometry
 		Odometry.update();
-		if (plottingEnabled()) {
-			Plotter.plot(Odometry.getPositionFeet().getXFeet(),
-			             Odometry.getPositionFeet().getYFeet(),
-			             Plotter.Color.ORANGE);
-		}
 	}
 
 	//Plotting
