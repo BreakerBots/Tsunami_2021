@@ -22,18 +22,18 @@ public class AutoNavBarrel extends AutoPath {
             run(new DriveTrajectoryAction(false, 
                     new Position(9.2, 6.6, 90), // Last point
                     new Position(23.9, 8.7, 30),
-                    new Position(18.4, 13.2, -180),
-                    new Position(17, 8.5, 90)
+                    new Position(18.4, 13.2, 180),
+                    new Position(17, 8.5, 270)
             ));
             // Evading Marker D10
             run(new DriveTrajectoryAction(false, 
-                    new Position(17, 8.5, 90), // Last point
-                    new Position(20.3, 3.9, 45),
+                    new Position(17, 8.5, 270), // Last point
+                    new Position(20.3, 3.9, 315),
                     new Position(26.5, 2.6, 0),
                     new Position(28, 6.9, 90),
                     new Position(22, 7.35, 195),
                     new Position(15.4, 8, 165),
-                    new Position(7.5, 0, 180) // Finish
+                    new Position(0, 7.5, 180) // Finish
             ));
         }
     }
