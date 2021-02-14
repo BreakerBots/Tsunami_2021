@@ -2,7 +2,6 @@
 
 #potterTabWrapper {
 	display: flex;
-	flex-wrap: wrap;
 }
 
 #plotterWindow {
@@ -13,7 +12,7 @@
 	margin: 10px;
 }
 
-#plotterInputWrapper {
+#plotterInteractWrapper {
 	padding: 10px 10px 0 10px;
 	max-width: 50px;
 	min-width: 50px;
@@ -37,4 +36,62 @@
 	height: 100%;
 	border-radius: 20px;
 	transition: background-color 0.25s ease;
+}
+
+#plotterInput {
+	width: 30%;
+	height: calc(100%-180px) !important;
+	padding: 10px 0px 10px 10px;
+	border-top: 10px solid #b90013;
+	border-right: 10px solid #b90013;
+	border-bottom: 10px solid #b90013;
+	border-radius: 0 5px 5px 0;
+	z-index: 1;
+	position: relative;
+	background: white;
+	overflow-y: auto;
+}
+
+.plotter-input-element-parent {
+	margin: 10px 0 0 0;
+	width: 100%;
+}
+	.plotter-input-element-parent > .plotter-input-element {
+		width: calc(100% - 10px);
+	}
+	.plotter-input-element-parent > .plotter-input-element.plotter-input-coord {
+		width: calc(33% - 20px);
+	}
+	.plotter-input-element-parent > .plotter-input-element.plotter-input-coord input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	.plotter-input-element-parent > .plotter-input-remove {
+		display: inline-flex;
+		height: 100%;
+	}
+	.plotter-input-element-parent > .plotter-input-remove > .mdc-icon-toggle {
+		position: relative;
+		top: 8px;
+		display: block;
+	}
+#plotterInputFooter {
+	display: flex;
+}
+.plotter-input-add {
+	margin: 15px 0 0 15px;
+}
+.plotter-input-save {
+	margin: 15px;
+}
+.mdc-dialog__content, .mdc-dialog__content > * {
+	font-family: Consolas, Roboto, sans-serif;
+}
+.mdc-dialog__content > or {
+	display: inline-block;
+	color: orange;
+}
+.mdc-dialog__content > bl {
+	display: inline-block;
+	color: blue;
 }

@@ -108,10 +108,37 @@
 		<!--Plotter-->
 		<div id="tab-plotter" class="tab">
 			<div id="potterTabWrapper">
+				<div id="plotterInput">
+					<div class="plotter-input-element-parent">
+						<div id="plotter-input-reversed" class="plotter-input-element mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
+							<input class="mdc-text-field__input">
+							<div class="mdc-notched-outline">
+								<div class="mdc-notched-outline__leading"></div>
+								<div class="mdc-notched-outline__notch">
+									<label class="mdc-floating-label">Reversed</label>
+								</div>
+								<div class="mdc-notched-outline__trailing"></div>
+							</div>
+						</div>
+					</div>
+
+					<div id="plotter-input-points-wrapper">
+
+					</div>
+
+					<div id="plotterInputFooter">
+						<i onclick="addPlotterInputElement()" class="plotter-input-add mdc-icon-toggle" data-mdc-auto-init="MDCIconToggle">
+							<img src="resources/images/add.png" style="width: 100%;"/>
+						</i>
+						<i onclick="savePlotterInput()" class="plotter-input-save mdc-icon-toggle" data-mdc-auto-init="MDCIconToggle">
+							<img src="resources/images/save.png" style="width: 100%;"/>
+						</i>
+					</div>
+				</div>
 				<div id="plotterWindow">
 					<!--Desmos-->
 				</div>
-				<div id="plotterInputWrapper">
+				<div id="plotterInteractWrapper">
 					<i onclick="handlePlotterPausePlay()" class="mdc-icon-toggle" data-mdc-auto-init="MDCIconToggle">
 						<img id="plotter-pause-play" src="resources/images/pause.png" style="width: 100%" />
 					</i>
@@ -129,6 +156,25 @@
 		</div>
 	</div>
 
+	<!--Modal-->
+	<div class="mdc-dialog" data-mdc-auto-init="MDCDialog">
+		<div class="mdc-dialog__container">
+			<div class="mdc-dialog__surface"
+				 role="alertdialog"
+				 aria-modal="true"
+				 aria-labelledby="my-dialog-title"
+				 aria-describedby="my-dialog-content">
+				<div class="mdc-dialog__content" id="my-dialog-content"> </div>
+				<div class="mdc-dialog__actions">
+					<button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="cancel">
+						<div class="mdc-button__ripple"></div>
+						<span class="mdc-button__label">Ok</span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="mdc-dialog__scrim"></div>
+	</div>
 
 	<!--Javascript-->
 	<script src="resources/other/desmos.js"></script>

@@ -4,6 +4,7 @@ import frc.team5104.auto.Position;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Handles the plotting of points on the WebApp.
@@ -25,6 +26,9 @@ public class Plotter {
                 ORANGE = new Color("orange"),
                 BLACK = new Color("black");
     }
+    public enum InputMode { DISABLED, TRAJECTORY }
+    private static InputMode inputMode;
+    private static Consumer<String> inputListener;
 
     private static final List<PlotterPoint> buffer = new ArrayList<PlotterPoint>();
 
@@ -44,6 +48,16 @@ public class Plotter {
 
     public static void plot(double x, double y, Color color) {
         buffer.add(new PlotterPoint(x, y, color));
+    }
+
+    public static void setInputMode(InputMode inputMode) { Plotter.inputMode = inputMode; }
+    public static InputMode getInputMode() { return inputMode; }
+    public static void onInput(String data) {
+        if (inputListener != null)
+            inputListener.accept(data);
+    }
+    public static void setInputListener(Consumer<String> listener) {
+        inputListener = listener;
     }
 
     protected static String readBuffer() {

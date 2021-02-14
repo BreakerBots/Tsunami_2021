@@ -1,8 +1,10 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package frc.team5104.auto;
 
+import frc.team5104.auto.actions.DriveTrajectoryAction;
 import frc.team5104.teleop.CompressorController;
 import frc.team5104.util.*;
+import frc.team5104.util.Plotter.InputMode;
 import frc.team5104.util.console.c;
 import frc.team5104.util.managers.Subsystem;
 import frc.team5104.util.setup.RobotState;
@@ -76,5 +78,30 @@ public class AutoManager {
 	}
 	public static boolean plottingEnabled() {
 		return plottingEnabled;
+	}
+
+	//Trajectory Tester
+	public static void runTrajectoryTester() {
+		Plotter.setInputMode(InputMode.TRAJECTORY);
+		Plotter.setInputListener((data) -> {
+			boolean reversed = Webapp.getJSONValue(data, "reversed") == "\"true\"";
+			String[] pointStrings = data
+					.substring(data.indexOf("points\":")+9, data.indexOf("}")-1)
+					.replaceAll("\"", "")
+					.split("]");
+
+			Position[] positions = new Position[pointStrings.length];
+			for (int i = 0; i < positions.length; i++) {
+				String str = pointStrings[i].substring(pointStrings[i].charAt(0)==','?2:1);
+				double x = Double.valueOf(str.substring(0, str.indexOf(",")));
+				double y = Double.valueOf(str.substring(str.indexOf(",")+1, str.lastIndexOf(",")));
+				double angle = Double.valueOf(str.substring(str.lastIndexOf(",")+1));
+				positions[i] = new Position(x, y, angle);
+			}
+
+			try {
+				new DriveTrajectoryAction(reversed, positions);
+			} catch (Exception e) { }
+		});
 	}
 }

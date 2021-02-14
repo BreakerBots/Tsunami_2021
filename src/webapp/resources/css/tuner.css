@@ -11,7 +11,7 @@
 
 	#tuner-container > #inputBox {
 		width: 30%;
-		height: calc(100%-180px) !important;
+		height: calc(100% - 50px) !important;
 		padding: 10px;
 		border-top: 10px solid #b90013;
 		border-right: 10px solid #b90013;

@@ -176,6 +176,15 @@ public class Webapp {
                 os.write(response.getBytes());
                 os.close();
             }
+
+            //Set
+            else if (requestType.equals("set")) {
+                //Set inputs
+                InputStreamReader isr = new InputStreamReader(t.getRequestBody(), StandardCharsets.UTF_8);
+                BufferedReader br = new BufferedReader(isr);
+                String data = br.readLine();
+                Plotter.onInput(data);
+            }
         }
     }
 
@@ -188,10 +197,12 @@ public class Webapp {
             //Get
             if (requestType.equals("get")) {
                 //Send outputs
-                String response = "{\"name\":\"" + Constants.config.robotName +
-                        "\",\"sim\":\"" + RobotState.isSimulation() +
-                        "\",\"enabled\":\"" + RobotState.isEnabled() + "\"}";
-
+                String response = toJSON(
+                        "name", Constants.config.robotName,
+                        "sim", RobotState.isSimulation(),
+                        "enabled", RobotState.isEnabled(),
+                        "plotterInput", Plotter.getInputMode()
+                );
                 t.sendResponseHeaders(200, response.length());
                 OutputStream os = t.getResponseBody();
                 os.write(response.getBytes());
@@ -209,5 +220,30 @@ public class Webapp {
                 DriverStationSim.setEnabled(enabled.equals("true"));
             }
         }
+    }
+
+    //JSON
+    public static String toJSON(Object... nameOrValue) {
+        String ret = "{";
+        for (int i = 0; i < nameOrValue.length; i++) {
+            ret += "\"" + console.parseAndRound(2, nameOrValue[i]) + "\"";
+            ret += (i%2==0? ":" : (i!=nameOrValue.length-1? ",":""));
+        }
+        return ret + "}";
+    }
+    public static String getJSONValue(String json, String key) {
+        key = "\"" + key + "\":";
+        int keyI = json.indexOf(key);
+        if (keyI == -1)
+            return null;
+        keyI += key.length();
+
+        int endI = json.indexOf(",", keyI);
+        if (endI == -1)
+            endI = json.indexOf("}", keyI);
+        if (endI == -1)
+            return null;
+
+        return json.substring(keyI, endI);
     }
 }
