@@ -3,7 +3,7 @@ package frc.team5104.auto;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
-import frc.team5104.util.BreakerMath;
+import frc.team5104.util.ExtraMath;
 import frc.team5104.util.Units;
 
 import java.util.ArrayList;
@@ -67,9 +67,9 @@ public class Position {
 
 	public String toString() {
 		return "position: {" +
-				"xft: " + BreakerMath.round(xFeet, 2) + ", " +
-				"yft: " + BreakerMath.round(yFeet, 2) + ", " +
-				"deg: " + BreakerMath.round(degrees, 2) +
+				"xft: " + ExtraMath.round(xFeet, 2) + ", " +
+				"yft: " + ExtraMath.round(yFeet, 2) + ", " +
+				"deg: " + ExtraMath.round(degrees, 2) +
 			"}";
 	}
 	

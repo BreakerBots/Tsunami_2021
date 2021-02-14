@@ -87,7 +87,7 @@ public class Plotter {
         }
 
         public String toString() {
-            return "{\"x\":" + BreakerMath.round(x, 6) + ",\"y\":" + BreakerMath.round(y, 6) + ",\"color\":\"" + color.value + "\"}";
+            return "{\"x\":" + ExtraMath.round(x, 6) + ",\"y\":" + ExtraMath.round(y, 6) + ",\"color\":\"" + color.value + "\"}";
         }
     }
 }

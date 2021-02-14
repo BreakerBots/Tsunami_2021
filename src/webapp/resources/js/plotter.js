@@ -314,6 +314,8 @@ function savePlotterInput() {
 }
 let plotterInputReversedEl = document.querySelector("#plotter-input-reversed");
 plotterInputReversedEl.MDCTextField.value = "false";
+plotterInputReversedEl.querySelector(".mdc-notched-outline__notch").style.width = "60.5px";
+
 plotterInputReversedEl.oninput = () => { plotterRequestSendTrajectory(); }
 
 //HTTP Requests

@@ -4,6 +4,8 @@ package frc.team5104.auto;
 import frc.team5104.auto.actions.DriveTrajectoryAction;
 import frc.team5104.teleop.CompressorController;
 import frc.team5104.util.*;
+import frc.team5104.util.Looper.Crash;
+import frc.team5104.util.Looper.Loop;
 import frc.team5104.util.Plotter.InputMode;
 import frc.team5104.util.console.c;
 import frc.team5104.util.managers.Subsystem;
@@ -20,7 +22,7 @@ public class AutoManager {
 		if (Characterizer.isRunning()) {
 			Characterizer.enabled();
 		}
-		else {
+		else if (targetPath != null) {
 			/*Spawn path thread -- a thread that waits through each action.
 		     Calls action init(), isFinished(), end(), and getValue() but not update() <-- called below */
 			pathThread = new Thread(() -> {
@@ -28,9 +30,10 @@ public class AutoManager {
 					console.log(c.AUTO, "Running auto path: " + targetPath.getClass().getSimpleName());
 					targetPath.start();
 					console.log(c.AUTO, targetPath.getClass().getSimpleName() + " finished");
-				} catch (Exception e) { CrashLogger.logCrash(new CrashLogger.Crash("auto-manager", e)); }
+				} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 			});
 			pathThread.start();
+			Looper.registerLoop(new Loop("Auto", pathThread, 8));
 		}
 	}
 	public static void disabled() {

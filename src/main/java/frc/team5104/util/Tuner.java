@@ -1,6 +1,6 @@
 package frc.team5104.util;
 
-import frc.team5104.util.CrashLogger.Crash;
+import frc.team5104.util.Looper.Crash;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -150,7 +150,7 @@ public class Tuner {
                 else if (methodTarget != null) {
                     return methodTarget.invoke(null).toString();
                 }
-            } catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
+            } catch (Exception e) { Looper.logCrash(new Crash(e)); }
             return null;
         }
 

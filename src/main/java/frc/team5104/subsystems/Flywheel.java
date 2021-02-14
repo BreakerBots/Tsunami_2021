@@ -85,8 +85,8 @@ public class Flywheel extends Subsystem {
 		return (Hood.isTrenchMode()) ? 11000 : 9000;
 	}
 	public static boolean isSpedUp() {
-		return (motor1 == null) ? true : BreakerMath.roughlyEquals(getAvgRPM(), getTargetRPM(),
-				Constants.FLYWHEEL_RPM_TOL * Constants.SUPERSTRUCTURE_TOL_SCALAR);
+		return (motor1 == null) ? true : ExtraMath.roughlyEquals(getAvgRPM(), getTargetRPM(),
+		                                                         Constants.FLYWHEEL_RPM_TOL * Constants.SUPERSTRUCTURE_TOL_SCALAR);
 	}
 	
 	//Config

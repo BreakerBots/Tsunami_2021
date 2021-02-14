@@ -4,25 +4,30 @@ package frc.team5104.util.setup;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.hal.NotifierJNI;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import frc.team5104.Constants;
 import frc.team5104.Robot;
 import frc.team5104.RobotSim;
-import frc.team5104.util.CrashLogger;
-import frc.team5104.util.CrashLogger.Crash;
+import frc.team5104.util.Looper;
+import frc.team5104.util.Looper.Crash;
+import frc.team5104.util.Looper.Loop;
+import frc.team5104.util.Looper.TimedLoop;
 import frc.team5104.util.console;
 import frc.team5104.util.console.c;
 import frc.team5104.util.console.t;
 import frc.team5104.util.setup.RobotState.RobotMode;
 
 public class RobotController extends RobotBase {
+	private final int notifier = NotifierJNI.initializeNotifier();
+	private double expirationTime; //ms
 	private BreakerRobot robot;
 
 	//Init Robot
 	public void startCompetition() {
-		HAL.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Iterative);
+		//Logging
+		console.init();
 		if (!RobotState.isSimulation())
 			console.logFile.start();
 		console.sets.create("RobotInit");
@@ -30,33 +35,39 @@ public class RobotController extends RobotBase {
 			console.error("Please deploy robot.txt with the correct robot name!");
 		console.log(c.MAIN, t.INFO, "Initializing " + Constants.config.robotName + " Code...");
 
+		//Set Child Class
 		if (RobotState.isSimulation())
 			robot = new RobotSim();
 		else robot = new Robot();
-		
+
+		//HAL
+		HAL.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Timed);
 		HAL.observeUserProgramStarting();
-		
+
+		//Logging
 		console.sets.log(c.MAIN, t.INFO, "RobotInit", "Initialization took ");
-		
+
+		//Fast Loop
+		Looper.registerLoop(new TimedLoop("Fast", 9, 5));
+
 		//Main Loop
+		Looper.registerLoop(new Loop("Main", Thread.currentThread(), 5));
+		expirationTime = RobotState.getFPGATimestamp() + RobotState.getLoopPeriod();
+		NotifierJNI.setNotifierName(notifier, "Main");
 		while (true) {
-			double st = Timer.getFPGATimestamp();
-			
-			//Call main loop function (and crash tracker)
-			try {
-				loop();
-			} catch (Exception e) {
-				CrashLogger.logCrash(new Crash("robot", e));
-			}
-			
-			//Wait to make loop correct time
-			try { Thread.sleep(Math.round(RobotState.loopPeriod - (Timer.getFPGATimestamp() - st))); } catch (Exception e) { }
-			
-			RobotState.setDeltaTime(Timer.getFPGATimestamp() - st);
+			NotifierJNI.updateNotifierAlarm(notifier, (long) (expirationTime * 1e3d));
+			if (NotifierJNI.waitForNotifierAlarm(notifier) == 0)
+				break;
+
+			loop();
+
+			expirationTime += RobotState.getLoopPeriod();
 		}
 	}
 	public void endCompetition() {
-		
+		NotifierJNI.stopNotifier(notifier);
+		NotifierJNI.cleanNotifier(notifier);
+		Looper.killAll();
 	}
 
 	//Main Loop
@@ -83,8 +94,6 @@ public class RobotController extends RobotBase {
 					if (!RobotState.isSimulation())
 						console.logFile.end();
 					robot.mainStop();
-					RobotState.resetTimer();
-					RobotState.startTimer();
 				}
 				else if (RobotState.getLastMode() == RobotMode.DISABLED) {
 					if (!RobotState.isSimulation()) {
@@ -94,12 +103,12 @@ public class RobotController extends RobotBase {
 					robot.mainStart();
 				}
 			}
-		} catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
+		} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 		
 		//Update Main Robot Loop
 		try {
 			robot.mainLoop();
-		} catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
+		} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 		
 		//Handle Modes
 		switch(RobotState.getMode()) {
@@ -112,7 +121,7 @@ public class RobotController extends RobotBase {
 					}
 					robot.teleopLoop();
 					HAL.observeUserProgramTeleop();
-				} catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
+				} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 				break;
 			}
 			case AUTONOMOUS: {
@@ -124,7 +133,7 @@ public class RobotController extends RobotBase {
 					}
 					robot.autoLoop();
 					HAL.observeUserProgramTeleop();
-				} catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
+				} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 				break;
 			}
 			case TEST: {
@@ -136,7 +145,7 @@ public class RobotController extends RobotBase {
 					}
 					robot.testLoop();
 					HAL.observeUserProgramTest();
-				} catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
+				} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 				break;
 			}
 			case DISABLED: {
@@ -163,7 +172,7 @@ public class RobotController extends RobotBase {
 						}
 					}
 					HAL.observeUserProgramDisabled();
-				} catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
+				} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 				break;
 			}
 			default: break;
@@ -177,7 +186,7 @@ public class RobotController extends RobotBase {
 		}
 		RobotState.setLastMode(RobotState.getMode());
 	}
-	
+
 	//Child Class
 	/**
 	 * The Main Robot Interface. Called by this, Breaker Robot Controller

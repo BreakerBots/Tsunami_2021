@@ -5,7 +5,7 @@ package frc.team5104.util;
  * Extra Math Functions :)
  * Stay in school kids.
  */
-public class BreakerMath {
+public class ExtraMath {
     //Number Range Clamping
     public static double clamp(double value, double min, double max) { return min(max(value, max), min); }
 

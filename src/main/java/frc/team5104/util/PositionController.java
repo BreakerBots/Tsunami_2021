@@ -1,14 +1,16 @@
 package frc.team5104.util;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.Constraints;
-import frc.team5104.util.setup.RobotState;
 
 public class PositionController {
+    private final Timer timer = new Timer();
     private final ProfiledPIDController pid;
     private final SimpleMotorFeedforward ff;
-    private double lastVelocity, lastPIDOutput, lastFFOutput, lastOutput, lastPosition, lastTarget;
+    private double lastVelocity, lastPIDOutput, lastFFOutput, lastOutput,
+            lastPosition, lastTarget, lastTime;
 
     public PositionController(ConstantsUtils.SubsystemConstants constants) {
         this(constants.kP, constants.kI, constants.kD, constants.maxVelocity, constants.maxAccel,
@@ -22,14 +24,17 @@ public class PositionController {
     }
 
     public double calculate(double currentPosition, double targetPosition) {
+        double curTime = timer.get();
+        double dt = curTime - lastTime;
+
         lastPIDOutput = pid.calculate(currentPosition, targetPosition);
         lastFFOutput = ff.calculate(
                 pid.getSetpoint().velocity,
-                (pid.getSetpoint().velocity - lastVelocity) / RobotState.getDeltaTime()
+                (pid.getSetpoint().velocity - lastVelocity) / dt
         );
         lastOutput = lastFFOutput + lastPIDOutput;
-
         lastVelocity = pid.getSetpoint().velocity;
+        lastTime = curTime;
 
         return lastOutput;
     }

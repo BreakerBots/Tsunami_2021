@@ -26,6 +26,7 @@ function updateConnection() {
 				enabledSwitchEl.style.display = (data.sim === "true") ? "inline-block" : "none";
 				enabledSwitchEl.MDCSwitch.checked = data.enabled === "true";
 				robotConnectedIconEl.src = "resources/images/connection.png";
+				document.querySelector("#plotterInput").style.display = data.plotterInput === "DISABLED" ? "none" : "block";
 			}
 		}
 	};

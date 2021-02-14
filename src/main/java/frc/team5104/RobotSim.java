@@ -7,7 +7,6 @@ import frc.team5104.util.Plotter;
 import frc.team5104.util.Webapp;
 import frc.team5104.util.managers.SubsystemManager;
 import frc.team5104.util.setup.RobotController;
-import frc.team5104.util.setup.RobotState;
 
 public class RobotSim extends RobotController.BreakerRobot {
     public RobotSim() {

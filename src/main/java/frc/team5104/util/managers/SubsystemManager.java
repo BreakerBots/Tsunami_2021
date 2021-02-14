@@ -2,8 +2,8 @@
 package frc.team5104.util.managers;
 
 import edu.wpi.first.wpilibj.Notifier;
-import frc.team5104.util.CrashLogger;
-import frc.team5104.util.CrashLogger.Crash;
+import frc.team5104.util.Looper;
+import frc.team5104.util.Looper.Crash;
 import frc.team5104.util.console;
 import frc.team5104.util.console.c;
 import frc.team5104.util.console.t;
@@ -29,20 +29,19 @@ public class SubsystemManager {
 					subsystem.initSim();
 				else subsystem.init();
 				message += subsystem.getClass().getSimpleName() + ", ";
-			} catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
+			} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 		}
 		console.log(c.MAIN, t.INFO, message.substring(0, message.length()-2));
 		
 		//Fast Update
-		thread = new Notifier(() -> {
+		Looper.attach(() -> {
 			for (Subsystem subsystem : targetSubsystems) {
 				try {
 					if (!subsystem.emergencyStopped)
 						subsystem.fastUpdate();
-				} catch (Exception e) { CrashLogger.logCrash(new Crash("subsystem-fast-loop", e)); }
+				} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 			}
-		});
-		thread.startPeriodic(0.005);
+		}, "Fast");
 	}
 	
 	/** Plug in a the classes of subsystem you want to debug. */
@@ -53,7 +52,7 @@ public class SubsystemManager {
 				try {
 					if (subsystem.getClass() == subsystemToDebug)
 						subsystem.startDebugging();
-				} catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
+				} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 			}
 		}
 	}
@@ -65,7 +64,7 @@ public class SubsystemManager {
 			try {
 				if (subsystem.getClass() == targetSubsystem)
 					return subsystem;
-			} catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
+			} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 		}
 		return null;
 	}
@@ -75,7 +74,7 @@ public class SubsystemManager {
 		for (Subsystem subsystem : targetSubsystems) {
 			try {
 				subsystem.disabled();
-			} catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
+			} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 		}
 	}
 	
@@ -92,7 +91,7 @@ public class SubsystemManager {
 					if (subsystem.debugging)
 						subsystem.debug();
 				}
-			} catch (Exception e) { CrashLogger.logCrash(new Crash("main", e)); }
+			} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 		}
 	}
 }

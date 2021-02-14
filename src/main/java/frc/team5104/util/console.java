@@ -3,6 +3,7 @@ package frc.team5104.util;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import frc.team5104.util.Looper.TimedLoop;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -50,7 +51,7 @@ public class console {
         t(String message) { this.message = message; }
     }
 
-    // -- Log::Main
+    // -- Logging Methods
 
     /**
      * Prints out text to the console under the specific category (Base Function)
@@ -60,7 +61,7 @@ public class console {
      */
     public static void log(c category, t type, Object... data) {
         String f = round(Timer.getFPGATimestamp(), 2) + ": " + type.message + "[" + category.toString() + "]: " + parseAndRound(2, data);
-        System.out.println(f);
+        addToPrintBuffer(f);
         if (logFile.isLogging)
             logFile.log += f + "\n";
     }
@@ -93,7 +94,7 @@ public class console {
 
     /** Prints out a divider */
     public static void divider() {
-        System.out.println("<----------------------------------------->");
+        addToPrintBuffer("<----------------------------------------->");
     }
 
     // -- Parse
@@ -138,7 +139,22 @@ public class console {
 
     /** Rounds a number to N decimal places */
     public static String round(double number, int decimalPlaces) {
-        return String.format("%." + ((int) BreakerMath.clamp(decimalPlaces, 0, 10)) + "f", number);
+        return String.format("%." + ((int) ExtraMath.clamp(decimalPlaces, 0, 10)) + "f", number);
+    }
+
+    // -- System Logging/Thread/Loop
+    private static ArrayList<String> buffer = new ArrayList();
+    public static void init() {
+        buffer.clear();
+        Looper.registerLoop(new TimedLoop("Console", 1, 100));
+        Looper.attach(() -> {
+            for (String line : buffer)
+                System.out.println(line);
+            buffer.clear();
+        }, "Console");
+    }
+    public static void addToPrintBuffer(String line) {
+        buffer.add(line);
     }
 
     // -- Timing Groups/Sets

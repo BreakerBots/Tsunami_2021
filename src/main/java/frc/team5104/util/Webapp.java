@@ -7,12 +7,15 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import frc.team5104.Constants;
+import frc.team5104.util.Looper.Crash;
+import frc.team5104.util.Looper.Loop;
 import frc.team5104.util.console.c;
 import frc.team5104.util.setup.RobotState;
 
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.Executor;
 
 /**
  * Hosts the BreakerBoard (WebApp) through the RoboRIO.
@@ -40,7 +43,7 @@ public class Webapp {
             server.createContext("/robot", new RobotHandler());
 
             //Start Server
-            server.setExecutor(null);
+            server.setExecutor(new WebappExecutor());
             server.start();
 
             console.log("Hosting Web App at " +
@@ -219,6 +222,22 @@ public class Webapp {
                 DriverStationSim.setAutonomous(true);
                 DriverStationSim.setEnabled(enabled.equals("true"));
             }
+        }
+    }
+
+    //Executer
+    private static class WebappExecutor implements Executor {
+        private Thread thread;
+
+        public void execute(Runnable task) {
+            thread = new Thread(() -> {
+                try {
+                    task.run();
+                } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+            });
+            thread.start();
+
+            Looper.registerLoop(new Loop("Webapp", thread, 2));
         }
     }
 
