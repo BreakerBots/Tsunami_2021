@@ -3,7 +3,6 @@ package frc.team5104.util;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import frc.team5104.util.console.c;
 import frc.team5104.util.managers.Subsystem;
 import frc.team5104.util.managers.SubsystemManager;
 import frc.team5104.util.setup.RobotState;
@@ -20,7 +19,7 @@ public class Characterizer {
 		subsystem = SubsystemManager.getSubsystem(targetSubsystem);
 
 		if (subsystem == null) {
-			console.error(c.AUTO, "subsystem to characterize could not be found.");
+			console.error("subsystem to characterize could not be found.");
 			return;
 		}
 

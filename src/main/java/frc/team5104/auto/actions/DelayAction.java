@@ -3,7 +3,6 @@ package frc.team5104.auto.actions;
 
 import frc.team5104.auto.AutoAction;
 import frc.team5104.util.console;
-import frc.team5104.util.console.c;
 
 public class DelayAction extends AutoAction {
 	long startTime;
@@ -14,7 +13,7 @@ public class DelayAction extends AutoAction {
     }
 
     public void init() {
-    	console.log(c.AUTO, "Delaying " + delay + "ms");
+    	console.log("Delaying " + delay + "ms");
     	startTime = System.currentTimeMillis();
     }
 

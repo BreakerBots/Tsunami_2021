@@ -2,10 +2,8 @@
 package frc.team5104.util.managers;
 
 import frc.team5104.util.Looper;
-import frc.team5104.util.console;
 import frc.team5104.util.Looper.Crash;
-import frc.team5104.util.console.c;
-import frc.team5104.util.console.t;
+import frc.team5104.util.console;
 
 /** Manages all the calls for all Teleop Controllers given */
 public class TeleopControllerManager {
@@ -20,7 +18,7 @@ public class TeleopControllerManager {
 		for (TeleopController teleopController : teleopControllers) {
 			message += teleopController.getClass().getSimpleName() + ", ";
 		}
-		console.log(c.MAIN, t.INFO, message.substring(0, message.length()-2));
+		console.log(message.substring(0, message.length()-2));
 	}
 	
 	/** Call periodically when the robot is enabled (and wants teleoperation) */

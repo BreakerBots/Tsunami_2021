@@ -4,7 +4,6 @@ package frc.team5104.auto.actions;
 import frc.team5104.auto.AutoAction;
 import frc.team5104.subsystems.Turret;
 import frc.team5104.util.console;
-import frc.team5104.util.console.c;
 
 public class ZeroTurretAction extends AutoAction {
 	
@@ -15,7 +14,7 @@ public class ZeroTurretAction extends AutoAction {
     }
 
     public void init() {
-    	console.log(c.AUTO, "zeroing turret at " + angleToZeroTurretAt);
+    	console.log("zeroing turret at " + angleToZeroTurretAt);
     	Turret.setFieldOrientedTarget(angleToZeroTurretAt);
     }
 

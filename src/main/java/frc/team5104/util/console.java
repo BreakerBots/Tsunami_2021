@@ -21,81 +21,36 @@ public class console {
     public static final boolean OVERWRITE_NON_MATCH_LOGS = true;
     public static final boolean OVERWRITE_MATCH_LOGS = false;
 
-    /** Categories for Logging */
-    public enum c {
-        TELEOP,
-        MAIN,
-        DEBUG,
-        OTHER,
-        AUTO,
-        WEBAPP,
-        VISION,
-
-        DRIVE,
-        SUPERSTRUCTURE,
-        INTAKE,
-        HOPPER,
-        PANELER,
-        FLYWHEEL,
-        HOOD,
-        TURRET,
-        CLIMBER
-        //slap ur subsystems here
-    }
-
     /** Types of Logging */
-    public enum t {
+    private enum Type {
         ERROR("ERROR "), INFO(""), WARNING("WARNING ");
         String message;
 
-        t(String message) { this.message = message; }
+        Type(String message) { this.message = message; }
     }
 
     // -- Logging Methods
 
-    /**
-     * Prints out text to the console under the specific category (Base Function)
+    /** Prints out text in a separate thread (lowest priority) and adds prints to a text file (if Console.logFile.isLogging)
      * Examples:
-     * 2.12 [MAIN]: Message
-     * 90.12 ERROR [AUTO]: Message
-     */
-    public static void log(c category, t type, Object... data) {
-        String f = round(Timer.getFPGATimestamp(), 2) + ": " + type.message + "[" + category.toString() + "]: " + parseAndRound(2, data);
+     * 2.12 [Robot]: Message
+     * 90.12 ERROR [subsystems.Turret]: Message */
+    private static void logBase(int stackCount, Type type, Object... data) {
+        String location = new Throwable().getStackTrace()[stackCount].getClassName();
+        if (location.indexOf("frc.team5104.") != -1)
+            location = location.substring("frc.team5104.".length());
+        String f = round(Timer.getFPGATimestamp(), 2) + ": " + type.message + "[" + location + "]: " + parseAndRound(2, data);
         addToPrintBuffer(f);
         if (logFile.isLogging)
             logFile.log += f + "\n";
     }
-
-    // -- Log::Info
-
-    /** Prints out text to the console under the type "INFO" */
-    public static void log(c category, Object... data) { log(category, t.INFO, data); }
-
     /** Prints out text to the console under the type "INFO" and category "OTHER" */
-    public static void log(Object... data) { log(c.OTHER, t.INFO, data); }
-
-    // -- Log::Error
-
-    /** Prints out text to the console under the type "ERROR" */
-    public static void error(c category, Object... data) { log(category, t.ERROR, data); }
-
+    public static void log(Object... data) { logBase(2, Type.INFO, data); }
     /** Prints out text to the console under the type "ERROR" and category "OTHER" */
-    public static void error(Object... data) { log(c.OTHER, t.ERROR, data); }
-
-    // -- Log::Warning
-
-    /** Prints out text to the console under the type "WARN" */
-    public static void warn(c category, Object... data) { log(category, t.WARNING, data); }
-
+    public static void error(Object... data) { logBase(2, Type.ERROR, data); }
     /** Prints out text to the console under the type "WARN" and category "OTHER" */
-    public static void warn(Object... data) { log(c.OTHER, t.WARNING, data); }
+    public static void warn(Object... data) { logBase(2, Type.WARNING, data); }
 
-    // -- Divider
-
-    /** Prints out a divider */
-    public static void divider() {
-        addToPrintBuffer("<----------------------------------------->");
-    }
 
     // -- Parse
 
@@ -175,7 +130,7 @@ public class console {
                 si++;
             }
             else
-                console.log("Max Amount of Sets Created");
+                console.error("Max Amount of Sets Created");
         }
 
         /** Returns the index of the timing group/set (-1 if not found) */
@@ -212,8 +167,6 @@ public class console {
                 switch (format) {
                     case Milliseconds:
                         return r;
-                    case Seconds:
-                        return r / 1000.0;
                     case Minutes:
                         return r / 1000.0 / 60.0;
                     default:
@@ -222,17 +175,12 @@ public class console {
             }
         }
 
-        /**
-         * Similar to normal "console.log" with the time of a timing group/set appended
+        /** Similar to normal "console.log" with the time of a timing group/set appended
          * "CATEGORY: MESSAGE TIMESPACER TIME". Ex) "AUTO: Initialization took 10.26s"
-         *
          * @param a               The text to print out
-         * @param t               The Category under which to print out
-         * @param timingGroupName The name of the timing group/set
-         * @param timeSpacer      What to add to the message before the time.
-         */
-        public static void log(c c, t t, String timingGroupName, Object... a) {
-            console.log(c, t, parse(a) + " " + String.format("%.2f", getTime(timingGroupName)) + "s");
+         * @param timingGroupName The name of the timing group/set */
+        public static void log(String timingGroupName, Object... a) {
+            console.logBase(2, Type.INFO, parse(a) + " " + String.format("%.2f", getTime(timingGroupName)) + "s");
         }
     }
 

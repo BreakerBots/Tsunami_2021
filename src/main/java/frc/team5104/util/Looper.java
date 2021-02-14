@@ -1,7 +1,6 @@
 package frc.team5104.util;
 
 import edu.wpi.first.hal.NotifierJNI;
-import frc.team5104.util.console.c;
 import frc.team5104.util.setup.RobotState;
 
 import java.io.PrintWriter;
@@ -121,8 +120,7 @@ public class Looper {
 		try {
 			if (!crash.equals(lastCrash) && System.currentTimeMillis() > timeSinceLastCrash + 5000) {
 				System.out.println('\n');
-				console.error(c.MAIN,
-				              "Caught fatal error at " + crash.loop.name + " thread!\n" +
+				console.error("Caught fatal error at " + crash.loop.name + " thread!\n" +
 				              exceptionToString(crash.exception) + "Robot should work, but yours is bad!\n"
 				);
 				lastCrash = crash;

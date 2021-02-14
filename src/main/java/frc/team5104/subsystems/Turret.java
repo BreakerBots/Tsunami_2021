@@ -9,10 +9,9 @@ import frc.team5104.Constants;
 import frc.team5104.Ports;
 import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.Mode;
-import frc.team5104.util.*;
-import frc.team5104.util.console.c;
-import frc.team5104.util.managers.Subsystem;
 import frc.team5104.util.Encoder.FalconEncoder;
+import frc.team5104.util.*;
+import frc.team5104.util.managers.Subsystem;
 
 
 public class Turret extends Subsystem {
@@ -68,7 +67,7 @@ public class Turret extends Subsystem {
 	public void fastUpdate() {
 		//Exit Calibration
 		if (isCalibrating() && leftLimitHit()) {
-			console.log(c.TURRET, "finished calibration!");
+			console.log("finished calibration!");
 			Filer.createFile("/tmp/turret_calibrated.txt");
 			stopCalibrating();
 		}
@@ -173,7 +172,7 @@ public class Turret extends Subsystem {
 
 		//Only calibrate once per roborio boot while not.
 		if (!Filer.fileExists("/tmp/turret_calibrated.txt")) {
-			console.log(c.TURRET, "ready to calibrate!");
+			console.log("ready to calibrate!");
 			startCalibrating();
 		}
 		else enableSoftLimits(true);

@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj.Notifier;
 import frc.team5104.util.Looper;
 import frc.team5104.util.Looper.Crash;
 import frc.team5104.util.console;
-import frc.team5104.util.console.c;
-import frc.team5104.util.console.t;
 import frc.team5104.util.setup.RobotState;
 
 /** Manages the calls for all Subsystems given */
@@ -31,7 +29,7 @@ public class SubsystemManager {
 				message += subsystem.getClass().getSimpleName() + ", ";
 			} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 		}
-		console.log(c.MAIN, t.INFO, message.substring(0, message.length()-2));
+		console.log(message.substring(0, message.length()-2));
 		
 		//Fast Update
 		Looper.attach(() -> {

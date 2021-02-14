@@ -15,8 +15,6 @@ import frc.team5104.util.Looper.Crash;
 import frc.team5104.util.Looper.Loop;
 import frc.team5104.util.Looper.TimedLoop;
 import frc.team5104.util.console;
-import frc.team5104.util.console.c;
-import frc.team5104.util.console.t;
 import frc.team5104.util.setup.RobotState.RobotMode;
 
 public class RobotController extends RobotBase {
@@ -33,7 +31,7 @@ public class RobotController extends RobotBase {
 		console.sets.create("RobotInit");
 		if (Constants.config.robotName.length() < 4)
 			console.error("Please deploy robot.txt with the correct robot name!");
-		console.log(c.MAIN, t.INFO, "Initializing " + Constants.config.robotName + " Code...");
+		console.log("Initializing " + Constants.config.robotName + " Code...");
 
 		//Set Child Class
 		if (RobotState.isSimulation())
@@ -45,7 +43,7 @@ public class RobotController extends RobotBase {
 		HAL.observeUserProgramStarting();
 
 		//Logging
-		console.sets.log(c.MAIN, t.INFO, "RobotInit", "Initialization took ");
+		console.sets.log("RobotInit", "Initialization took ");
 
 		//Fast Loop
 		Looper.registerLoop(new TimedLoop("Fast", 9, 5));
@@ -116,7 +114,7 @@ public class RobotController extends RobotBase {
 				try {
 					//Teleop
 					if (RobotState.getLastMode() != RobotState.getMode()) {
-						console.log(c.MAIN, t.INFO, "Teleop Enabled");
+						console.log("Teleop Enabled");
 						robot.teleopStart();
 					}
 					robot.teleopLoop();
@@ -128,7 +126,7 @@ public class RobotController extends RobotBase {
 				try {
 					//Auto
 					if (RobotState.getLastMode() != RobotState.getMode()) {
-						console.log(c.MAIN, t.INFO, "Auto Enabled");
+						console.log("Auto Enabled");
 						robot.autoStart();
 					}
 					robot.autoLoop();
@@ -140,7 +138,7 @@ public class RobotController extends RobotBase {
 				try {
 					//Test
 					if (RobotState.getLastMode() != RobotState.getMode()) {
-						console.log(c.MAIN, t.INFO, "Test Enabled");
+						console.log("Test Enabled");
 						robot.testStart();
 					}
 					robot.testLoop();
@@ -155,17 +153,17 @@ public class RobotController extends RobotBase {
 						switch (RobotState.getLastMode()) {
 							case TELEOP: { 
 								robot.teleopStop(); 
-								console.log(c.MAIN, t.INFO, "Teleop Disabled"); 
+								console.log("Teleop Disabled");
 								break;
 							}
 							case AUTONOMOUS: {
 								robot.autoStop(); 
-								console.log(c.MAIN, t.INFO, "Autonomous Disabled"); 
+								console.log("Autonomous Disabled");
 								break;
 							}
 							case TEST: { 
 								robot.testStop(); 
-								console.log(c.MAIN, t.INFO, "Test Disabled"); 
+								console.log("Test Disabled");
 								break;
 							}
 							default: break;

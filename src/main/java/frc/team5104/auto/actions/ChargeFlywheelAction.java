@@ -5,7 +5,6 @@ import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.FlywheelState;
 import frc.team5104.auto.AutoAction;
 import frc.team5104.util.console;
-import frc.team5104.util.console.c;
 
 public class ChargeFlywheelAction extends AutoAction {
     public ChargeFlywheelAction() {
@@ -13,7 +12,7 @@ public class ChargeFlywheelAction extends AutoAction {
     }
 
     public void init() {
-    	console.log(c.AUTO, "charging flywheel");
+    	console.log("charging flywheel");
     	Superstructure.set(FlywheelState.SPINNING);
     }
 

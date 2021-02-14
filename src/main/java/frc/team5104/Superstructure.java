@@ -5,7 +5,6 @@ import frc.team5104.subsystems.*;
 import frc.team5104.util.*;
 import frc.team5104.util.LatchedBoolean.LatchedBooleanMode;
 import frc.team5104.util.Limelight.LEDMode;
-import frc.team5104.util.console.c;
 
 /** The Superstructure is a massive state machine for all subsystems, except drive. */
 public class Superstructure {
@@ -58,33 +57,33 @@ public class Superstructure {
 		//Exit Paneling
 		if (Superstructure.is(Mode.PANELING) && Paneler.isFinished()) {
 			Superstructure.set(Mode.IDLE);
-			console.log(c.SUPERSTRUCTURE, "finished paneling... idling");
+			console.log("finished paneling... idling");
 		}
 		
 		//Exit Intake
 		if (is(Mode.INTAKE) && Hopper.isFull()) {
 			set(Mode.IDLE);
-			console.log(c.SUPERSTRUCTURE, "hopper full... idling");
+			console.log("hopper full... idling");
 		}
 		
 		//Exit Shooting
 		if (is(Mode.SHOOTING) && !Hopper.isFullAverage() && Hopper.hasFedAverage()) {
 			set(Mode.IDLE);
 			set(FlywheelState.STOPPED);
-			console.log(c.SUPERSTRUCTURE, "done shooting... idling");
+			console.log("done shooting... idling");
 		}
 		
 		//Start Shooting after done Aiming
 		if (flywheelOnTarget.get(Flywheel.isSpedUp()) && is(Mode.AIMING))
-			console.log(c.FLYWHEEL, "sped up");
+			console.log("sped up");
 		if (hoodOnTarget.get(Hood.onTarget()) && is(Mode.AIMING))
-			console.log(c.HOOD, "on target");
+			console.log("on target");
 		if (turretOnTarget.get(Turret.onTarget()) && is(Mode.AIMING))
-			console.log(c.TURRET, "on target");
+			console.log("on target");
 		readyToFire.update(is(Mode.AIMING) && Flywheel.isSpedUp() && Turret.onTarget() && Hood.onTarget() && Limelight.hasTarget());
 		if (is(Mode.AIMING) && readyToFire.getBooleanOutput()) {
 			set(Mode.SHOOTING);
-			console.log(c.SUPERSTRUCTURE, "finished aiming... shooting");
+			console.log("finished aiming... shooting");
 		}
 		
 		//Spin Flywheel while Shooting
@@ -103,7 +102,7 @@ public class Superstructure {
 	
 	//Reset
 	protected static void reset() {
-		console.log(c.SUPERSTRUCTURE, "resetting!");
+		console.log("resetting!");
 		set(Mode.IDLE);
 		set(PanelState.ROTATION);
 		set(FlywheelState.STOPPED);
@@ -113,7 +112,7 @@ public class Superstructure {
 
 	//Init
 	protected static void init() {
-		console.log(c.SUPERSTRUCTURE, "initializing!");
+		console.log("initializing!");
 		reset();
 	}
 }

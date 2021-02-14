@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import frc.team5104.subsystems.Drive;
 import frc.team5104.util.Units;
 import frc.team5104.util.console;
-import frc.team5104.util.console.c;
 
 /** keeps of the position of the robot relative to the field (in x, y, angle) */
 public class Odometry {
@@ -16,7 +15,7 @@ public class Odometry {
 	public static void init() {
 		Drive.reset();
 		odometry = new DifferentialDriveOdometry(new Rotation2d());
-		console.log(c.AUTO, "initialized odometry");
+		console.log("initialized");
 	}
 	
 	public static void update() {

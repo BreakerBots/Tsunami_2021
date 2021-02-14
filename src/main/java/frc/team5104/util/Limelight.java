@@ -5,7 +5,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Notifier;
 import frc.team5104.util.LatchedBoolean.LatchedBooleanMode;
-import frc.team5104.util.console.c;
 
 public class Limelight {
     public static boolean defaultOff;
@@ -50,7 +49,7 @@ public class Limelight {
     public static void setLEDMode(LEDMode ledMode) {
         if (isConnected())
             setEntry("ledMode", ledMode.value);
-        else console.warn(c.VISION, "limelight is not connected");
+        else console.warn("not connected");
     }
 
     public static void init(boolean defaultOff) {
@@ -65,7 +64,7 @@ public class Limelight {
                 setEntry("pipeline", 0);
                 setEntry("stream", 0);
                 setEntry("snapshot", 0);
-                console.log(c.VISION, "connected to limelight");
+                console.log("connected");
             }
         });
         limelightThread.startPeriodic(1);

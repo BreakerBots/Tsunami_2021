@@ -23,7 +23,6 @@ import frc.team5104.util.DriveSignal.DriveUnit;
 import frc.team5104.util.Plotter;
 import frc.team5104.util.Units;
 import frc.team5104.util.console;
-import frc.team5104.util.console.c;
 
 /**
  * Follow a trajectory using the Breaker Trajectory Follower (Ramses Follower)
@@ -92,7 +91,7 @@ public class DriveTrajectoryAction extends AutoAction {
 
 	public void init() {
 		console.sets.create("RunTrajectoryTime");
-		console.log(c.AUTO, "Running Trajectory");
+		console.log("Running Trajectory");
 		lastTime = 0;
 		Trajectory.State initialState = trajectory.sample(0);
 		lastSpeeds = kinematics.toWheelSpeeds(
@@ -162,7 +161,7 @@ public class DriveTrajectoryAction extends AutoAction {
 	public void end() {
 		timer.stop();
 		Drive.stop();
-		console.log(c.AUTO, 
+		console.log(
 				"Trajectory Finished in " + 
 				console.sets.getTime("RunTrajectoryTime") + "s" +
 				", at: " + Odometry.getPositionFeet()

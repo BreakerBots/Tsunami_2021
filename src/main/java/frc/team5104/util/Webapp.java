@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import frc.team5104.Constants;
 import frc.team5104.util.Looper.Crash;
 import frc.team5104.util.Looper.Loop;
-import frc.team5104.util.console.c;
 import frc.team5104.util.setup.RobotState;
 
 import java.io.*;
@@ -53,7 +52,7 @@ public class Webapp {
 
             return true;
         } catch (Exception e) {
-            console.error(c.WEBAPP, e);
+            console.error(e);
             return false;
         }
     }

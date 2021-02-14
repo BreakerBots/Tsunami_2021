@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import frc.team5104.util.Encoder;
 import frc.team5104.util.console;
-import frc.team5104.util.console.c;
 
 import java.util.function.BiConsumer;
 import java.util.function.DoubleConsumer;
@@ -33,7 +32,7 @@ public abstract class Subsystem {
 	/** Labels this subsystem as emergency stopped. Stops calling the update() and fastUpdate() methods and instead
 	 * spam calls disabled(). */
 	public void emergencyStop() {
-		console.error(c.MAIN, "Emergency stopped the " + this.getClass().getSimpleName());
+		console.error("Emergency stopped the " + this.getClass().getSimpleName());
 		emergencyStopped = true;
 	}
 
@@ -112,7 +111,7 @@ public abstract class Subsystem {
 	}
 	public double[] getCharacterization(double percentOutput, boolean shouldRotate) {
 		if (!canCharacterize)
-			console.error(c.MAIN, "You have not set up characterization for this setup. Call the configCharacterization() method in the init() method add an `if (isCharacterizing())` statement to your update() method so it doesnt move motors.");
+			console.error("You have not set up characterization for this setup. Call the configCharacterization() method in the init() method add an `if (isCharacterizing())` statement to your update() method so it doesnt move motors.");
 
 		characterizing = true;
 

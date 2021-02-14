@@ -7,7 +7,6 @@ import frc.team5104.util.*;
 import frc.team5104.util.Looper.Crash;
 import frc.team5104.util.Looper.Loop;
 import frc.team5104.util.Plotter.InputMode;
-import frc.team5104.util.console.c;
 import frc.team5104.util.managers.Subsystem;
 import frc.team5104.util.setup.RobotState;
 
@@ -27,9 +26,9 @@ public class AutoManager {
 		     Calls action init(), isFinished(), end(), and getValue() but not update() <-- called below */
 			pathThread = new Thread(() -> {
 				try {
-					console.log(c.AUTO, "Running auto path: " + targetPath.getClass().getSimpleName());
+					console.log("Running auto path: " + targetPath.getClass().getSimpleName());
 					targetPath.start();
-					console.log(c.AUTO, targetPath.getClass().getSimpleName() + " finished");
+					console.log(targetPath.getClass().getSimpleName() + " finished");
 				} catch (Exception e) { Looper.logCrash(new Crash(e)); }
 			});
 			pathThread.start();
@@ -47,7 +46,7 @@ public class AutoManager {
 	
 	//Init
 	public static void setTargetPath(AutoPath path) {
-		console.log(c.AUTO, "Setting target auto path to: " + path.getClass().getSimpleName());
+		console.log("Setting target auto path to: " + path.getClass().getSimpleName());
 		targetPath = path;
 	}
 	public static AutoPath getTargetPath() {

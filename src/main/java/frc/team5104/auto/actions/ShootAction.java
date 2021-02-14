@@ -5,7 +5,6 @@ import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.Mode;
 import frc.team5104.auto.AutoAction;
 import frc.team5104.util.console;
-import frc.team5104.util.console.c;
 
 public class ShootAction extends AutoAction {
     public ShootAction() {
@@ -13,7 +12,7 @@ public class ShootAction extends AutoAction {
     }
 
     public void init() {
-    	console.log(c.AUTO, "firing!");
+    	console.log("firing!");
     	Superstructure.set(Mode.AIMING);
     }
 
@@ -27,6 +26,6 @@ public class ShootAction extends AutoAction {
     }
 
     public void end() {
-    	console.log(c.AUTO, "finished firing");
+    	console.log("finished firing");
     }
 }

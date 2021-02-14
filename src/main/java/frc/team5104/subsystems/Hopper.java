@@ -8,12 +8,11 @@ import frc.team5104.Constants;
 import frc.team5104.Ports;
 import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.Mode;
+import frc.team5104.util.Encoder.FalconEncoder;
 import frc.team5104.util.*;
 import frc.team5104.util.LatchedBoolean.LatchedBooleanMode;
 import frc.team5104.util.Sensor.PortType;
-import frc.team5104.util.console.c;
 import frc.team5104.util.managers.Subsystem;
-import frc.team5104.util.Encoder.FalconEncoder;
 
 public class Hopper extends Subsystem {
 	private static VictorSPX startMotor, feederMotor;
@@ -51,7 +50,7 @@ public class Hopper extends Subsystem {
 			isIndexing = !isEndSensorTripped() && (isEntrySensorTrippedAvg() || 
 					(getIndexPosition() + Constants.HOPPER_INDEX_TOL) < targetIndexPosition);
 			if (entrySensorLatch.get(isEntrySensorTrippedAvg())) {
-				console.log(c.HOPPER, "i gots da ball");
+				console.log("i gots da ball");
 				targetIndexPosition = Constants.HOPPER_INDEX_BALL_SIZE;
 				controller.reset();
 				resetIndexerEncoder();

@@ -8,7 +8,6 @@ import frc.team5104.Superstructure.PanelState;
 import frc.team5104.Superstructure.Target;
 import frc.team5104.subsystems.Climber;
 import frc.team5104.util.console;
-import frc.team5104.util.console.c;
 import frc.team5104.util.managers.TeleopController;
 
 public class SuperstructureController extends TeleopController {
@@ -17,47 +16,47 @@ public class SuperstructureController extends TeleopController {
 		if (Controls.IDLE.get()) {
 			Superstructure.set(Mode.IDLE);
 			Superstructure.set(FlywheelState.STOPPED);
-			console.log(c.SUPERSTRUCTURE, "idling");
+			console.log("idling");
 		}
 
 		// Panel
 		if (Controls.PANEL_DEPLOY.get()) {
 			if (Superstructure.is(Mode.PANEL_DEPLOYING) || Superstructure.is(Mode.PANELING)) {
 				Superstructure.set(Mode.IDLE);
-				console.log(c.SUPERSTRUCTURE, "manually exiting paneling... idling");
+				console.log("manually exiting paneling... idling");
 			} else {
 				Superstructure.set(Mode.PANEL_DEPLOYING);
-				console.log(c.SUPERSTRUCTURE, "deploying paneler");
+				console.log("deploying paneler");
 			}
 		}
 		if (Controls.PANEL_SPIN.get()) {
 			if (Superstructure.is(Mode.PANEL_DEPLOYING)) {
 				Superstructure.set(Mode.PANELING);
 				if (Superstructure.is(PanelState.POSITION))
-					console.log(c.SUPERSTRUCTURE, "panel running position control");
-				else console.log(c.SUPERSTRUCTURE, "panel running rotation control");
+					console.log("panel running position control");
+				else console.log("panel running rotation control");
 			} else if (Superstructure.is(Mode.PANELING)) {
 				Superstructure.set(Mode.PANEL_DEPLOYING);
-				console.log(c.SUPERSTRUCTURE, "deploying paneler");
+				console.log("deploying paneler");
 			}
 		}
 		if (Controls.PANEL_POSITION.get()) {
 			Superstructure.set(PanelState.POSITION);
-			console.log(c.SUPERSTRUCTURE, "setting panel mode to position");
+			console.log("setting panel mode to position");
 		}
 		if (Controls.PANEL_ROTATION.get()) {
 			Superstructure.set(PanelState.ROTATION);
-			console.log(c.SUPERSTRUCTURE, "setting panel mode to rotation");
+			console.log("setting panel mode to rotation");
 		}
 
 		// Intake
 		if (Controls.INTAKE.get()) {
 			if (Superstructure.is(Mode.INTAKE)) {
 				Superstructure.set(Mode.IDLE);
-				console.log(c.SUPERSTRUCTURE, "exiting intake... idling");
+				console.log("exiting intake... idling");
 			} else {
 				Superstructure.set(Mode.INTAKE);
-				console.log(c.SUPERSTRUCTURE, "intaking");
+				console.log("intaking");
 			}
 		}
 
@@ -66,29 +65,29 @@ public class SuperstructureController extends TeleopController {
 			if (Superstructure.is(Mode.SHOOTING) || Superstructure.is(Mode.AIMING)) {
 				Superstructure.set(Mode.IDLE);
 				Superstructure.set(FlywheelState.STOPPED);
-				console.log(c.SUPERSTRUCTURE, "exiting shooting... idling");
+				console.log("exiting shooting... idling");
 			}
 			else {
 				Superstructure.set(Mode.AIMING);
-				console.log(c.SUPERSTRUCTURE, "aiming");
+				console.log("aiming");
 			}
 		}
 		if (Controls.CHARGE_FLYWHEEL.get()) {
 			if (Superstructure.is(FlywheelState.STOPPED)) {
-				console.log(c.SUPERSTRUCTURE, "charging flywheel");
+				console.log("charging flywheel");
 				Superstructure.set(FlywheelState.SPINNING);
 			}
 			else {
-				console.log(c.SUPERSTRUCTURE, "stopped charging flywheel");
+				console.log("stopped charging flywheel");
 				Superstructure.set(FlywheelState.STOPPED);
 			}
 		}
 		if (Controls.SHOOT_LOW.get()) {
-			console.log(c.SUPERSTRUCTURE, "setting target to low");
+			console.log("setting target to low");
 			Superstructure.set(Target.LOW);
 		}
 		if (Controls.SHOOT_HIGH.get()) {
-			console.log(c.SUPERSTRUCTURE, "setting target to high");
+			console.log("setting target to high");
 			Superstructure.set(Target.HIGH);
 		}
 
@@ -96,15 +95,15 @@ public class SuperstructureController extends TeleopController {
 		if (Controls.CLIMBER_DEPLOY.get()) {
 			if (Superstructure.is(Mode.CLIMBING)) {
 				Superstructure.set(Mode.IDLE);
-				console.log(c.SUPERSTRUCTURE, "stopping climb... idling");
+				console.log("stopping climb... idling");
 			}
 			else if (Superstructure.is(Mode.CLIMBER_DEPLOYING)) {
 				Superstructure.set(Mode.CLIMBING);
-				console.log(c.SUPERSTRUCTURE, "climbing!");
+				console.log("climbing!");
 			}
 			else {
 				Superstructure.set(Mode.CLIMBER_DEPLOYING);
-				console.log(c.SUPERSTRUCTURE, "deploying climber!!!!");
+				console.log("deploying climber!!!!");
 			}
 		}
 		Climber.climberManual = Controls.CLIMBER_WINCH.get();

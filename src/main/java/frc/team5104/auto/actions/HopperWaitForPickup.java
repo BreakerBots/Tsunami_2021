@@ -4,7 +4,6 @@ package frc.team5104.auto.actions;
 import frc.team5104.auto.AutoAction;
 import frc.team5104.subsystems.Hopper;
 import frc.team5104.util.console;
-import frc.team5104.util.console.c;
 import frc.team5104.util.setup.RobotState;
 
 public class HopperWaitForPickup extends AutoAction {
@@ -21,7 +20,7 @@ public class HopperWaitForPickup extends AutoAction {
     }
 
     public void init() {
-    	console.log(c.AUTO, "Waiting for hopper to intake a ball");
+    	console.log("Waiting for hopper to intake a ball");
     	startTime = System.currentTimeMillis();
     }
 

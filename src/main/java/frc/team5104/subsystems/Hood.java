@@ -9,10 +9,9 @@ import frc.team5104.Ports;
 import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.Mode;
 import frc.team5104.Superstructure.Target;
-import frc.team5104.util.*;
-import frc.team5104.util.console.c;
-import frc.team5104.util.managers.Subsystem;
 import frc.team5104.util.Encoder.MagEncoder;
+import frc.team5104.util.*;
+import frc.team5104.util.managers.Subsystem;
 
 public class Hood extends Subsystem {
 	private static TalonSRX motor;
@@ -63,7 +62,7 @@ public class Hood extends Subsystem {
 	public void fastUpdate() {
 		//Exit Calibrating
 		if (isCalibrating() && backLimitHit()) {
-			console.log(c.HOOD, "finished calibration!");
+			console.log("finished calibration!");
 			stopCalibrating();
 		}
 		
@@ -156,7 +155,7 @@ public class Hood extends Subsystem {
 		controller.setP(getKP());
 		visionFilter = new MovingAverage(3, 0);
 		
-		console.log(c.HOOD, "ready to calibrate!");
+		console.log("ready to calibrate!");
 		startCalibrating();
 
 		configCharacterization(
@@ -171,7 +170,7 @@ public class Hood extends Subsystem {
 		stop();
 		
 		if (!this.isCalibrating()) {
-			console.log(c.HOOD, "ready to calibrate!");
+			console.log("ready to calibrate!");
 			startCalibrating();
 		}
 	}

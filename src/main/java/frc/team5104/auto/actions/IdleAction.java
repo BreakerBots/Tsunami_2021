@@ -5,7 +5,6 @@ import frc.team5104.Superstructure;
 import frc.team5104.Superstructure.Mode;
 import frc.team5104.auto.AutoAction;
 import frc.team5104.util.console;
-import frc.team5104.util.console.c;
 
 public class IdleAction extends AutoAction {
     public IdleAction() {
@@ -13,7 +12,7 @@ public class IdleAction extends AutoAction {
     }
 
     public void init() {
-    	console.log(c.AUTO, "idling");
+    	console.log("idling");
     	Superstructure.set(Mode.IDLE);
     }
 
