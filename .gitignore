@@ -13,6 +13,7 @@ src/webapp/.vs/
 src/webapp/breakerboard-win32-ia32/
 src/webapp/breakerboard-darwin-x64/
 .characterize/
+imgui.ini
 
 # Ignore Gradle GUI config
 gradle-app.setting
