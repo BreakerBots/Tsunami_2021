@@ -300,9 +300,9 @@ function getPlotterTrajectoryData() {
 }
 function savePlotterInput() {
 	let trajectoryData = getPlotterTrajectoryData();
-	let code = "run(<or>new</or> DriveTrajectoryAction(<or>" + trajectoryData.reversed + "</or><br>";
+	let code = "run(<or>new</or> DriveTrajectory(<or>" + trajectoryData.reversed + "</or><br>";
 	for (let p = 0; p < trajectoryData.points.length; p++) {
-		code += "&emsp;<or>new</or> Position(<bl>" +
+		code += "<or>new</or> Position(<bl>" +
 			trajectoryData.points[p][0] + "</bl><or>,</or> <bl>" +
 			trajectoryData.points[p][1] + "</bl><or>,</or> <bl>" +
 			trajectoryData.points[p][2] + "</bl>)" +
