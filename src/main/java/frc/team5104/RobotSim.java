@@ -47,7 +47,13 @@ public class RobotSim extends RobotController.BreakerRobot {
         SubsystemManager.reset();
     }
 
+//    double last = RobotState.getFPGATimestamp();
     public void mainLoop() {
+//        Tuner.setTunerOutput("dt", RobotState.getFPGATimestamp() - last);
+//        last = RobotState.getFPGATimestamp();
+
         SubsystemManager.update();
+
+
     }
 }

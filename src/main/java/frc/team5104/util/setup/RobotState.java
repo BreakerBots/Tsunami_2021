@@ -37,6 +37,6 @@ public class RobotState {
 	public static boolean isSimulation() { return HALUtil.getHALRuntimeType() != 0; }
 	/** returns the FPGA timestamp in ms */
 	public static double getFPGATimestamp() {
-		return edu.wpi.first.wpilibj.RobotController.getFPGATime() / 1e9d;
+		return edu.wpi.first.wpilibj.RobotController.getFPGATime() / 1e3d;
 	}
 }

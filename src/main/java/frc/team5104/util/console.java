@@ -176,7 +176,6 @@ public class console {
         }
 
         /** Similar to normal "console.log" with the time of a timing group/set appended
-         * "CATEGORY: MESSAGE TIMESPACER TIME". Ex) "AUTO: Initialization took 10.26s"
          * @param a               The text to print out
          * @param timingGroupName The name of the timing group/set */
         public static void log(String timingGroupName, Object... a) {
