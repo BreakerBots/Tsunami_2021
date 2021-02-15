@@ -27,7 +27,7 @@ import frc.team5104.util.console;
 /**
  * Follow a trajectory using the Breaker Trajectory Follower (Ramses Follower)
  */
-public class DriveTrajectoryAction extends AutoAction {
+public class DriveTrajectory extends AutoAction {
 
 	public static final double CORRECTION_FACTOR = 1/*1*/; //>0
 	public static final double DAMPENING_FACTOR = 0.3/*0.5*/; //0-1
@@ -41,7 +41,7 @@ public class DriveTrajectoryAction extends AutoAction {
 	private DifferentialDriveWheelSpeeds lastSpeeds;
 	private double lastTime;
 
-	public DriveTrajectoryAction(boolean isReversed, Position... waypoints) {
+	public DriveTrajectory(boolean isReversed, Position... waypoints) {
 		feedforward = new SimpleMotorFeedforward(
 				Constants.drive.kLS,
 				Constants.drive.kLV,

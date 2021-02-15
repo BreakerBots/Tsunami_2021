@@ -1,7 +1,7 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package frc.team5104.auto;
 
-import frc.team5104.auto.actions.DriveTrajectoryAction;
+import frc.team5104.auto.actions.DriveTrajectory;
 import frc.team5104.teleop.CompressorController;
 import frc.team5104.util.*;
 import frc.team5104.util.Looper.Crash;
@@ -102,7 +102,7 @@ public class AutoManager {
 			}
 
 			try {
-				new DriveTrajectoryAction(reversed, positions);
+				new DriveTrajectory(reversed, positions);
 			} catch (Exception e) { }
 		});
 	}

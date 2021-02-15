@@ -6,15 +6,15 @@ import frc.team5104.subsystems.Hopper;
 import frc.team5104.util.console;
 import frc.team5104.util.setup.RobotState;
 
-public class HopperWaitForPickup extends AutoAction {
+public class PickupBall extends AutoAction {
     private boolean intaked, simulationValue;
 	private long startTime;
 	private int timeoutMs;
 
-    public HopperWaitForPickup(int timeoutMs) {
+    public PickupBall(int timeoutMs) {
         this(timeoutMs, false);
     }
-    public HopperWaitForPickup(int timeoutMs, boolean simulationValue) {
+    public PickupBall(int timeoutMs, boolean simulationValue) {
         this.timeoutMs = timeoutMs;
         this.simulationValue = simulationValue;
     }

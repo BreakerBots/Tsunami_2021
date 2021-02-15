@@ -19,6 +19,7 @@ public abstract class AutoPath {
 		currentAction.init();
 		while (!currentAction.isFinished()) {
 			try { Thread.sleep(RobotState.getLoopPeriod()); }
+			//no code in the loop (just waiting until currentAction is finished)
 			catch (InterruptedException e) { }
 		}
 		currentAction.end();
