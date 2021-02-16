@@ -2,6 +2,7 @@ package frc.team5104.frc2021;
 
 import frc.team5104.frc2021.auto.paths.AutoNavBarrel;
 import frc.team5104.frc2021.auto.paths.AutoNavBounce;
+import frc.team5104.frc2021.auto.paths.AutoNavSlalom;
 import frc.team5104.frc2021.auto.paths.GalacticDefault2;
 import frc.team5104.lib.auto.AutoManager;
 import frc.team5104.lib.auto.Odometry;
@@ -25,7 +26,7 @@ public class RobotSim extends RobotController.BreakerRobot {
         Webapp.run();
         Plotter.reset();
         Odometry.init();
-        AutoManager.setTargetPath(new AutoNavBarrel());
+        AutoManager.setTargetPath(new AutoNavSlalom());
         //AutoManager.runTrajectoryTester();
         AutoManager.enabledPlotting();
         //AutoManager.characterize(Drive.class);
