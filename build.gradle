@@ -8,7 +8,7 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
-def ROBOT_MAIN_CLASS = "frc.team5104.lib.setup.Main"
+def ROBOT_MAIN_CLASS = "com.team5104.lib.setup.Main"
 
 deploy {
     targets {

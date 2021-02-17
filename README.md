@@ -33,7 +33,7 @@ Note: If you don't want to use the desktop version navigate to `http://localhost
 5) Click on the switch in the header (next to the robot name) to enable the robot
 8) To finish close the command line that launched when you ran `simulateJava`
 
-Note: If you want to change the selected auto path navigate to `frc.team5104.frc2021.RobotSim`
+Note: If you want to change the selected auto path navigate to `RobotSim`
    in IntelliJ and change the path inside the line: `AutoManager.setTargetPath(new ExamplePath());`
 
 ## Characterizing
