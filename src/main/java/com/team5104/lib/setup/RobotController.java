@@ -63,6 +63,7 @@ public class RobotController extends RobotBase {
 		}
 	}
 	public void endCompetition() {
+		robot.mainShutdown();
 		NotifierJNI.stopNotifier(notifier);
 		NotifierJNI.cleanNotifier(notifier);
 		Looper.killAll();
@@ -197,6 +198,7 @@ public class RobotController extends RobotBase {
 		public void mainLoop() { }
 		public void mainStart() { }
 		public void mainStop() { }
+		public void mainShutdown() { }
 		public void autoLoop() { }
 		public void autoStart() { }
 		public void autoStop() { }

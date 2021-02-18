@@ -1,0 +1,41 @@
+# Controls.yaml - Stores all the teleop controls
+
+# Controllers
+driver: createController(0)
+operator: createController(1)
+
+# Main
+idle: Button.LIST
+compressorToggle: Button.MENU
+
+# Drive -driver only
+drive:
+  turn: Axis.LEFT_JOYSTICK_X
+   - deadband(0.08)
+   - bezierCurve(.8, .32, .75, .27)
+  forward: Axis.RIGHT_TRIGGER, deadband(0.01)
+  reverse: Axis.LEFT_TRIGGER, new Deadband(0.01)
+  kickstand: Button.LEFT_JOYSTICK_PRESS
+
+# Intake
+intake: Button.X
+
+# Shooter
+shooter:
+  shoot: Button.B
+  charge: Button.RIGHT_BUMPER
+  setLow: Button.DIRECTION_PAD_LEFT
+  setHigh: Button.DIRECTION_PAD_RIGHT
+
+# Paneler
+paneler:
+  deploy: Button.Y
+  spin: Button.A
+  setRotation: Button.DIRECTION_PAD_UP
+  setPosition: Button.DIRECTION_PAD_DOWN
+
+# Climber
+climber:
+  deploy: Button.RIGHT_JOYSTICK_PRESS
+  winch: Axis.RIGHT_JOYSTICK_Y
+    - new Deadband(0.08)

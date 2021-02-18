@@ -12,7 +12,6 @@ import com.team5104.lib.control.VelocityController;
 import com.team5104.lib.managers.Subsystem;
 import com.team5104.lib.sensors.Encoder.FalconEncoder;
 import com.team5104.lib.webapp.Tuner;
-import frc.team5104.lib.*;
 
 public class Flywheel extends Subsystem {
 	private static TalonFX motor1, motor2;

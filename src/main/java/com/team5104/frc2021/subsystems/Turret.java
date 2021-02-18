@@ -15,8 +15,6 @@ import com.team5104.lib.managers.Subsystem;
 import com.team5104.lib.sensors.Encoder.FalconEncoder;
 import com.team5104.lib.sensors.Limelight;
 import com.team5104.lib.webapp.Tuner;
-import frc.team5104.lib.*;
-
 
 public class Turret extends Subsystem {
 	private static TalonFX motor;

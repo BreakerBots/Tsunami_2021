@@ -1,5 +1,4 @@
 plugins {
-    id "eclipse"
     id "idea"
     id "java"
     id "edu.wpi.first.GradleRIO" version "2021.2.1"
@@ -31,20 +30,36 @@ deploy {
 
 def includeDesktopSupport = true
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
+    //dashboard
+    compile "org.java-websocket:Java-WebSocket:1.5.1"
+    compile "org.slf4j:slf4j-simple:1.7.9"
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.12.1'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.1'
+
+    //wpilib
     implementation wpi.deps.wpilib()
     nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
 
+    //wpilib sim
+    //simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
+    simulation wpi.deps.sim.driverstation(wpi.platforms.desktop, false)
+
+    //vendors
     implementation wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
-
-    //simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
-    simulation wpi.deps.sim.driverstation(wpi.platforms.desktop, false)
 }
 
 jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
+
+apply plugin: 'java'

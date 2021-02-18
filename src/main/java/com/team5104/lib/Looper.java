@@ -56,7 +56,8 @@ public class Looper {
 		String name;
 		int priority;
 
-		/** @param name the name of the loop/thread
+		/** Registers a loop
+		 * @param name the name of the loop/thread
 		 * @param thread the thread the loop is on
 		 * @param priority 1-10 thread priority */
 		public Loop(String name, Thread thread, int priority) {
@@ -68,6 +69,19 @@ public class Looper {
 				thread.setPriority(priority);
 				thread.setName(name);
 			}
+		}
+
+		/** Creates a new thread, runs it, and registers it as a loop
+		 * @param name the name of the loop/thread
+		 * @param runnable code to run in the thread
+		 * @param priority 1-10 thread priority */
+		public Loop(String name, Runnable runnable, int priority) {
+			this(name, new Thread(() -> {
+				try {
+					runnable.run();
+				} catch (Exception e) { logCrash(new Crash(e)); }
+			}), priority);
+			thread.start();
 		}
 	}
 	/** Handles the creation of a thread and periodic updating of it. Then runnables can
@@ -85,7 +99,7 @@ public class Looper {
 			this.period = period;
 
 			NotifierJNI.setNotifierName(notifier, name);
-			expirationTime = RobotState.getFPGATimestamp() + RobotState.getLoopPeriod();
+			expirationTime = RobotState.getFPGATimestamp() + period;
 
 			thread = new Thread(() -> {
 				while (true) {
@@ -97,10 +111,21 @@ public class Looper {
 					for (Runnable runnable : runnables)
 						runnable.run();
 
-					expirationTime += RobotState.getLoopPeriod();
+					expirationTime += period;
 				}
 			});
 			thread.start();
+			thread.setPriority(priority);
+			thread.setName(name);
+		}
+
+		/** @param name the name of the loop
+		 * @param runnable a runnable to attach
+		 * @param priority 1-10 thread priority
+		 * @param period loop period in ms */
+		public TimedLoop(String name, Runnable runnable, int priority, double period) {
+			this(name, priority, period);
+			attach(runnable);
 		}
 
 		public void kill() {

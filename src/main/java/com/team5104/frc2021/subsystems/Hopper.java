@@ -17,7 +17,6 @@ import com.team5104.lib.sensors.Sensor;
 import com.team5104.lib.sensors.Sensor.PortType;
 import com.team5104.lib.webapp.Tuner;
 import edu.wpi.first.wpilibj.controller.PIDController;
-import frc.team5104.lib.*;
 
 public class Hopper extends Subsystem {
 	private static VictorSPX startMotor, feederMotor;

@@ -21,15 +21,14 @@ import java.util.concurrent.Executor;
 /**
  * Hosts the BreakerBoard (WebApp) through the RoboRIO.
  * See Tuner.java for the tuner functionality.
- *
- * @version 2.6
+ * @version 3.2
  */
 public class Webapp {
     private static final int port = 5804; //has to be [5802-5810]
     private static HttpServer server;
 
     @SuppressWarnings("resource")
-    public static boolean run() {
+    public static void run() {
         try {
             //Setup Server
             server = HttpServer.create(new InetSocketAddress(port), 0);
@@ -51,12 +50,7 @@ public class Webapp {
                     (RobotState.isSimulation() ? "localhost:" : "10.51.4.2:") +
                     server.getAddress().getPort()
             );
-
-            return true;
-        } catch (Exception e) {
-            console.error(e);
-            return false;
-        }
+        } catch (Exception e) { Looper.logCrash(new Crash(e)); }
     }
 
     public static String getBaseUrl() {

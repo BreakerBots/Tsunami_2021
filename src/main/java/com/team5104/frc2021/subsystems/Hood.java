@@ -17,7 +17,6 @@ import com.team5104.lib.managers.Subsystem;
 import com.team5104.lib.sensors.Encoder.MagEncoder;
 import com.team5104.lib.sensors.Limelight;
 import com.team5104.lib.webapp.Tuner;
-import frc.team5104.lib.*;
 
 public class Hood extends Subsystem {
 	private static TalonSRX motor;

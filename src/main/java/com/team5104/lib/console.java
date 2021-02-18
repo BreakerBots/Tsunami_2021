@@ -37,8 +37,8 @@ public class console {
      * 90.12 ERROR [subsystems.Turret]: Message */
     private static void logBase(int stackCount, Type type, Object... data) {
         String location = new Throwable().getStackTrace()[stackCount].getClassName();
-        if (location.indexOf("frc.team5104.") != -1)
-            location = location.substring("frc.team5104.".length());
+        if (location.indexOf("com.team5104.") != -1)
+            location = location.substring("com.team5104.".length());
         String f = round(Timer.getFPGATimestamp(), 2) + ": " + type.message + "[" + location + "]: " + parseAndRound(2, data);
         addToPrintBuffer(f);
         if (logFile.isLogging)
@@ -101,12 +101,11 @@ public class console {
     private static ArrayList<String> buffer = new ArrayList();
     public static void init() {
         buffer.clear();
-        Looper.registerLoop(new TimedLoop("Console", 1, 100));
-        Looper.attach(() -> {
+        Looper.registerLoop(new TimedLoop("Console", () -> {
             for (String line : buffer)
                 System.out.println(line);
             buffer.clear();
-        }, "Console");
+        }, 1, 100));
     }
     public static void addToPrintBuffer(String line) {
         buffer.add(line);

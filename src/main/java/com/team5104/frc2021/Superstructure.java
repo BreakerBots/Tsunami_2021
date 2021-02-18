@@ -6,7 +6,6 @@ import com.team5104.lib.LatchedBoolean;
 import com.team5104.lib.LatchedBoolean.LatchedBooleanMode;
 import com.team5104.lib.MovingAverage;
 import com.team5104.lib.console;
-import frc.team5104.frc2021.subsystems.*;
 import com.team5104.lib.sensors.Limelight;
 import com.team5104.lib.sensors.Limelight.LEDMode;
 import com.team5104.lib.webapp.Tuner;
