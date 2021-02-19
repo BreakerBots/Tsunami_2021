@@ -10,11 +10,9 @@ package com.team5104.lib.setup;
 import edu.wpi.first.wpilibj.RobotBase;
 
 public final class Main {
-	private Main() { 
-		
-	}
-	
-	public static void main(String... args) {
-		RobotBase.startRobot(RobotController::new);
-	}
+  private Main() {}
+
+  public static void main(String... args) {
+    RobotBase.startRobot(RobotController::new);
+  }
 }

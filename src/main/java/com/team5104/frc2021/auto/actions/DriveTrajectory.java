@@ -23,147 +23,125 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.util.Units;
 
-/**
- * Follow a trajectory using the Breaker Trajectory Follower (Ramses Follower)
- */
+/** Follow a trajectory using the Breaker Trajectory Follower (Ramses Follower) */
 public class DriveTrajectory extends AutoAction {
 
-	public static final double CORRECTION_FACTOR = 1/*1*/; //>0
-	public static final double DAMPENING_FACTOR = 0.3/*0.5*/; //0-1
+  public static final double CORRECTION_FACTOR = 1 /*1*/; // >0
+  public static final double DAMPENING_FACTOR = 0.3 /*0.5*/; // 0-1
 
-	private final Timer timer = new Timer();
-	private final Trajectory trajectory;
-	private final RamseteController follower;
-	private final SimpleMotorFeedforward feedforward;
-	private final DifferentialDriveKinematics kinematics;
-	private final PIDController leftController, rightController;
-	private DifferentialDriveWheelSpeeds lastSpeeds;
-	private double lastTime;
+  private final Timer timer = new Timer();
+  private final Trajectory trajectory;
+  private final RamseteController follower;
+  private final SimpleMotorFeedforward feedforward;
+  private final DifferentialDriveKinematics kinematics;
+  private final PIDController leftController, rightController;
+  private DifferentialDriveWheelSpeeds lastSpeeds;
+  private double lastTime;
 
-	public DriveTrajectory(boolean isReversed, Position... waypoints) {
-		feedforward = new SimpleMotorFeedforward(
-				Constants.drive.KLS,
-				Constants.drive.KLV,
-				Constants.drive.KLA
-			);
+  public DriveTrajectory(boolean isReversed, Position... waypoints) {
+    feedforward =
+        new SimpleMotorFeedforward(Constants.drive.KLS, Constants.drive.KLV, Constants.drive.KLA);
 
-		kinematics = new DifferentialDriveKinematics(
-				Units.feetToMeters(Constants.drive.TRACK_WIDTH)
-			);
+    kinematics = new DifferentialDriveKinematics(Units.feetToMeters(Constants.drive.TRACK_WIDTH));
 
-		// Create a voltage constraint to ensure we don't accelerate too fast
-		DifferentialDriveVoltageConstraint autoVoltageConstraint = 
-				new DifferentialDriveVoltageConstraint(
-						feedforward,
-						kinematics,
-					10
-				);
+    // Create a voltage constraint to ensure we don't accelerate too fast
+    DifferentialDriveVoltageConstraint autoVoltageConstraint =
+        new DifferentialDriveVoltageConstraint(feedforward, kinematics, 10);
 
-		// Create config for trajectory
-		TrajectoryConfig config = new TrajectoryConfig(
-				Units.feetToMeters(Constants.drive.MAX_VEL),
-				Units.feetToMeters(Constants.drive.MAX_ACC)
-			).setKinematics(kinematics)
-			 .addConstraint(autoVoltageConstraint)
-			 .setReversed(isReversed);
+    // Create config for trajectory
+    TrajectoryConfig config =
+        new TrajectoryConfig(
+                Units.feetToMeters(Constants.drive.MAX_VEL),
+                Units.feetToMeters(Constants.drive.MAX_ACC))
+            .setKinematics(kinematics)
+            .addConstraint(autoVoltageConstraint)
+            .setReversed(isReversed);
 
-		// An example trajectory to follow. All Util in meters.
-		trajectory = TrajectoryGenerator.generateTrajectory(
-				Position.toPose2dMeters(waypoints),
-				config
-			);
-		
-		follower = new RamseteController(
-				CORRECTION_FACTOR,
-				DAMPENING_FACTOR
-			);
-		leftController = new PIDController(Constants.drive.KP, 0, Constants.drive.KD);
-		rightController = new PIDController(Constants.drive.KP, 0, Constants.drive.KD);
+    // An example trajectory to follow. All Util in meters.
+    trajectory = TrajectoryGenerator.generateTrajectory(Position.toPose2dMeters(waypoints), config);
 
-		if (AutoManager.plottingEnabled())
-			Plotter.plotAll(Position.fromStates(trajectory.getStates()), Plotter.Color.RED);
-	}
+    follower = new RamseteController(CORRECTION_FACTOR, DAMPENING_FACTOR);
+    leftController = new PIDController(Constants.drive.KP, 0, Constants.drive.KD);
+    rightController = new PIDController(Constants.drive.KP, 0, Constants.drive.KD);
 
-	public void plot() {
-		Plotter.plotAll(Position.fromStates(trajectory.getStates()), Plotter.Color.RED);
-	}
+    if (AutoManager.plottingEnabled())
+      Plotter.plotAll(Position.fromStates(trajectory.getStates()), Plotter.Color.RED);
+  }
 
-	public void init() {
-		console.sets.create("RunTrajectoryTime");
-		console.log("Running Trajectory");
-		lastTime = 0;
-		Trajectory.State initialState = trajectory.sample(0);
-		lastSpeeds = kinematics.toWheelSpeeds(
-			new ChassisSpeeds(
-				initialState.velocityMetersPerSecond, 
-				0,
-				initialState.curvatureRadPerMeter * initialState.velocityMetersPerSecond
-			)
-		);
-		timer.reset();
-		timer.start();
-		leftController.reset();
-		rightController.reset();
-	}
+  public void plot() {
+    Plotter.plotAll(Position.fromStates(trajectory.getStates()), Plotter.Color.RED);
+  }
 
-	public void update() {
-		double curTime = timer.get();
-		double dt = curTime - lastTime;
+  public void init() {
+    console.sets.create("RunTrajectoryTime");
+    console.log("Running Trajectory");
+    lastTime = 0;
+    Trajectory.State initialState = trajectory.sample(0);
+    lastSpeeds =
+        kinematics.toWheelSpeeds(
+            new ChassisSpeeds(
+                initialState.velocityMetersPerSecond,
+                0,
+                initialState.curvatureRadPerMeter * initialState.velocityMetersPerSecond));
+    timer.reset();
+    timer.start();
+    leftController.reset();
+    rightController.reset();
+  }
 
-		DifferentialDriveWheelSpeeds targetWheelSpeeds = kinematics.toWheelSpeeds(
-				follower.calculate(
-						Odometry.getPose2dMeters(),
-						trajectory.sample(curTime)
-			)
-		);
+  public void update() {
+    double curTime = timer.get();
+    double dt = curTime - lastTime;
 
-		double leftFeedforward = feedforward.calculate(
-				targetWheelSpeeds.leftMetersPerSecond,
-				(targetWheelSpeeds.leftMetersPerSecond - lastSpeeds.leftMetersPerSecond) / dt
-			);
+    DifferentialDriveWheelSpeeds targetWheelSpeeds =
+        kinematics.toWheelSpeeds(
+            follower.calculate(Odometry.getPose2dMeters(), trajectory.sample(curTime)));
 
-		double rightFeedforward = feedforward.calculate(
-				targetWheelSpeeds.rightMetersPerSecond,
-				(targetWheelSpeeds.rightMetersPerSecond - lastSpeeds.rightMetersPerSecond) / dt
-			);
+    double leftFeedforward =
+        feedforward.calculate(
+            targetWheelSpeeds.leftMetersPerSecond,
+            (targetWheelSpeeds.leftMetersPerSecond - lastSpeeds.leftMetersPerSecond) / dt);
 
-		double leftFeedback = leftController.calculate(
-				Odometry.getWheelSpeeds().leftMetersPerSecond, 
-				targetWheelSpeeds.leftMetersPerSecond
-			);
+    double rightFeedforward =
+        feedforward.calculate(
+            targetWheelSpeeds.rightMetersPerSecond,
+            (targetWheelSpeeds.rightMetersPerSecond - lastSpeeds.rightMetersPerSecond) / dt);
 
-		double rightFeedback = rightController.calculate(
-				Odometry.getWheelSpeeds().rightMetersPerSecond,
-				targetWheelSpeeds.rightMetersPerSecond
-			);
+    double leftFeedback =
+        leftController.calculate(
+            Odometry.getWheelSpeeds().leftMetersPerSecond, targetWheelSpeeds.leftMetersPerSecond);
 
-		lastTime = curTime;
-		lastSpeeds = targetWheelSpeeds;
+    double rightFeedback =
+        rightController.calculate(
+            Odometry.getWheelSpeeds().rightMetersPerSecond, targetWheelSpeeds.rightMetersPerSecond);
 
-		com.team5104.frc2021.subsystems.Drive.set(new DriveSignal(
-				leftFeedforward + leftFeedback,
-				rightFeedforward + rightFeedback,
-				DriveUnit.VOLTAGE
-		));
+    lastTime = curTime;
+    lastSpeeds = targetWheelSpeeds;
 
-		if (AutoManager.plottingEnabled()) {
-			Plotter.plot(Odometry.getPositionFeet().getXFeet(),
-			             Odometry.getPositionFeet().getYFeet(),
-			             Plotter.Color.ORANGE);
-		}
-	}
+    com.team5104.frc2021.subsystems.Drive.set(
+        new DriveSignal(
+            leftFeedforward + leftFeedback, rightFeedforward + rightFeedback, DriveUnit.VOLTAGE));
 
-	public boolean isFinished() {
-		return timer.hasPeriodPassed(trajectory.getTotalTimeSeconds());
-	}
+    if (AutoManager.plottingEnabled()) {
+      Plotter.plot(
+          Odometry.getPositionFeet().getXFeet(),
+          Odometry.getPositionFeet().getYFeet(),
+          Plotter.Color.ORANGE);
+    }
+  }
 
-	public void end() {
-		timer.stop();
-		com.team5104.frc2021.subsystems.Drive.stop();
-		console.log(
-				"Trajectory Finished in " + 
-				console.sets.getTime("RunTrajectoryTime") + "s" +
-				", at: " + Odometry.getPositionFeet()
-		);
-	}
+  public boolean isFinished() {
+    return timer.hasPeriodPassed(trajectory.getTotalTimeSeconds());
+  }
+
+  public void end() {
+    timer.stop();
+    com.team5104.frc2021.subsystems.Drive.stop();
+    console.log(
+        "Trajectory Finished in "
+            + console.sets.getTime("RunTrajectoryTime")
+            + "s"
+            + ", at: "
+            + Odometry.getPositionFeet());
+  }
 }

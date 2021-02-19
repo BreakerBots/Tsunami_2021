@@ -7,37 +7,35 @@ import com.team5104.lib.console;
 import com.team5104.lib.setup.RobotState;
 
 public class PickupBall extends AutoAction {
-    private boolean intaked, simulationValue;
-	private long startTime;
-	private int timeoutMs;
+  private boolean intaked, simulationValue;
+  private long startTime;
+  private int timeoutMs;
 
-    public PickupBall(int timeoutMs) {
-        this(timeoutMs, false);
-    }
-    public PickupBall(int timeoutMs, boolean simulationValue) {
-        this.timeoutMs = timeoutMs;
-        this.simulationValue = simulationValue;
-    }
+  public PickupBall(int timeoutMs) {
+    this(timeoutMs, false);
+  }
 
-    public void init() {
-    	console.log("Waiting for hopper to intake a ball");
-    	startTime = System.currentTimeMillis();
-    }
+  public PickupBall(int timeoutMs, boolean simulationValue) {
+    this.timeoutMs = timeoutMs;
+    this.simulationValue = simulationValue;
+  }
 
-    public void update() {
-        if (RobotState.isSimulation() ? false : Hopper.isEntrySensorTrippedAvg())
-            intaked = true;
-    }
+  public void init() {
+    console.log("Waiting for hopper to intake a ball");
+    startTime = System.currentTimeMillis();
+  }
 
-    public boolean isFinished() {
-        return intaked || (System.currentTimeMillis() >= startTime + timeoutMs);
-    }
+  public void update() {
+    if (RobotState.isSimulation() ? false : Hopper.isEntrySensorTrippedAvg()) intaked = true;
+  }
 
-    public void end() {
-    	
-    }
+  public boolean isFinished() {
+    return intaked || (System.currentTimeMillis() >= startTime + timeoutMs);
+  }
 
-    public boolean getValue() {
-        return RobotState.isSimulation() ? simulationValue : intaked;
-    }
+  public void end() {}
+
+  public boolean getValue() {
+    return RobotState.isSimulation() ? simulationValue : intaked;
+  }
 }
