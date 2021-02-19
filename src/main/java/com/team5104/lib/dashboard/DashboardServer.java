@@ -61,16 +61,6 @@ public class DashboardServer extends WebSocketServer {
 		return connection != null && connection.isOpen();
 	}
 
-	//Ping Pong
-	public void onWebsocketPong() {
-		console.log("pong");
-	}
-	public void sendPing() {
-		if (isConnected()) {
-			connection.sendPing();
-		}
-	}
-
 	//Init
 	public void onStart() {
 		console.log("running on " + getOrigin() + ":" + getPort());

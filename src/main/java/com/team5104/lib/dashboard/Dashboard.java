@@ -4,7 +4,6 @@ import com.team5104.lib.Looper;
 import com.team5104.lib.Looper.Crash;
 import com.team5104.lib.Looper.Loop;
 import com.team5104.lib.Looper.TimedLoop;
-import com.team5104.lib.console;
 
 public class Dashboard {
 	private static Thread thread;
@@ -19,10 +18,6 @@ public class Dashboard {
 		Looper.registerLoop(new TimedLoop("Dashboard-Send", () -> {
 
 		},1, 500));
-
-		Looper.registerLoop(new TimedLoop("Dashboard-Ping", () -> {
-			server.sendPing();
-		},1, 10000));
 	}
 
 	public static void close() {
