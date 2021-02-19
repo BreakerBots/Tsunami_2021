@@ -2,6 +2,7 @@ plugins {
     id "idea"
     id "java"
     id "edu.wpi.first.GradleRIO" version "2021.2.1"
+    id "com.diffplug.spotless" version "5.9.0"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -71,6 +72,15 @@ wrapper {
 
 test {
     useJUnit()
+}
+
+spotless {
+    java {
+        //trimTrailingWhitespace()
+        //endWithNewline()
+        indentWithSpaces(2)
+        //googleJavaFormat()
+    }
 }
 
 apply plugin: 'java'

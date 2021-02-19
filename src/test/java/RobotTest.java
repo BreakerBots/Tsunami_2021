@@ -3,12 +3,12 @@ import org.junit.Assert;
 
 public class RobotTest {
 
-	@org.junit.Test
-	public void start() {
-		Assert.assertEquals(RobotState.isSimulation(), true);
+  @org.junit.Test
+  public void start() {
+    Assert.assertEquals(RobotState.isSimulation(), true);
 
-		// TODO
-	}
+    // TODO
+  }
 
 }
 

@@ -8,8 +8,8 @@ import com.team5104.lib.setup.RobotState;
 
 public class PickupBall extends AutoAction {
     private boolean intaked, simulationValue;
-	private long startTime;
-	private int timeoutMs;
+  private long startTime;
+  private int timeoutMs;
 
     public PickupBall(int timeoutMs) {
         this(timeoutMs, false);
@@ -20,8 +20,8 @@ public class PickupBall extends AutoAction {
     }
 
     public void init() {
-    	console.log("Waiting for hopper to intake a ball");
-    	startTime = System.currentTimeMillis();
+      console.log("Waiting for hopper to intake a ball");
+      startTime = System.currentTimeMillis();
     }
 
     public void update() {
@@ -34,7 +34,7 @@ public class PickupBall extends AutoAction {
     }
 
     public void end() {
-    	
+      
     }
 
     public boolean getValue() {

@@ -196,10 +196,10 @@ public class Webapp {
             if (requestType.equals("get")) {
                 //Send outputs
                 String response = toJSON(
-		                "name", Constants.robot.name,
-		                "sim", RobotState.isSimulation(),
-		                "enabled", RobotState.isEnabled(),
-		                "plotterInput", Plotter.getInputMode()
+                    "name", Constants.robot.name,
+                    "sim", RobotState.isSimulation(),
+                    "enabled", RobotState.isEnabled(),
+                    "plotterInput", Plotter.getInputMode()
                 );
                 t.sendResponseHeaders(200, response.length());
                 OutputStream os = t.getResponseBody();

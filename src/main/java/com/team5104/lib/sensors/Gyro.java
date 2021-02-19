@@ -17,7 +17,7 @@ public abstract class Gyro {
         set(0);
     }
 
-	public static class GyroPigeon extends Gyro {
+  public static class GyroPigeon extends Gyro {
         private final PigeonIMU gyro;
 
         public GyroPigeon(int canID) {
