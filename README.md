@@ -9,10 +9,7 @@ along with a brief walk through this repository.
 2) Download [Github Desktop](https://desktop.github.com/)
 3) Open Github Desktop and clone this repo (BreakerBots/Tsunami_2021)
 4) Download [IntelliJ IDEA Community](https://www.jetbrains.com/idea/download/#section=windows)
-5) Open IntelliJ and choose `File > Open` then navigate to the folder where
-you downloaded this repo (should be /Documents/Github/Tsunami_2021) and press `OK`. 
-I recommend clicking on the settings icon in the top left and selecting
-`Flatten Packages`.
+5) Set your `JAVA_HOME` enviornment variable to `C:\Users\Public\wpilib\2021\jdk` and then add `%JAVA_HOME%\bin` to your path.
 
 ## Deploying Code
 1) Open up a command prompt in the repo
