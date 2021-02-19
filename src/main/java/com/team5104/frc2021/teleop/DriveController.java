@@ -6,16 +6,11 @@ import com.team5104.lib.managers.TeleopController;
 import com.team5104.frc2021.subsystems.Drive;
 
 public class DriveController extends TeleopController {
-	//Constants
-	private static final double MIN_SPEED_FORWARD = 0.055;
-	private static final double MIN_SPEED_TURN = 0.055;
-
-	private static final double KICKSTAND_SCALAR = 0.2; //percent aka slow-mode
-
-	private static final double TURN_SPEED_ADJ = 0.2; //percent reduces turning bases on forward/back velocity
-
-	//Variables
-	boolean kickstand = false;
+	private static final double MIN_SPEED_FORWARD = 0.66; //volts
+	private static final double MIN_SPEED_TURN = 0.66; //volts
+	private static final double KICKSTAND_SCALAR = 0.2; //percent
+	private static final double TURN_SPEED_ADJ = 0.2; //percent - reduces turning bases on forward velocity
+	private boolean kickstand = false;
 
 	//Loop
 	protected void update() {
@@ -56,7 +51,7 @@ public class DriveController extends TeleopController {
 		double forward = 1 - turn;
 
 		double minSpeed;
-		minSpeed = (forward * (MIN_SPEED_FORWARD/12.0)) + (turn * (MIN_SPEED_TURN/12.0));
+		minSpeed = (forward * (MIN_SPEED_FORWARD)) + (turn * (MIN_SPEED_TURN));
 
 		if (signal.leftSpeed != 0)
 			signal.leftSpeed = signal.leftSpeed * (1 - minSpeed) + (signal.leftSpeed > 0 ? minSpeed : -minSpeed);

@@ -1,12 +1,12 @@
 package com.team5104.lib.auto;
 
-import com.team5104.lib.Util;
+import com.team5104.frc2021.subsystems.Drive;
 import com.team5104.lib.console;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-import com.team5104.frc2021.subsystems.Drive;
+import edu.wpi.first.wpilibj.util.Units;
 
 /** keeps of the position of the robot relative to the field (in x, y, angle) */
 public class Odometry {
@@ -36,8 +36,8 @@ public class Odometry {
 		if (odometry == null)
 			return new Position(0, 0, 0);
 		return new Position(
-				Util.metersToFeet(getPose2dMeters().getTranslation().getX()),
-				Util.metersToFeet(getPose2dMeters().getTranslation().getY()),
+				Units.metersToFeet(getPose2dMeters().getTranslation().getX()),
+				Units.metersToFeet(getPose2dMeters().getTranslation().getY()),
 				getPose2dMeters().getRotation().getDegrees()
 			);
 	}

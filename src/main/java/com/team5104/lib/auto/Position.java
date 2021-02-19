@@ -4,6 +4,7 @@ import com.team5104.lib.Util;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
+import edu.wpi.first.wpilibj.util.Units;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,8 @@ public class Position {
 	
 	public Position(Pose2d poseMeters) {
 		this(
-				Util.metersToFeet(poseMeters.getTranslation().getX()),
-				Util.metersToFeet(poseMeters.getTranslation().getY()),
+				Units.metersToFeet(poseMeters.getTranslation().getX()),
+				Units.metersToFeet(poseMeters.getTranslation().getY()),
 				poseMeters.getRotation().getDegrees()
 		);
 	}
@@ -58,8 +59,8 @@ public class Position {
 	
 	public Pose2d toPose2dMeters() {
 		return new Pose2d(
-				Util.feetToMeters(xFeet),
-				Util.feetToMeters(yFeet),
+				Units.feetToMeters(xFeet),
+				Units.feetToMeters(yFeet),
 				Rotation2d.fromDegrees(degrees)
 			);
 	}

@@ -5,7 +5,6 @@ import com.team5104.frc2021.Constants;
 import com.team5104.frc2021.subsystems.Drive;
 import com.team5104.frc2021.teleop.DriveController.DriveSignal;
 import com.team5104.frc2021.teleop.DriveController.DriveSignal.DriveUnit;
-import com.team5104.lib.Util;
 import com.team5104.lib.auto.AutoAction;
 import com.team5104.lib.auto.AutoManager;
 import com.team5104.lib.auto.Odometry;
@@ -23,6 +22,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.util.Units;
 
 /**
  * Follow a trajectory using the Breaker Trajectory Follower (Ramses Follower)
@@ -49,7 +49,7 @@ public class DriveTrajectory extends AutoAction {
 			);
 
 		kinematics = new DifferentialDriveKinematics(
-				Util.feetToMeters(Constants.drive.trackWidth)
+				Units.feetToMeters(Constants.drive.trackWidth)
 			);
 
 		// Create a voltage constraint to ensure we don't accelerate too fast
@@ -62,8 +62,8 @@ public class DriveTrajectory extends AutoAction {
 
 		// Create config for trajectory
 		TrajectoryConfig config = new TrajectoryConfig(
-				Util.feetToMeters(Constants.drive.maxVelocity),
-				Util.feetToMeters(Constants.drive.maxAccel)
+				Units.feetToMeters(Constants.drive.maxVelocity),
+				Units.feetToMeters(Constants.drive.maxAccel)
 			).setKinematics(kinematics)
 			 .addConstraint(autoVoltageConstraint)
 			 .setReversed(isReversed);

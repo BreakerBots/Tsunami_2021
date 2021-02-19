@@ -51,7 +51,7 @@ public class Turret extends Subsystem {
 
 			//Field Oriented Mode
 			else setAngle(
-						Util.boundDegrees180(
+				Util.boundDegrees180(
 					Drive.getHeading() + fieldOrientedOffset + tunerFieldOrientedOffsetAdd
 				)
 			);
@@ -107,12 +107,12 @@ public class Turret extends Subsystem {
 
 	//Internal Functions
 	private void setAngle(double angle) {
-		targetAngle = Util.clamp(angle, -260, 260);
+		targetAngle = Util.limit(angle, -260, 260);
 		outputAverage.update(controller.calculate(getAngle(), targetAngle));
 		setVoltage(outputAverage.getDoubleOutput());
 	}
 	private void setVoltage(double volts) {
-		volts = Util.clamp(volts, -Constants.TURRET_VOLT_LIMIT, Constants.TURRET_VOLT_LIMIT);
+		volts = Util.limit(volts, -Constants.TURRET_VOLT_LIMIT, Constants.TURRET_VOLT_LIMIT);
 		setPercentOutput(volts / motor.getBusVoltage());
 	}
 	private void setPercentOutput(double percent) {

@@ -99,12 +99,12 @@ public class Hood extends Subsystem {
 
 	//Internal Functions
 	private void setAngle(double degrees) {
-		targetAngle = Util.clamp(degrees, -1, 40);
+		targetAngle = Util.limit(degrees, -1, 40);
 		controller.setP(getKP());
 		setVoltage(controller.calculate(getAngle(), targetAngle));
 	}
 	private void setVoltage(double volts) {
-		setPercentOutput(Util.clamp(volts, -6, 6) / motor.getBusVoltage());
+		setPercentOutput(Util.limit(volts, -6, 6) / motor.getBusVoltage());
 	}
 	private void setPercentOutput(double percent) {
 		motor.set(ControlMode.PercentOutput, percent);

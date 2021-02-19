@@ -94,7 +94,7 @@ public class console {
 
     /** Rounds a number to N decimal places */
     public static String round(double number, int decimalPlaces) {
-        return String.format("%." + ((int) Util.clamp(decimalPlaces, 0, 10)) + "f", number);
+        return String.format("%." + ((int) Util.limit(decimalPlaces, 0, 10)) + "f", number);
     }
 
     // -- System Logging/Thread/Loop

@@ -3,8 +3,8 @@ package com.team5104.lib.sensors;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.team5104.lib.Util;
 import com.team5104.lib.motion.TalonSim;
+import edu.wpi.first.wpilibj.util.Units;
 
 public abstract class Encoder {
     public double gearing, ticksPerRev;
@@ -95,9 +95,9 @@ public abstract class Encoder {
 
         public void setVelocityAccelMeters(double metersPerSecond, double metersPerSecondSquared, double wheelDiameter) {
             setTicks(componentRevsToTicks(
-		            Util.metersToFeet(metersPerSecond) / (wheelDiameter * Math.PI)));
+                    Units.metersToFeet(metersPerSecond) / (wheelDiameter * Math.PI)));
             setTicksVel(componentRevsToTicks(
-                    Util.metersToFeet(metersPerSecondSquared) / (wheelDiameter * Math.PI)) / 10d);
+                    Units.metersToFeet(metersPerSecondSquared) / (wheelDiameter * Math.PI)) / 10d);
         }
     }
 }
