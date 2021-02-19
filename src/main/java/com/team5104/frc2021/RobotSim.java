@@ -1,11 +1,7 @@
 package com.team5104.frc2021;
 
-import com.team5104.frc2021.auto.paths.AutoNavSlalom;
 import com.team5104.lib.auto.AutoManager;
-import com.team5104.lib.auto.Odometry;
-import com.team5104.frc2021.subsystems.Drive;
-import com.team5104.lib.webapp.Plotter;
-import com.team5104.lib.webapp.Webapp;
+import com.team5104.lib.dashboard.Dashboard;
 import com.team5104.lib.managers.SubsystemManager;
 import com.team5104.lib.setup.RobotController;
 
@@ -16,16 +12,17 @@ public class RobotSim extends RobotController.BreakerRobot {
 
         //Managers
         SubsystemManager.useSubsystems(
-            new Drive()
+            //new Drive()
         );
 
         //Other Initialization
-        Webapp.run();
-        Plotter.reset();
-        Odometry.init();
-        AutoManager.setTargetPath(new AutoNavSlalom());
+        Dashboard.run();
+        //Webapp.run();
+        //Plotter.reset();
+        //Odometry.init();
+        //AutoManager.setTargetPath(new AutoNavSlalom());
         //AutoManager.runTrajectoryTester();
-        AutoManager.enabledPlotting();
+        //AutoManager.enabledPlotting();
         //AutoManager.characterize(Drive.class);
     }
 
@@ -47,14 +44,10 @@ public class RobotSim extends RobotController.BreakerRobot {
     public void mainStop() {
         SubsystemManager.reset();
     }
-
-//    double last = RobotState.getFPGATimestamp();
     public void mainLoop() {
-//        Tuner.setTunerOutput("dt", RobotState.getFPGATimestamp() - last);
-//        last = RobotState.getFPGATimestamp();
-
         SubsystemManager.update();
-
-
+    }
+    public void mainShutdown() {
+        Dashboard.close();
     }
 }

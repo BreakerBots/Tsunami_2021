@@ -87,13 +87,6 @@ public class Hopper extends Subsystem {
 	
 	//Debugging
 	public void debug() {
-		//Competition Debugging
-		if (Constants.config.isAtCompetition) {
-			Tuner.setTunerOutput("Hopper Indexer Output", indexMotor.getMotorOutputPercent());
-			Constants.HOPPER_INDEX_BALL_SIZE = Tuner.getTunerInputDouble("Hopper Indexer Ball Size", Constants.HOPPER_INDEX_BALL_SIZE);
-			return;
-		}
-
 		//Constants.HOPPER_INDEX_BALL_SIZE = Tuner.getTunerInputDouble("Hopper Indexer Ball Size", Constants.HOPPER_INDEX_BALL_SIZE);
 		Constants.hopperIndexer.kP = Tuner.getTunerInputDouble("Hopper Index KP", Constants.hopperIndexer.kP);
 		Constants.hopperIndexer.kI = Tuner.getTunerInputDouble("Hopper Index KI", Constants.hopperIndexer.kI);
@@ -158,19 +151,21 @@ public class Hopper extends Subsystem {
 	public void init() {
 		startMotor = new VictorSPX(Ports.HOPPER_START_MOTOR);
 		startMotor.configFactoryDefault();
-		startMotor.setInverted(Constants.config.isCompetitionRobot ? false : true);
+		startMotor.setInverted(Constants.robot.switchOnBot(false, true));
 
 		feederMotor = new VictorSPX(Ports.HOPPER_FEEDER_MOTOR);
 		feederMotor.configFactoryDefault();
-		feederMotor.setInverted(Constants.config.isCompetitionRobot ? false : true);
+		feederMotor.setInverted(Constants.robot.switchOnBot(false, true));
 		
 		indexMotor = new TalonFX(Ports.HOPPER_INDEX_MOTOR);
 		indexMotor.configFactoryDefault();
 		indexMotor.setInverted(true);
 		indexEncoder = new FalconEncoder(indexMotor, Constants.hopperIndexer.gearing);
 
-		entrySensor = new Sensor(PortType.ANALOG, Ports.HOPPER_SENSOR_START, Constants.config.isCompetitionRobot ? false : true);
-		endSensor = new Sensor(PortType.ANALOG, Ports.HOPPER_SENSOR_END, Constants.config.isCompetitionRobot ? false : true);
+		entrySensor = new Sensor(PortType.ANALOG, Ports.HOPPER_SENSOR_START,
+		                         Constants.robot.switchOnBot(false, true));
+		endSensor = new Sensor(PortType.ANALOG, Ports.HOPPER_SENSOR_END,
+		                       Constants.robot.switchOnBot(false, true));
 		
 		entrySensorLatch = new LatchedBoolean(LatchedBooleanMode.RISING);
 		isFullAverage = new MovingAverage(200, 0);

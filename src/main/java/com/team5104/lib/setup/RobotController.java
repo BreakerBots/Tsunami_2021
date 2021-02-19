@@ -29,9 +29,9 @@ public class RobotController extends RobotBase {
 		if (!RobotState.isSimulation())
 			console.logFile.start();
 		console.sets.create("RobotInit");
-		if (Constants.config.robotName.length() < 4)
+		if (Constants.robot.name.length() < 4)
 			console.error("Please deploy robot.txt with the correct robot name!");
-		console.log("Initializing " + Constants.config.robotName + " Code...");
+		console.log("Initializing " + Constants.robot.name + " Code...");
 
 		//Set Child Class
 		if (RobotState.isSimulation())

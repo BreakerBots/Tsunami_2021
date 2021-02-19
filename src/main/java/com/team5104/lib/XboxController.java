@@ -59,54 +59,22 @@ public class XboxController {
     public static boolean isConnected(int port) { return HAL.getJoystickIsXbox((byte) port) == 1; }
 
     //Buttons
-    public static Button getButton(int slot, XboxController controller1, XboxController controller2) {
-        return new DoubleButton(
-                controller1.getButton(slot),
-                controller2.getButton(slot)
-        );
-    }
-
-    public static Button getHoldButton(int slot, XboxController controller1, XboxController controller2) {
-        return new DoubleButton(
-                controller1.getHoldButton(slot),
-                controller2.getHoldButton(slot)
-        );
-    }
-
-    public static Button getHoldTimeButton(int slot, int holdTime, XboxController controller1, XboxController controller2) {
-        return new DoubleButton(
-                controller1.getHoldTimeButton(slot, holdTime),
-                controller2.getHoldTimeButton(slot, holdTime)
-        );
-    }
-
-    public static Button getDoubleClickButton(int slot, int killOffTime, XboxController controller1, XboxController controller2) {
-        return new DoubleButton(
-                controller1.getDoubleClickButton(slot, killOffTime),
-                controller2.getDoubleClickButton(slot, killOffTime)
-        );
-    }
-
-    public Button getButton(int slot) {
+    public Button button(int slot) {
         buttons.add(new Button(port, slot, ButtonType.NORMAL, 0));
         return buttons.get(buttons.size() - 1);
     }
-
-    public Button getHoldButton(int slot) {
+    public Button holdButton(int slot) {
         buttons.add(new Button(port, slot, ButtonType.HOLD, 0));
         return buttons.get(buttons.size() - 1);
     }
-
-    public Button getHoldTimeButton(int slot, int holdTime) {
+    public Button holdTimeButton(int slot, int holdTime) {
         buttons.add(new Button(port, slot, ButtonType.HOLD_TIME, holdTime));
         return buttons.get(buttons.size() - 1);
     }
-
-    public Button getDoubleClickButton(int slot, int killOffTime) {
+    public Button doubleClickButton(int slot, int killOffTime) {
         buttons.add(new Button(port, slot, ButtonType.DOUBLE_CLICK, killOffTime));
         return buttons.get(buttons.size() - 1);
     }
-
     public static class Button {
         public enum ButtonType {NORMAL, HOLD, HOLD_TIME, DOUBLE_CLICK}
 
@@ -235,7 +203,6 @@ public class XboxController {
                 DIRECTION_PAD_DOWN_RIGHT = 135,
                 DIRECTION_PAD_LEFT = 270;
     }
-
     private static class DoubleButton extends Button {
         private final Button button1;
         private final Button button2;
@@ -269,45 +236,13 @@ public class XboxController {
     }
 
     //Axis'
-    public static Axis getAxis(int slot, XboxController controller1, XboxController controller2) {
-        return new DoubleAxis(
-                controller1.getAxis(slot),
-                controller2.getAxis(slot)
-        );
-    }
-
-    public static Axis getAxis(int slot, Deadband deadband, XboxController controller1, XboxController controller2) {
-        return new DoubleAxis(
-                controller1.getAxis(slot, deadband),
-                controller2.getAxis(slot, deadband)
-        );
-    }
-
-    public static Axis getAxis(int slot, Deadband deadband, BezierCurve curve, XboxController controller1, XboxController controller2) {
-        return new DoubleAxis(
-                controller1.getAxis(slot, deadband, curve),
-                controller2.getAxis(slot, deadband, curve)
-        );
-    }
-
-    public static Axis getAxis(int slot, Deadband deadband, BezierCurve curve, boolean reversed, XboxController controller1, XboxController controller2) {
-        return new DoubleAxis(
-                controller1.getAxis(slot, deadband, curve, reversed),
-                controller2.getAxis(slot, deadband, curve, reversed)
-        );
-    }
-
-    public Axis getAxis(int slot) { return getAxis(slot, null); }
-
-    public Axis getAxis(int slot, Deadband deadband) { return getAxis(slot, deadband, null); }
-
-    public Axis getAxis(int slot, Deadband deadband, BezierCurve curve) { return getAxis(slot, deadband, curve, false); }
-
-    public Axis getAxis(int slot, Deadband deadband, BezierCurve curve, boolean reversed) {
+    public Axis axis(int slot) { return axis(slot, null); }
+    public Axis axis(int slot, Deadband deadband) { return axis(slot, deadband, null); }
+    public Axis axis(int slot, Deadband deadband, BezierCurve curve) { return axis(slot, deadband, curve, false); }
+    public Axis axis(int slot, Deadband deadband, BezierCurve curve, boolean reversed) {
         axises.add(new Axis(port, slot, deadband, curve, reversed));
         return axises.get(axises.size() - 1);
     }
-
     public static class Axis {
         private final int port;
         private final int slot;
@@ -352,7 +287,6 @@ public class XboxController {
                 RIGHT_JOYSTICK_X = 4,
                 RIGHT_JOYSTICK_Y = 5;
     }
-
     public static class DoubleAxis extends Axis {
         private final Axis axis1;
         private final Axis axis2;
@@ -369,12 +303,10 @@ public class XboxController {
     }
 
     //Rumbles
-    public Rumble getRumble(double strength, boolean hard, int timeoutMs) { return getRumble(strength, hard, timeoutMs, 0); }
-
-    public Rumble getRumble(double strength, boolean hard, int timeoutMs, int dipCount) {
+    public Rumble rumble(double strength, boolean hard, int timeoutMs) { return rumble(strength, hard, timeoutMs, 0); }
+    public Rumble rumble(double strength, boolean hard, int timeoutMs, int dipCount) {
         return new Rumble(port, strength, hard, timeoutMs, dipCount);
     }
-
     public static class Rumble {
         private final int port;
         private final int timeoutMs;
@@ -420,13 +352,103 @@ public class XboxController {
                 if (controller.port == port) controller.activeRumble = this;
         }
     }
+    public static class DoubleRumble extends Rumble {
+        private final Rumble rumble1, rumble2;
+
+        public DoubleRumble(Rumble rumble1, Rumble rumble2) {
+            super(0, 0, false, 0, 0);
+            this.rumble1 = rumble1;
+            this.rumble2 = rumble2;
+        }
+
+        void update() {
+            // do nothing
+        }
+        public void start() {
+            rumble1.start();
+            rumble2.start();
+        }
+    }
+
+    //Controller Group
+    public static class XboxControllerGroup {
+        XboxController controller1, controller2;
+
+        public XboxControllerGroup(XboxController controller1, XboxController controller2) {
+            this.controller1 = controller1;
+            this.controller2 = controller2;
+        }
+
+        //Buttons
+        public Button button(int slot) {
+            return new DoubleButton(
+                    controller1.button(slot),
+                    controller2.button(slot)
+            );
+        }
+        public Button holdButton(int slot) {
+            return new DoubleButton(
+                    controller1.holdButton(slot),
+                    controller2.holdButton(slot)
+            );
+        }
+        public Button holdTimeButton(int slot, int holdTime, XboxController controller1, XboxController controller2) {
+            return new DoubleButton(
+                    controller1.holdTimeButton(slot, holdTime),
+                    controller2.holdTimeButton(slot, holdTime)
+            );
+        }
+        public Button doubleClickButton(int slot, int killOffTime) {
+            return new DoubleButton(
+                    controller1.doubleClickButton(slot, killOffTime),
+                    controller2.doubleClickButton(slot, killOffTime)
+            );
+        }
+
+        //Axis'
+        public Axis axis(int slot) {
+            return new DoubleAxis(
+                    controller1.axis(slot),
+                    controller2.axis(slot)
+            );
+        }
+        public Axis axis(int slot, Deadband deadband) {
+            return new DoubleAxis(
+                    controller1.axis(slot, deadband),
+                    controller2.axis(slot, deadband)
+            );
+        }
+        public Axis axis(int slot, Deadband deadband, BezierCurve curve) {
+            return new DoubleAxis(
+                    controller1.axis(slot, deadband, curve),
+                    controller2.axis(slot, deadband, curve)
+            );
+        }
+        public Axis axis(int slot, Deadband deadband, BezierCurve curve, boolean reversed) {
+            return new DoubleAxis(
+                    controller1.axis(slot, deadband, curve, reversed),
+                    controller2.axis(slot, deadband, curve, reversed)
+            );
+        }
+
+        //Rumble
+        public Rumble rumble(double strength, boolean hard, int timeoutMs) {
+            return new DoubleRumble(
+                    controller1.rumble(strength, hard, timeoutMs),
+                    controller2.rumble(strength, hard, timeoutMs)
+            );
+        }
+        public Rumble rumble(double strength, boolean hard, int timeoutMs, int dipCount) {
+            return new DoubleRumble(
+                    controller1.rumble(strength, hard, timeoutMs, dipCount),
+                    controller2.rumble(strength, hard, timeoutMs, dipCount)
+            );
+        }
+    }
 
     //Bezier Curves
-
-    /**
-     * Processes bezier curves between two points.
-     * Desmos Link: https://www.desmos.com/calculator/da8zwxpgzo
-     */
+    /** Processes bezier curves between two points.
+     * Desmos Link: https://www.desmos.com/calculator/da8zwxpgzo */
     public static class BezierCurve {
         public double x1, y1, x2, y2;
 
@@ -457,15 +479,12 @@ public class XboxController {
     }
 
     //Deadband
-
-    /**
-     * A deadband cuts out areas of an input.
+    /** A deadband cuts out areas of an input.
      * For example in a clipping deadband with a radius of .05, .05 would go to 0 and .06 would not change.
      * This class has two deadbands.
      * - Clipping: in which areas will be directly cut out (r=.05: .05->0, .06->.06)
      * - Slope Adjustment: in which the slope is adjusted (r=.05: .05->0, 0.06->0.01)
-     * Desmos Link: https://www.desmos.com/calculator/xhbilptzt9
-     */
+     * Desmos Link: https://www.desmos.com/calculator/xhbilptzt9 */
     public static class Deadband {
         //Deadband Types
 

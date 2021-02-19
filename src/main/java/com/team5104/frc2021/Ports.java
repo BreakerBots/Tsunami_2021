@@ -42,7 +42,7 @@ public class Ports {
 
 	//Other
 	/** Returns "c" if this is the competition robot otherwise returns "a" */
-	public static int switchOnBot(int c, int a) {
-		return Constants.config.isCompetitionRobot ? c : a;
+	public static int switchOnBot(int... out) {
+		return Constants.robot.switchOnBotArray(out);
 	}
 }

@@ -80,12 +80,6 @@ public class Hood extends Subsystem {
 	
 	//Debugging
 	public void debug() {
-		if (Constants.config.isAtCompetition) {
-			Tuner.setTunerOutput("Hood Output", motor.getMotorOutputPercent());
-			Constants.HOOD_EQ_CONST = Tuner.getTunerInputDouble("Hood Eq Const", Constants.HOOD_EQ_CONST);
-			return;
-		}
-
 		Tuner.setTunerOutput("Hood Limelight Y", Limelight.getTargetY());
 		Tuner.setTunerOutput("Hood Angle", getAngle());
 		Tuner.setTunerOutput("Hood Output", controller.getLastOutput());
@@ -131,7 +125,7 @@ public class Hood extends Subsystem {
 	}
 	public static boolean onTarget() {
 		if (motor == null) return true;
-		return Math.abs(getAngle() - getTargetVisionAngle()) < (Constants.HOOD_TOL * Constants.SUPERSTRUCTURE_TOL_SCALAR);
+		return Math.abs(getAngle() - getTargetVisionAngle()) < (Constants.HOOD_TOL);
 	}
 	public static boolean isTrenchMode() {
 		return visionFilter.getDoubleOutput() < -13;
@@ -147,8 +141,8 @@ public class Hood extends Subsystem {
 	public void init() {
 		motor = new TalonSRX(Ports.HOOD_MOTOR);
 		motor.configFactoryDefault();
-		motor.setInverted(Constants.config.isCompetitionRobot ? true : false);
-		motor.setSensorPhase(Constants.config.isCompetitionRobot ? false : true);
+		motor.setInverted(Constants.robot.switchOnBot(true, false));
+		motor.setSensorPhase(Constants.robot.switchOnBot(false, true));
 
 		encoder = new MagEncoder(motor, Constants.hood.gearing);
 

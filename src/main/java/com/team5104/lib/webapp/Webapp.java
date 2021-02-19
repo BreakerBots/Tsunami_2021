@@ -196,7 +196,7 @@ public class Webapp {
             if (requestType.equals("get")) {
                 //Send outputs
                 String response = toJSON(
-		                "name", Constants.config.robotName,
+		                "name", Constants.robot.name,
 		                "sim", RobotState.isSimulation(),
 		                "enabled", RobotState.isEnabled(),
 		                "plotterInput", Plotter.getInputMode()

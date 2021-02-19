@@ -30,7 +30,7 @@ public class Intake extends Subsystem {
 
 	//Internal Functions
 	public void setPiston(boolean position) {
-		if (Constants.config.isCompetitionRobot)
+		if (Constants.robot.id == 0)
 			piston.set(position ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
 	}
 	public void setPercentOutput(double percent) {
@@ -43,7 +43,7 @@ public class Intake extends Subsystem {
 
 	//Config
 	public void init() {
-		if (Constants.config.isCompetitionRobot)
+		if (Constants.robot.id == 0)
 			piston = new DoubleSolenoid(Ports.INTAKE_DEPLOYER[0], Ports.INTAKE_DEPLOYER[1]);
 			
 		motor = new VictorSPX(Ports.INTAKE_MOTOR);

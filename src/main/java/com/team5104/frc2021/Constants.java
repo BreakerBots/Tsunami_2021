@@ -2,15 +2,29 @@
 package com.team5104.frc2021;
 
 import com.team5104.lib.ConstantsUtils.DriveConstants;
-import com.team5104.lib.ConstantsUtils.RobotConfig;
+import com.team5104.lib.ConstantsUtils.RobotNameManager;
 import com.team5104.lib.ConstantsUtils.SubsystemConstants;
 
 public class Constants {
     //Main
-    public static final RobotConfig config = new RobotConfig(false, "Tsunami", "Tidal-Wave");
-    public static double SUPERSTRUCTURE_TOL_SCALAR = 1;
+    public static RobotNameManager robot = new RobotNameManager("Tsunami", "Tidal-Wave");
 
     //Drive
+    public static class Drive {
+        public static double KP = 1;
+        public static double KD = 0;
+        public static double KLS = 0.162;
+        public static double KLV = 1.98;
+        public static double KLA = 0.2;
+        public static double KAS = 0.66;
+        public static double KAL = 1.5;
+        public static double KAA = 0.3;
+        public static double MAX_VEL = 6;
+        public static double MAX_ACC = 4;
+        public static double GEARING = (50.0 / 8.0) * (46.0 / 24.0);
+        public static double TRACK_WIDTH = 2.0589795990198065;
+        public static double WHEEL_DIA = 0.5;
+    }
     public static DriveConstants drive = new DriveConstants(
             1/*0.153*/, 0,
             switchOnBot(0.162, 0.151),
@@ -24,9 +38,9 @@ public class Constants {
     );
 
     //Flywheel
-    public static final boolean FLYWHEEL_OPEN_LOOP = false;
-    public static final double FLYWHEEL_RAMP_RATE_UP = 0.7;
-    public static final double FLYWHEEL_RAMP_RATE_DOWN = 3;
+    public static boolean FLYWHEEL_OPEN_LOOP = false;
+    public static double FLYWHEEL_RAMP_RATE_UP = 0.7;
+    public static double FLYWHEEL_RAMP_RATE_DOWN = 3;
     public static double FLYWHEEL_RPM_TOL = 500;
     public static SubsystemConstants flywheel = new SubsystemConstants(
             switchOnBot(0.2, 1), 0, switchOnBot(0.01, 0.2),
@@ -38,9 +52,9 @@ public class Constants {
     );
 
     //Hood
-    public static final double HOOD_TOL = 3;
+    public static double HOOD_TOL = 3;
     public static double HOOD_EQ_CONST = 0;
-    public static final double HOOD_CALIBRATE_SPEED = 0.4;
+    public static double HOOD_CALIBRATE_SPEED = 0.4;
     public static SubsystemConstants hood = new SubsystemConstants(
             0, 0, 0,
             switchOnBot(.835, .49),
@@ -51,8 +65,8 @@ public class Constants {
     );
 
     //Hopper
-    public static final double HOPPER_START_INTAKE_SPEED = 7;
-    public static final double HOPPER_START_INDEX_SPEED = 0.5;
+    public static double HOPPER_START_INTAKE_SPEED = 7;
+    public static double HOPPER_START_INDEX_SPEED = 0.5;
     public static double HOPPER_INDEX_BALL_SIZE = 2;
     public static double HOPPER_INDEX_TOL = 0.05;
     public static double HOPPER_FEED_SPEED = 6;
@@ -65,24 +79,24 @@ public class Constants {
 
 
     //Intake
-    public static final double INTAKE_SPEED = 1.0;
-    public static final double INTAKE_FIRE_SPEED = 0;//0.25;
-    public static final double INTAKE_REJECT_SPEED = 0;//.25;//0;
+    public static double INTAKE_SPEED = 1.0;
+    public static double INTAKE_FIRE_SPEED = 0;//0.25;
+    public static double INTAKE_REJECT_SPEED = 0;//.25;//0;
 
     //Paneler
-    public static final double PANELER_ROT_SPEED = 0.15;
-    public static final double PANELER_POS_SPEED = 0.0;
-    public static final double PANELER_GEARING = /*control panel*/16.0 / 2;
-    public static final double PANELER_ROTATIONS = 3;
-    public static final int PANELER_BRAKE_INT = 25;
+    public static double PANELER_ROT_SPEED = 0.15;
+    public static double PANELER_POS_SPEED = 0.0;
+    public static double PANELER_GEARING = /*control panel*/16.0 / 2;
+    public static double PANELER_ROTATIONS = 3;
+    public static int PANELER_BRAKE_INT = 25;
 
     //Turret
-    public static final double TURRET_CALIBRATE_SPEED = 0.15;
-    public static final double TURRET_VOLT_LIMIT = 6;
-    public static final double TURRET_VISION_TOL = 6;
-    public static final double TURRET_SOFT_LEFT = switchOnBot(120, 110);
-    public static final double TURRET_SOFT_RIGHT = switchOnBot(-120, -120);
-    public static final double TURRET_ZERO = switchOnBot(140, 130);
+    public static double TURRET_CALIBRATE_SPEED = 0.15;
+    public static double TURRET_VOLT_LIMIT = 6;
+    public static double TURRET_VISION_TOL = 6;
+    public static double TURRET_SOFT_LEFT = switchOnBot(120, 110);
+    public static double TURRET_SOFT_RIGHT = switchOnBot(-120, -120);
+    public static double TURRET_ZERO = switchOnBot(140, 130);
     public static SubsystemConstants turret = new SubsystemConstants(
             switchOnBot(0.2, 0.2),
             0,
@@ -95,8 +109,8 @@ public class Constants {
     );
 
     //Other
-    /** Returns "c" if this is the competition robot otherwise returns "a" */
-    public static double switchOnBot(double c, double a) {
-        return config.isCompetitionRobot ? c : a;
+    /** See RobotNameManager.switchOnBot() */
+    public static double switchOnBot(double... out) {
+        return robot.switchOnBotArray(out);
     }
 }

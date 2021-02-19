@@ -8,7 +8,6 @@ import com.team5104.lib.MovingAverage;
 import com.team5104.lib.console;
 import com.team5104.lib.sensors.Limelight;
 import com.team5104.lib.sensors.Limelight.LEDMode;
-import com.team5104.lib.webapp.Tuner;
 
 /** The Superstructure is a massive state machine for all subsystems, except drive. */
 public class Superstructure {
@@ -18,23 +17,21 @@ public class Superstructure {
 		INTAKE, AIMING, SHOOTING,
 		CLIMBER_DEPLOYING, CLIMBING,
 		PANEL_DEPLOYING, PANELING
-	};
-	public enum PanelState { ROTATION, POSITION };
-	public enum FlywheelState { STOPPED, SPINNING };
-	public enum Target { LOW, HIGH };
+	}
+	public enum PanelState { ROTATION, POSITION }
+	public enum FlywheelState { STOPPED, SPINNING }
+	public enum Target { LOW, HIGH }
 	
 	private static Mode mode = Mode.IDLE;
 	private static PanelState panelState = PanelState.ROTATION;
 	private static FlywheelState flywheelState = FlywheelState.STOPPED;
 	private static Target target = Target.HIGH;
 	private static boolean isEnabled;
-	private static long systemStateStart = System.currentTimeMillis();
 	private static LatchedBoolean flywheelOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING), hoodOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING),
 								  turretOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING), limelightOn = new LatchedBoolean();
 	private static MovingAverage readyToFire = new MovingAverage(15, false);
 	
 	//External Functions
-	public static long getTimeInSystemState() { return System.currentTimeMillis() - systemStateStart; }
 	public static boolean is(Mode mode) { return mode == Superstructure.mode; }
 	public static void set(Mode mode) { Superstructure.mode = mode; }
 	public static boolean isEnabled() { return isEnabled; }
@@ -53,11 +50,6 @@ public class Superstructure {
 	
 	//Loop
 	protected static void update() {
-		//Competition Debugging
-		if (Constants.config.isAtCompetition) {
-			Constants.SUPERSTRUCTURE_TOL_SCALAR = Tuner.getTunerInputDouble("Superstructure Tolerance Scalar", Constants.SUPERSTRUCTURE_TOL_SCALAR);
-		}
-		
 		//Exit Paneling
 		if (Superstructure.is(Mode.PANELING) && Paneler.isFinished()) {
 			Superstructure.set(Mode.IDLE);

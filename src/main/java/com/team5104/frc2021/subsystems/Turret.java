@@ -85,16 +85,6 @@ public class Turret extends Subsystem {
 	
 	//Debugging
 	public void debug() {
-		//Competition Debugging
-		if (Constants.config.isAtCompetition) {
-			Tuner.setTunerOutput("Turret Output", motor.getMotorOutputPercent());
-			tunerFieldOrientedOffsetAdd = Tuner.getTunerInputDouble("Turret Field Oriented Offset Add", tunerFieldOrientedOffsetAdd);
-			Constants.turret.kP = Tuner.getTunerInputDouble("Turret KP", Constants.turret.kP);
-			Constants.turret.kD = Tuner.getTunerInputDouble("Turret KD", Constants.turret.kD);
-			controller.setPID(Constants.turret.kP, 0, Constants.turret.kD);
-			return;
-		}
-
 		Tuner.setTunerOutput("Turret FF", controller.getLastFFOutput());
 		Tuner.setTunerOutput("Turret PID", controller.getLastPIDOutput());
 		Tuner.setTunerOutput("Turret Error", controller.getLastError());
@@ -137,13 +127,13 @@ public class Turret extends Subsystem {
 	}
 	public static boolean leftLimitHit() {
 		if (motor == null) return true;
-		else if (Constants.config.isCompetitionRobot)
+		else if (Constants.robot.id == 0)
 			return motor.isFwdLimitSwitchClosed() == 1;
 		return motor.isRevLimitSwitchClosed() == 1;
 	}
 	public static boolean onTarget() {
 		if (motor == null) return true;
-		return Math.abs(getAngle() - targetAngle) < (Constants.TURRET_VISION_TOL * Constants.SUPERSTRUCTURE_TOL_SCALAR);
+		return Math.abs(getAngle() - targetAngle) < (Constants.TURRET_VISION_TOL);
 	}
 	public static void setFieldOrientedTarget(double angle) {
 		fieldOrientedOffset = angle;
@@ -153,7 +143,7 @@ public class Turret extends Subsystem {
 	public void init() {
 		motor = new TalonFX(Ports.TURRET_MOTOR);
 		motor.configFactoryDefault();
-		motor.setInverted(Constants.config.isCompetitionRobot ? false : true);
+		motor.setInverted(Constants.robot.switchOnBot(false, true));
 
 		encoder = new FalconEncoder(motor, Constants.turret.gearing);
 
