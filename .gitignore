@@ -2,9 +2,9 @@ java.iml
 imgui.ini
 
 # IntelliJ
+!.idea/
 .idea/*
-*.idea/*
-!.idea/runConfigurations/*
+!.idea/runConfigurations/
 
 # Visual Studio
 .vs/*
@@ -17,7 +17,6 @@ src/webapp/breakerboard-darwin-x64/
 
 # Gradle
 .gradle/
-gradle/
 /build/
 /bin/
 gradle-app.setting
