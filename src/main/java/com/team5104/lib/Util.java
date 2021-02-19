@@ -26,8 +26,8 @@ public class  Util {
         return Math.round(a * b) / b;
     }
 
-    //Angle Bounding
-    public static double boundDegrees180(double angle) {
-        return MathUtil.inputModulus(angle, -180, 180);
+    //Angle Rapping
+    public static double wrap180(double degrees) {
+        return MathUtil.inputModulus(degrees, -180, 180);
     }
 }

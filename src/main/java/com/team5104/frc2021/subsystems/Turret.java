@@ -51,7 +51,7 @@ public class Turret extends Subsystem {
 
 			//Field Oriented Mode
 			else setAngle(
-				Util.boundDegrees180(
+				Util.wrap180(
 					Drive.getHeading() + fieldOrientedOffset + tunerFieldOrientedOffsetAdd
 				)
 			);
@@ -60,7 +60,7 @@ public class Turret extends Subsystem {
 		//Disabled
 		else {
 			stop();
-			targetAngle = Util.boundDegrees180(Drive.getHeading() + fieldOrientedOffset);
+			targetAngle = Util.wrap180(Drive.getHeading() + fieldOrientedOffset);
 			controller.calculate(getAngle(), targetAngle);
 		}
 	}
