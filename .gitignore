@@ -4,10 +4,10 @@ imgui.ini
 # IntelliJ
 .idea/*
 *.idea/*
-!.idea/runConfigurations/deploy.xml
-!.idea/runConfigurations/test.xml
+!.idea/runConfigurations/*
 
 # Visual Studio
+.vs/*
 *.vs/
 
 # Webapp V3 - delete this
