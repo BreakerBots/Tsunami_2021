@@ -22,17 +22,17 @@ public class Flywheel extends Subsystem {
 	//Loop
 	public void update() {
 		if (Superstructure.isEnabled() && Superstructure.is(FlywheelState.SPINNING)) {
-			setRampRate(Constants.FLYWHEEL_RAMP_RATE_UP);
-			if (Constants.FLYWHEEL_OPEN_LOOP)
+			setRampRate(Constants.flywheel.RAMP_RATE_UP);
+			if (Constants.flywheel.OPEN_LOOP)
 				setPercentOutput(1.0);
 			else setSpeed(getTargetRPM());
 		}
 		else if (isCharacterizing()) {
-			setRampRate(Constants.FLYWHEEL_RAMP_RATE_UP);
+			setRampRate(Constants.flywheel.RAMP_RATE_UP);
 			//do nothing
 		}
 		else {
-			setRampRate(Constants.FLYWHEEL_RAMP_RATE_DOWN);
+			setRampRate(Constants.flywheel.RAMP_RATE_DOWN);
 			stop();
 		}
 		
@@ -51,10 +51,10 @@ public class Flywheel extends Subsystem {
 		Tuner.setTunerOutput("Flywheel Current 2", motor2.getSupplyCurrent());
 		Tuner.setTunerOutput("Flywheel Voltage 1", motor1.getMotorOutputVoltage());
 		Tuner.setTunerOutput("Flywheel Voltage 2", motor2.getMotorOutputVoltage());
-		Constants.flywheel.kP = Tuner.getTunerInputDouble("Flywheel KP", Constants.flywheel.kP);
-		Constants.flywheel.kD = Tuner.getTunerInputDouble("Flywheel KD", Constants.flywheel.kD);
-		Constants.FLYWHEEL_RPM_TOL = Tuner.getTunerInputDouble("Flywheel Tol", Constants.FLYWHEEL_RPM_TOL);
-		controller.setPID(Constants.flywheel.kP, 0, Constants.flywheel.kD);
+		Constants.flywheel.KP = Tuner.getTunerInputDouble("Flywheel KP", Constants.flywheel.KP);
+		Constants.flywheel.KD = Tuner.getTunerInputDouble("Flywheel KD", Constants.flywheel.KD);
+		Constants.flywheel.RPM_TOL = Tuner.getTunerInputDouble("Flywheel Tol", Constants.flywheel.RPM_TOL);
+		controller.setPID(Constants.flywheel.KP, 0, Constants.flywheel.KD);
 	}
 	
 	//Internal Functions
@@ -90,7 +90,7 @@ public class Flywheel extends Subsystem {
 	public static boolean isSpedUp() {
 		if (motor1 == null)
 			return true;
-		return Util.roughlyEquals(getAvgRPM(), getTargetRPM(), Constants.FLYWHEEL_RPM_TOL);
+		return Util.roughlyEquals(getAvgRPM(), getTargetRPM(), Constants.flywheel.RPM_TOL);
 	}
 	
 	//Config
@@ -104,9 +104,9 @@ public class Flywheel extends Subsystem {
 		motor2.follow(motor1);
 		motor2.setInverted(true);
 
-		encoder = new FalconEncoder(motor1, Constants.flywheel.gearing);
+		encoder = new FalconEncoder(motor1, Constants.flywheel.GEARING);
 		
-		setRampRate(Constants.FLYWHEEL_RAMP_RATE_UP);
+		setRampRate(Constants.flywheel.RAMP_RATE_UP);
 		
 		controller = new VelocityController(Constants.flywheel);
 		

@@ -18,12 +18,12 @@ public class Intake extends Subsystem {
 		setPiston(true);
 		if (Superstructure.isEnabled()) {
 			if (Superstructure.is(Mode.INTAKE)) {
-				setPercentOutput(Constants.INTAKE_SPEED);
+				setPercentOutput(Constants.intake.INTAKING_SPEED);
 			}
 			else if (Superstructure.is(Mode.SHOOTING)) {
-				setPercentOutput(Constants.INTAKE_FIRE_SPEED);
+				setPercentOutput(Constants.intake.FIRING_SPEED);
 			}
-			else setPercentOutput(-Constants.INTAKE_REJECT_SPEED);
+			else setPercentOutput(-Constants.intake.REJECTING_SPEED);
 		}
 		else stop();
 	}

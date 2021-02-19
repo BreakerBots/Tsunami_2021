@@ -43,19 +43,19 @@ public class Hopper extends Subsystem {
 		
 		//Shooting
 		else if (Superstructure.is(Mode.SHOOTING)) {
-			setIndexer(Constants.HOPPER_FEED_SPEED);
-			setFeeder(Constants.HOPPER_FEED_SPEED);
-			setStart(Constants.HOPPER_FEED_SPEED);
+			setIndexer(Constants.hopper.FEED_SPEED);
+			setFeeder(Constants.hopper.FEED_SPEED);
+			setStart(Constants.hopper.FEED_SPEED);
 		}
 		
 		//Indexing
 		else {
 			//Indexing
 			isIndexing = !isEndSensorTripped() && (isEntrySensorTrippedAvg() || 
-					(getIndexPosition() + Constants.HOPPER_INDEX_TOL) < targetIndexPosition);
+					(getIndexPosition() + Constants.hopper.TOLERANCE) < targetIndexPosition);
 			if (entrySensorLatch.get(isEntrySensorTrippedAvg())) {
 				console.log("i gots da ball");
-				targetIndexPosition = Constants.HOPPER_INDEX_BALL_SIZE;
+				targetIndexPosition = Constants.hopper.BALL_SIZE;
 				controller.reset();
 				resetIndexerEncoder();
 			}
@@ -63,7 +63,7 @@ public class Hopper extends Subsystem {
 			//Indexer and Feeder
 			if (isIndexing) {
 				setIndexer(
-					controller.calculate(getIndexPosition(), targetIndexPosition) + Constants.hopperIndexer.kS
+					controller.calculate(getIndexPosition(), targetIndexPosition) + Constants.hopper.KS
 				);
 				setFeeder(2);
 			}
@@ -74,9 +74,9 @@ public class Hopper extends Subsystem {
 			
 			//Entry
 			if (Superstructure.is(Mode.INTAKE))
-				setStart(Constants.HOPPER_START_INTAKE_SPEED);
+				setStart(Constants.hopper.START_SPEED_INTAKING);
 			else if (isIndexing)
-				setStart(Constants.HOPPER_START_INDEX_SPEED);
+				setStart(Constants.hopper.START_SPEED_INDEXING);
 			else setStart(0);
 		}
 		
@@ -88,18 +88,18 @@ public class Hopper extends Subsystem {
 	//Debugging
 	public void debug() {
 		//Constants.HOPPER_INDEX_BALL_SIZE = Tuner.getTunerInputDouble("Hopper Indexer Ball Size", Constants.HOPPER_INDEX_BALL_SIZE);
-		Constants.hopperIndexer.kP = Tuner.getTunerInputDouble("Hopper Index KP", Constants.hopperIndexer.kP);
-		Constants.hopperIndexer.kI = Tuner.getTunerInputDouble("Hopper Index KI", Constants.hopperIndexer.kI);
-		Constants.hopperIndexer.kD = Tuner.getTunerInputDouble("Hopper Index KD", Constants.hopperIndexer.kD);
-		Constants.HOPPER_INDEX_TOL = Tuner.getTunerInputDouble("Hopper Index Tol", Constants.HOPPER_INDEX_TOL);
-		Constants.HOPPER_FEED_SPEED = Tuner.getTunerInputDouble("Hopper Feed Speed", Constants.HOPPER_FEED_SPEED);
+		Constants.hopper.KP = Tuner.getTunerInputDouble("Hopper Index KP", Constants.hopper.KP);
+		Constants.hopper.KI = Tuner.getTunerInputDouble("Hopper Index KI", Constants.hopper.KI);
+		Constants.hopper.KD = Tuner.getTunerInputDouble("Hopper Index KD", Constants.hopper.KD);
+		Constants.hopper.TOLERANCE = Tuner.getTunerInputDouble("Hopper Index Tol", Constants.hopper.TOLERANCE);
+		Constants.hopper.FEED_SPEED = Tuner.getTunerInputDouble("Hopper Feed Speed", Constants.hopper.FEED_SPEED);
 		Tuner.setTunerOutput("Hopper Target", targetIndexPosition);
 		Tuner.setTunerOutput("Hopper Position", getIndexPosition());
 		Tuner.setTunerOutput("Hopper Output", indexMotor.getMotorOutputVoltage());
 		Tuner.setTunerOutput("Hopper Indexing", isIndexing);
 		Tuner.setTunerOutput("Hopper Full", isFull());
 		Tuner.setTunerOutput("Hopper Entry", isEntrySensorTrippedAvg());
-		controller.setPID(Constants.hopperIndexer.kP, Constants.hopperIndexer.kI, Constants.hopperIndexer.kD);
+		controller.setPID(Constants.hopper.KP, Constants.hopper.KI, Constants.hopper.KD);
 	}
 
 	//Internal Functions
@@ -160,7 +160,7 @@ public class Hopper extends Subsystem {
 		indexMotor = new TalonFX(Ports.HOPPER_INDEX_MOTOR);
 		indexMotor.configFactoryDefault();
 		indexMotor.setInverted(true);
-		indexEncoder = new FalconEncoder(indexMotor, Constants.hopperIndexer.gearing);
+		indexEncoder = new FalconEncoder(indexMotor, Constants.hopper.GEARING);
 
 		entrySensor = new Sensor(PortType.ANALOG, Ports.HOPPER_SENSOR_START,
 		                         Constants.robot.switchOnBot(false, true));
@@ -173,7 +173,7 @@ public class Hopper extends Subsystem {
 		entrySensorAverage = new MovingAverage(4, false);
 		
 		controller = new PIDController(
-				Constants.hopperIndexer.kP, Constants.hopperIndexer.kI, Constants.hopperIndexer.kD
+				Constants.hopper.KP, Constants.hopper.KI, Constants.hopper.KD
 			);
 
 		configCharacterization(indexEncoder, (double voltage) -> setIndexer(voltage));

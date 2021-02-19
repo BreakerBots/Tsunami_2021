@@ -2,7 +2,6 @@
 package com.team5104.frc2021.auto.actions;
 
 import com.team5104.frc2021.Constants;
-import com.team5104.frc2021.subsystems.Drive;
 import com.team5104.frc2021.teleop.DriveController.DriveSignal;
 import com.team5104.frc2021.teleop.DriveController.DriveSignal.DriveUnit;
 import com.team5104.lib.auto.AutoAction;
@@ -43,13 +42,13 @@ public class DriveTrajectory extends AutoAction {
 
 	public DriveTrajectory(boolean isReversed, Position... waypoints) {
 		feedforward = new SimpleMotorFeedforward(
-				Constants.drive.kLS,
-				Constants.drive.kLV,
-				Constants.drive.kLA
+				Constants.drive.KLS,
+				Constants.drive.KLV,
+				Constants.drive.KLA
 			);
 
 		kinematics = new DifferentialDriveKinematics(
-				Units.feetToMeters(Constants.drive.trackWidth)
+				Units.feetToMeters(Constants.drive.TRACK_WIDTH)
 			);
 
 		// Create a voltage constraint to ensure we don't accelerate too fast
@@ -62,8 +61,8 @@ public class DriveTrajectory extends AutoAction {
 
 		// Create config for trajectory
 		TrajectoryConfig config = new TrajectoryConfig(
-				Units.feetToMeters(Constants.drive.maxVelocity),
-				Units.feetToMeters(Constants.drive.maxAccel)
+				Units.feetToMeters(Constants.drive.MAX_VEL),
+				Units.feetToMeters(Constants.drive.MAX_ACC)
 			).setKinematics(kinematics)
 			 .addConstraint(autoVoltageConstraint)
 			 .setReversed(isReversed);
@@ -78,8 +77,8 @@ public class DriveTrajectory extends AutoAction {
 				CORRECTION_FACTOR,
 				DAMPENING_FACTOR
 			);
-		leftController = new PIDController(Constants.drive.kP, 0, Constants.drive.kD);
-		rightController = new PIDController(Constants.drive.kP, 0, Constants.drive.kD);
+		leftController = new PIDController(Constants.drive.KP, 0, Constants.drive.KD);
+		rightController = new PIDController(Constants.drive.KP, 0, Constants.drive.KD);
 
 		if (AutoManager.plottingEnabled())
 			Plotter.plotAll(Position.fromStates(trajectory.getStates()), Plotter.Color.RED);
@@ -141,7 +140,7 @@ public class DriveTrajectory extends AutoAction {
 		lastTime = curTime;
 		lastSpeeds = targetWheelSpeeds;
 
-		Drive.set(new DriveSignal(
+		com.team5104.frc2021.subsystems.Drive.set(new DriveSignal(
 				leftFeedforward + leftFeedback,
 				rightFeedforward + rightFeedback,
 				DriveUnit.VOLTAGE
@@ -160,7 +159,7 @@ public class DriveTrajectory extends AutoAction {
 
 	public void end() {
 		timer.stop();
-		Drive.stop();
+		com.team5104.frc2021.subsystems.Drive.stop();
 		console.log(
 				"Trajectory Finished in " + 
 				console.sets.getTime("RunTrajectoryTime") + "s" +

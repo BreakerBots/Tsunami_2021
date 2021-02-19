@@ -55,12 +55,12 @@ public class Drive extends Subsystem {
 		((EncoderSim) leftEncoder).setVelocityAccelMeters(
 				drivetrainSim.getLeftPositionMeters(),
 				drivetrainSim.getLeftVelocityMetersPerSecond(),
-				Constants.drive.wheelDiameter
+				Constants.drive.WHEEL_DIAMETER
 		);
 		((EncoderSim) rightEncoder).setVelocityAccelMeters(
 				drivetrainSim.getRightPositionMeters(),
 				drivetrainSim.getRightVelocityMetersPerSecond(),
-				Constants.drive.wheelDiameter
+				Constants.drive.WHEEL_DIAMETER
 		);
 		gyro.set(-drivetrainSim.getHeading().getDegrees());
 	}
@@ -76,17 +76,17 @@ public class Drive extends Subsystem {
 	}
 	
 	//External Functions
-	public static void set(DriveSignal signal) { Drive.signal = signal; }
+	public static void set(DriveSignal signal) { com.team5104.frc2021.subsystems.Drive.signal = signal; }
 	public static void stop() { signal = new DriveSignal(); }
 	public static double getHeading() {
 		return (gyro == null) ? 0 : gyro.get();
 	}
 	public static double[] getDriveStateMeters() {
 		return new double[] {
-			leftEncoder.getComponentRevs() * Units.feetToMeters(Constants.drive.wheelDiameter) * Math.PI,
-			rightEncoder.getComponentRevs() * Units.feetToMeters(Constants.drive.wheelDiameter) * Math.PI,
-			leftEncoder.getComponentRPS() * Units.feetToMeters(Constants.drive.wheelDiameter) * Math.PI,
-			rightEncoder.getComponentRPS() * Units.feetToMeters(Constants.drive.wheelDiameter) * Math.PI
+			leftEncoder.getComponentRevs() * Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) * Math.PI,
+			rightEncoder.getComponentRevs() * Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) * Math.PI,
+			leftEncoder.getComponentRPS() * Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) * Math.PI,
+			rightEncoder.getComponentRPS() * Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) * Math.PI
 		};
 	}
 	public static void reset() {
@@ -107,8 +107,8 @@ public class Drive extends Subsystem {
 		falconR1 = new TalonFX(Ports.DRIVE_MOTOR_R1);
 		falconR2 = new TalonFX(Ports.DRIVE_MOTOR_R2);
 		gyro = new Gyro.GyroPigeon(Ports.DRIVE_GYRO);
-		leftEncoder = new FalconEncoder((TalonFX) falconL1, Constants.drive.gearing);
-		rightEncoder = new FalconEncoder((TalonFX) falconR1, Constants.drive.gearing);
+		leftEncoder = new FalconEncoder((TalonFX) falconL1, Constants.drive.GEARING);
+		rightEncoder = new FalconEncoder((TalonFX) falconR1, Constants.drive.GEARING);
 		
 		falconL1.configFactoryDefault();
 		falconL2.configFactoryDefault();
@@ -135,8 +135,8 @@ public class Drive extends Subsystem {
 	public void initSim() {
 		falconL1 = new TalonSim(Ports.DRIVE_MOTOR_L1);
 		falconR1 = new TalonSim(Ports.DRIVE_MOTOR_R1);
-		leftEncoder = new EncoderSim((TalonSim) falconL1, Constants.drive.gearing);
-		rightEncoder = new EncoderSim((TalonSim) falconR1, Constants.drive.gearing);
+		leftEncoder = new EncoderSim((TalonSim) falconL1, Constants.drive.GEARING);
+		rightEncoder = new EncoderSim((TalonSim) falconR1, Constants.drive.GEARING);
 		gyro = new Gyro.GyroSim();
 
 		if (!RobotState.isSimulation())
@@ -144,14 +144,14 @@ public class Drive extends Subsystem {
 
 		drivetrainSim = new DifferentialDrivetrainSim(
 				LinearSystemId.identifyDrivetrainSystem(
-						Constants.drive.kLV,
-						Constants.drive.kLA,
-						Constants.drive.kAV,
-						Constants.drive.kAA), //TODO: GET ACTUAL MEASUREMENT
+						Constants.drive.KLV,
+						Constants.drive.KLA,
+						Constants.drive.KAV,
+						Constants.drive.KAA), //TODO: GET ACTUAL MEASUREMENT
 				DCMotor.getFalcon500(2),
-				Constants.drive.gearing,
-				edu.wpi.first.wpilibj.util.Units.feetToMeters(Constants.drive.trackWidth),
-				Units.feetToMeters(Constants.drive.wheelDiameter) / 2.0,
+				Constants.drive.GEARING,
+				edu.wpi.first.wpilibj.util.Units.feetToMeters(Constants.drive.TRACK_WIDTH),
+				Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) / 2.0,
 				null//VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005) //TODO: GET ACTUAL MEASUREMENT
 		);
 

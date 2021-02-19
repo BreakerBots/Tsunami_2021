@@ -1,6 +1,6 @@
 package com.team5104.lib.control;
 
-import com.team5104.lib.ConstantsUtils.SubsystemConstants;
+import com.team5104.lib.ConstantsUtils.ServoConstants;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
@@ -13,9 +13,9 @@ public class PositionController {
     private double lastVelocity, lastPIDOutput, lastFFOutput, lastOutput,
             lastPosition, lastTarget, lastTime;
 
-    public PositionController(SubsystemConstants constants) {
-        this(constants.kP, constants.kI, constants.kD, constants.maxVelocity, constants.maxAccel,
-                constants.kS, constants.kV, constants.kA);
+    public PositionController(ServoConstants constants) {
+        this(constants.KP, constants.KI, constants.KD, constants.MAX_VEL, constants.MAX_ACC,
+             constants.KS, constants.KV, constants.KA);
     }
 
     public PositionController(double kP, double kI, double kD, double maxVel,

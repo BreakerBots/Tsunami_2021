@@ -31,7 +31,7 @@ public class Turret extends Subsystem {
 			//Calibrating
 			if (isCalibrating()) {
 				enableSoftLimits(false);
-				setPercentOutput(Constants.TURRET_CALIBRATE_SPEED);
+				setPercentOutput(Constants.turret.CALIBRATE_SPEED);
 			}
 
 			//Characterizing
@@ -76,7 +76,7 @@ public class Turret extends Subsystem {
 		
 		//Zero Encoder
 		if (leftLimitHit()) {
-			resetEncoder(Constants.TURRET_ZERO);
+			resetEncoder(Constants.turret.ZERO);
 			enableSoftLimits(true);
 		}
 
@@ -90,9 +90,9 @@ public class Turret extends Subsystem {
 		Tuner.setTunerOutput("Turret Error", controller.getLastError());
 		Tuner.setTunerOutput("Turret Angle", getAngle());
 		Tuner.setTunerOutput("Turret Target Angle", targetAngle);
-		Constants.turret.kP = Tuner.getTunerInputDouble("Turret KP", Constants.turret.kP);
-		Constants.turret.kD = Tuner.getTunerInputDouble("Turret KD", Constants.turret.kD);
-		controller.setPID(Constants.turret.kP, 0, Constants.turret.kD);
+		Constants.turret.KP = Tuner.getTunerInputDouble("Turret KP", Constants.turret.KP);
+		Constants.turret.KD = Tuner.getTunerInputDouble("Turret KD", Constants.turret.KD);
+		controller.setPID(Constants.turret.KP, 0, Constants.turret.KD);
 	}
 
 	//Internal Functions
@@ -102,7 +102,7 @@ public class Turret extends Subsystem {
 		setVoltage(outputAverage.getDoubleOutput());
 	}
 	private void setVoltage(double volts) {
-		volts = Util.limit(volts, -Constants.TURRET_VOLT_LIMIT, Constants.TURRET_VOLT_LIMIT);
+		volts = Util.limit(volts, -Constants.turret.VOLT_LIMIT, Constants.turret.VOLT_LIMIT);
 		setPercentOutput(volts / motor.getBusVoltage());
 	}
 	private void setPercentOutput(double percent) {
@@ -133,7 +133,7 @@ public class Turret extends Subsystem {
 	}
 	public static boolean onTarget() {
 		if (motor == null) return true;
-		return Math.abs(getAngle() - targetAngle) < (Constants.TURRET_VISION_TOL);
+		return Math.abs(getAngle() - targetAngle) < (Constants.turret.VISION_TOL);
 	}
 	public static void setFieldOrientedTarget(double angle) {
 		fieldOrientedOffset = angle;
@@ -145,10 +145,10 @@ public class Turret extends Subsystem {
 		motor.configFactoryDefault();
 		motor.setInverted(Constants.robot.switchOnBot(false, true));
 
-		encoder = new FalconEncoder(motor, Constants.turret.gearing);
+		encoder = new FalconEncoder(motor, Constants.turret.GEARING);
 
-		motor.configForwardSoftLimitThreshold((int) encoder.componentRevsToTicks(Constants.TURRET_SOFT_LEFT / 360d));
-		motor.configReverseSoftLimitThreshold((int) encoder.componentRevsToTicks(Constants.TURRET_SOFT_RIGHT / 360d));
+		motor.configForwardSoftLimitThreshold((int) encoder.componentRevsToTicks(Constants.turret.SOFT_LEFT / 360d));
+		motor.configReverseSoftLimitThreshold((int) encoder.componentRevsToTicks(Constants.turret.SOFT_RIGHT / 360d));
 		enableSoftLimits(false);
 		motor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled);
 		

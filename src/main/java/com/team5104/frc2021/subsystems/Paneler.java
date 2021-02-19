@@ -42,27 +42,27 @@ public class Paneler extends Subsystem {
 				//rotation
 				if (Superstructure.is(PanelState.ROTATION)) {
 					console.log(getPanelRotations());
-					if (getPanelRotations() >= Constants.PANELER_ROTATIONS && end < Constants.PANELER_BRAKE_INT) {
+					if (getPanelRotations() >= Constants.paneler.ROTATIONS && end < Constants.paneler.BRAKE_INT) {
 						setPercentOutput(0);
 						end++;
-					} else if (getPanelRotations() >= Constants.PANELER_ROTATIONS) {
+					} else if (getPanelRotations() >= Constants.paneler.ROTATIONS) {
 						complete = true;
 						end = 0;
 					} 
-					else setPercentOutput(Constants.PANELER_ROT_SPEED);
+					else setPercentOutput(Constants.paneler.ROT_SPEED);
 				}
 		
 				//position
 				else {
 					if (readFMS().length() > 0 && PanelColor.fromChar(readFMS().charAt(0)) == readColor()
-							&& end < Constants.PANELER_BRAKE_INT) {
+							&& end < Constants.paneler.BRAKE_INT) {
 						setPercentOutput(0);
 						end++;
 					} else if (readFMS().length() > 0 && PanelColor.fromChar(readFMS().charAt(0)) == readColor()) {
 						complete = true;
 						end = 0;
 					}
-					else setPercentOutput(Constants.PANELER_POS_SPEED);
+					else setPercentOutput(Constants.paneler.POS_SPEED);
 				}
 			}
 			//idle
@@ -120,7 +120,7 @@ public class Paneler extends Subsystem {
 		motor.setInverted(Constants.robot.switchOnBot(true, false));
 		motor.setSensorPhase(Constants.robot.switchOnBot(true, false));
 		motor.configNeutralDeadband(0);
-		encoder = new MagEncoder(motor, Constants.PANELER_GEARING);
+		encoder = new MagEncoder(motor, Constants.paneler.GEARING);
 		resetEncoder();
 	}
 
