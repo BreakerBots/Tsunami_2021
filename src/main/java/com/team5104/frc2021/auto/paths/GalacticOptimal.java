@@ -71,7 +71,7 @@ public class GalacticOptimal extends AutoPath {
         runB_Blue();
       }
       if (pathChoice == 4) { // Yellow path or A-Blue
-        runA_Blue();
+        runA_Blue_Solo();
       }
     }
   }
@@ -111,6 +111,15 @@ public class GalacticOptimal extends AutoPath {
           new Position(17.5, 10, 0), // B7
           new Position(22.5, 7.5, -45), // C9
           new Position(30, 5, 0) // Finish
+    ));
+  }
+
+  public void runA_Blue_Solo() {
+    run(new DriveTrajectory(false,
+        new Position(15, 2.5, 0), // E6
+        new Position(17.5, 10, 0), // B7
+        new Position(22.5, 7.5, -45), // C9
+        new Position(30, 5, 0) // Finish
     ));
   }
 }
