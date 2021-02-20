@@ -11,13 +11,13 @@ import edu.wpi.first.wpilibj.util.Units;
 /** keeps of the position of the robot relative to the field (in x, y, angle) */
 public class Odometry {
   private static DifferentialDriveOdometry odometry;
-  
+
   public static void init() {
-    Drive.reset();
+    Drive.zero();
     odometry = new DifferentialDriveOdometry(new Rotation2d());
     console.log("initialized");
   }
-  
+
   public static void update() {
     if (odometry != null) {
       odometry.update(
@@ -27,11 +27,11 @@ public class Odometry {
       );
     }
   }
-  
+
   public static Pose2d getPose2dMeters() {
     return (odometry == null) ? null : odometry.getPoseMeters();
   }
-  
+
   public static Position getPositionFeet() {
     if (odometry == null)
       return new Position(0, 0, 0);
@@ -41,17 +41,17 @@ public class Odometry {
         getPose2dMeters().getRotation().getDegrees()
       );
   }
-  
+
   public static DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(
         Drive.getDriveStateMeters()[2],
         Drive.getDriveStateMeters()[3]
     );
   }
-  
+
   public static void reset(Position position) {
     if (odometry != null) {
-      Drive.reset();
+      Drive.zero();
       odometry.resetPosition(
           position.toPose2dMeters(),
           Rotation2d.fromDegrees(position.getDegrees())

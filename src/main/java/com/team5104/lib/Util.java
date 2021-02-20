@@ -3,10 +3,7 @@ package com.team5104.lib;
 
 import edu.wpi.first.wpiutil.math.MathUtil;
 
-/**
- * Extra Math Functions :)
- * Stay in school kids.
- */
+/** Random Util Stuff :l */
 public class  Util {
     public static double limit(double value, double min, double max) { return limitBottom(limitTop(value, max), min); }
     public static double limitBottom(double value, double min) { return value < min ? min : value; }

@@ -5,56 +5,39 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.team5104.frc2021.Ports;
 import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.Mode;
-import com.team5104.lib.managers.Subsystem;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import com.team5104.lib.devices.MotorGroup;
+import com.team5104.lib.devices.Solenoid;
+import com.team5104.lib.subsystem.Subsystem;
 
 public class Climber extends Subsystem {
-  private static TalonFX motor;
-  private static DoubleSolenoid deployerPiston;
-  private static DoubleSolenoid brakePiston;
-  
-  public static double climberManual = 0.0;
-  
+  public static double climberManual = 0.0; //passed through from SuperstructureController
+  private Solenoid deployerPiston, brakePiston;
+  private TalonFX motor;
+
   //Loop
   public void update() {
     if (Superstructure.isEnabled() && Superstructure.isClimbing()) {
-      setBrake(false);
-      setDeployerPiston(Superstructure.is(Mode.CLIMBER_DEPLOYING));
-      setPercentOutput(climberManual);
+      brakePiston.set(false);
+      deployerPiston.set(Superstructure.is(Mode.CLIMBER_DEPLOYING));
+      motor.set(ControlMode.PercentOutput, climberManual);
     }
     else {
-      setBrake(true);
-      setDeployerPiston(false);
+      brakePiston.set(true);
+      deployerPiston.set(false);
       stop();
-    }	
-  }
-
-  //Internal Functions
-  private void setBrake(boolean braked) {
-    brakePiston.set(braked ? Value.kReverse: Value.kForward);
-  }
-  private void setDeployerPiston(boolean up) {
-    deployerPiston.set(up ? Value.kForward: Value.kReverse);
-  }
-  private void setPercentOutput(double percent) {
-    motor.set(ControlMode.PercentOutput, percent);
-  }
-  private void stop() {
-    motor.set(ControlMode.Disabled, 0.0);
+    }
   }
 
   //Config
-  public void init() {
-    deployerPiston = new DoubleSolenoid(Ports.CLIMBER_DEPLOYER[0], Ports.CLIMBER_DEPLOYER[1]);
-    brakePiston = new DoubleSolenoid(Ports.CLIMBER_BRAKE[0], Ports.CLIMBER_BRAKE[1]);
+  public Climber() {
+    super(new SubsystemConstants());
+
+    deployerPiston = new Solenoid(Ports.CLIMBER_DEPLOYER);
+    brakePiston = new Solenoid(Ports.CLIMBER_BRAKE, true);
     motor = new TalonFX(Ports.CLIMBER_MOTOR);
     motor.configFactoryDefault();
     motor.setInverted(false);
-  }
 
-  //Reset
-  public void disabled() {
-    stop();
+    setDevices(new MotorGroup(motor), deployerPiston, brakePiston);
   }
 }

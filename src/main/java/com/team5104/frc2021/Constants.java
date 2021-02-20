@@ -1,8 +1,9 @@
 /*BreakerBots Robotics Team 2019*/
 package com.team5104.frc2021;
 
-import com.team5104.lib.ConstantsUtils.RobotNameManager;
-import com.team5104.lib.ConstantsUtils.ServoConstants;
+import com.team5104.lib.RobotNameManager;
+import com.team5104.lib.subsystem.ServoSubsystem.ServoConstants;
+import com.team5104.lib.subsystem.Subsystem.SubsystemConstants;
 
 public class Constants {
     public static RobotNameManager robot =
@@ -10,7 +11,7 @@ public class Constants {
 
     //Drive
     public static DriveConstants drive = new DriveConstants();
-    public static class DriveConstants {
+    public static class DriveConstants extends SubsystemConstants {
         public double KP = 1;
         public double KD = 0;
         public double KLS = 0.162;
@@ -96,7 +97,7 @@ public class Constants {
         public double MAX_ACC = 2000;
         public double GEARING = (8.0 / 60.0 /*gear*/) / (22.0 / 150.0 /*sprocket*/);
 
-        public double CALIBRATE_SPEED = 0.15;
+        public double CALIBRATE_SPEED = 1.8;
         public double VOLT_LIMIT = 6;
         public double VISION_TOL = 6;
         public double SOFT_LEFT = switchOnBot(120, 110);
@@ -106,7 +107,7 @@ public class Constants {
 
     //Intake
     public static IntakeConstants intake = new IntakeConstants();
-    public static class IntakeConstants {
+    public static class IntakeConstants extends SubsystemConstants {
         public double INTAKING_SPEED = 1.0;
         public double FIRING_SPEED = 0;//0.25
         public double REJECTING_SPEED = 0;//.25
@@ -114,7 +115,7 @@ public class Constants {
 
     //Paneler
     public static PanelerConstants paneler = new PanelerConstants();
-    public static class PanelerConstants {
+    public static class PanelerConstants extends SubsystemConstants {
         public double ROT_SPEED = 0.15;
         public double POS_SPEED = 0.0;
         public double GEARING = 16.0 / 2; //to control panel

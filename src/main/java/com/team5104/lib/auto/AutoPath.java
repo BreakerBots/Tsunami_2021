@@ -15,6 +15,9 @@ public abstract class AutoPath {
    * @warning DO NOT CALL IN MAIN THREAD
    * @return passthroughs value from action */
   public boolean run(AutoAction action) {
+    if (action == null)
+      return false;
+
     currentAction = action;
     currentAction.init();
     while (!currentAction.isFinished()) {

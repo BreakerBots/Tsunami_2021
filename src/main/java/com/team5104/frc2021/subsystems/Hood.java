@@ -13,12 +13,12 @@ import com.team5104.lib.MovingAverage;
 import com.team5104.lib.Util;
 import com.team5104.lib.console;
 import com.team5104.lib.control.PositionController;
-import com.team5104.lib.managers.Subsystem;
-import com.team5104.lib.sensors.Encoder.MagEncoder;
-import com.team5104.lib.sensors.Limelight;
-import com.team5104.lib.webapp.Tuner;
+import com.team5104.lib.devices.Encoder.MagEncoder;
+import com.team5104.lib.devices.Limelight;
+import com.team5104.lib.devices.MotorGroup;
+import com.team5104.lib.subsystem.ServoSubsystem;
 
-public class Hood extends Subsystem {
+public class Hood extends ServoSubsystem {
   private static TalonSRX motor;
   private static MagEncoder encoder;
   private static MovingAverage visionFilter;
@@ -29,36 +29,42 @@ public class Hood extends Subsystem {
   public void update() {
     //Automatic
     if (Superstructure.isEnabled()) {
-      //Calibrating
-      if (isCalibrating()) {
+      if (is(SubsystemMode.CALIBRATING)) {
+        setFiniteState("Calibrating");
         setPercentOutput(-Constants.hood.CALIBRATE_SPEED);
       }
 
-      //Characterizing
-      else if (isCharacterizing()) {
+      else if (is(SubsystemMode.CHARACTERIZING)) {
+        setFiniteState("Characterizing");
         //do nothing
       }
-      
+
       //Low
       else if (Superstructure.is(Target.LOW)) {
+        setFiniteState("Low");
         setAngle(40);
       }
-      
+
       //Vision
       else if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
+        setFiniteState("Vision");
         if (/*Limelight.hasTarget() && */Superstructure.is(Mode.AIMING)) {
           visionFilter.update(Limelight.getTargetY());
           setAngle(getTargetVisionAngle());
         }
         else setAngle(targetAngle);
       }
-        
+
       //Pull Back
-      else setAngle(-1);
+      else {
+        setFiniteState("Back");
+        setAngle(-1);
+      }
     }
-      
+
     //Disabled
     else {
+      setFiniteState("Stopped");
       stop();
     }
   }
@@ -66,29 +72,16 @@ public class Hood extends Subsystem {
   //Fast Loop
   public void fastUpdate() {
     //Exit Calibrating
-    if (isCalibrating() && backLimitHit()) {
+    if (is(SubsystemMode.CALIBRATING) && backLimitHit()) {
       console.log("finished calibration!");
-      stopCalibrating();
+      setMode(SubsystemMode.OPERATING, true);
     }
-    
+
     //Zero
     if (backLimitHit()) {
       resetEncoder();
       motor.configForwardSoftLimitEnable(true);
     }
-  }
-  
-  //Debugging
-  public void debug() {
-    Tuner.setTunerOutput("Hood Limelight Y", Limelight.getTargetY());
-    Tuner.setTunerOutput("Hood Angle", getAngle());
-    Tuner.setTunerOutput("Hood Output", controller.getLastOutput());
-    Tuner.setTunerOutput("Hood FF", controller.getLastFFOutput());
-    Tuner.setTunerOutput("Hood PID", controller.getLastPIDOutput());
-    Tuner.setTunerOutput("Hood KP", getKP());
-    Tuner.setTunerOutput("Hood Limit", backLimitHit());
-    Constants.hood.KD = Tuner.getTunerInputDouble("Hood KD", Constants.hood.KD);
-    //tunerTargetAngle = Tuner.getTunerInputDouble("Hood Target Vision Angle", 10);
   }
 
   //Internal Functions
@@ -102,9 +95,6 @@ public class Hood extends Subsystem {
   }
   private void setPercentOutput(double percent) {
     motor.set(ControlMode.PercentOutput, percent);
-  }
-  private void stop() {
-    motor.set(ControlMode.Disabled, 0);
   }
   private void resetEncoder() {
     encoder.reset();
@@ -138,7 +128,9 @@ public class Hood extends Subsystem {
   }
 
   //Config
-  public void init() {
+  public Hood() {
+    super(Constants.hood);
+
     motor = new TalonSRX(Ports.HOOD_MOTOR);
     motor.configFactoryDefault();
     motor.setInverted(Constants.robot.switchOnBot(true, false));
@@ -149,28 +141,30 @@ public class Hood extends Subsystem {
     motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
     motor.configForwardSoftLimitThreshold((int) encoder.componentRevsToTicks(38 / 360d));
     motor.configForwardSoftLimitEnable(false);
-    
+
     controller = new PositionController(Constants.hood);
     controller.setP(getKP());
     visionFilter = new MovingAverage(3, 0);
-    
+
     console.log("ready to calibrate!");
-    startCalibrating();
+    setMode(SubsystemMode.CALIBRATING);
 
     configCharacterization(
       () -> encoder.getComponentRevs() * 360d,
       () -> encoder.getComponentRPS() * 360d,
       (double voltage) -> setVoltage(voltage)
     );
+
+    setDevices(new MotorGroup(motor), encoder);
   }
 
   //Reset
-  public void disabled() {
+  public void reset() {
     stop();
-    
-    if (!this.isCalibrating()) {
+
+    if (!is(SubsystemMode.CALIBRATING)) {
       console.log("ready to calibrate!");
-      startCalibrating();
+      setMode(SubsystemMode.CALIBRATING);
     }
   }
 }

@@ -8,39 +8,38 @@ import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.Mode;
 import com.team5104.frc2021.Superstructure.PanelState;
 import com.team5104.lib.console;
-import com.team5104.lib.managers.Subsystem;
-import com.team5104.lib.sensors.ColorSensor;
-import com.team5104.lib.sensors.ColorSensor.PanelColor;
-import com.team5104.lib.sensors.Encoder.MagEncoder;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import com.team5104.lib.devices.ColorSensor;
+import com.team5104.lib.devices.ColorSensor.PanelColor;
+import com.team5104.lib.devices.Encoder.MagEncoder;
+import com.team5104.lib.devices.MotorGroup;
+import com.team5104.lib.devices.Solenoid;
+import com.team5104.lib.subsystem.ServoSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 
-public class Paneler extends Subsystem {
+public class Paneler extends ServoSubsystem {
   private static ColorSensor sensor;
   private static TalonSRX motor;
   private static MagEncoder encoder;
-  private static DoubleSolenoid piston;
+  private static Solenoid piston;
   private static boolean complete;
   private static int end;
-  
+
   //Loop
   public void update() {
     if (Superstructure.isEnabled()) {
-      //deploying
       if (Superstructure.is(Mode.PANEL_DEPLOYING)) {
+        setFiniteState("Deploying");
         complete = false;
         end = 0;
-        setPiston(true);
+        piston.set(true);
         stop();
         resetEncoder();
       }
-  
-      //paneling
+
       else if (Superstructure.is(Mode.PANELING)) {
-        //rotation
         if (Superstructure.is(PanelState.ROTATION)) {
+          setFiniteState("Paneling - Rotation");
           console.log(getPanelRotations());
           if (getPanelRotations() >= Constants.paneler.ROTATIONS && end < Constants.paneler.BRAKE_INT) {
             setPercentOutput(0);
@@ -48,12 +47,12 @@ public class Paneler extends Subsystem {
           } else if (getPanelRotations() >= Constants.paneler.ROTATIONS) {
             complete = true;
             end = 0;
-          } 
+          }
           else setPercentOutput(Constants.paneler.ROT_SPEED);
         }
-    
-        //position
+
         else {
+          setFiniteState("Paneling - Position");
           if (readFMS().length() > 0 && PanelColor.fromChar(readFMS().charAt(0)) == readColor()
               && end < Constants.paneler.BRAKE_INT) {
             setPercentOutput(0);
@@ -65,32 +64,23 @@ public class Paneler extends Subsystem {
           else setPercentOutput(Constants.paneler.POS_SPEED);
         }
       }
-      //idle
+
       else if (Superstructure.is(Mode.IDLE)) {
+        setFiniteState("Stopped");
         stop();
-        setPiston(false);
+        piston.set(false);
       }
     }
     else {
+      setFiniteState("Stopped");
       stop();
-      setPiston(false);
+      piston.set(false);
     }
-  }
-  
-  //Debugging
-  public void debug() {
-    
   }
 
   // Internal Functions
-  private void setPiston(boolean up) {
-    piston.set(up ? Value.kForward : Value.kReverse);
-  }
   private void setPercentOutput(double percent) {
     motor.set(ControlMode.PercentOutput, percent);
-  }
-  private void stop() {
-    motor.set(ControlMode.Disabled, 0);
   }
   private PanelColor readColor() {
     return sensor.getNearestColor();
@@ -111,9 +101,11 @@ public class Paneler extends Subsystem {
   }
 
   //Config
-  public void init() {
+  public Paneler() {
+    super(Constants.paneler);
+
     sensor = new ColorSensor(I2C.Port.kOnboard);
-    piston = new DoubleSolenoid(Ports.PANELER_DEPLOYER[0], Ports.PANELER_DEPLOYER[1]);
+    piston = new Solenoid(Ports.PANELER_DEPLOYER);
     motor = new TalonSRX(Ports.PANELER_MOTOR);
     motor.configOpenloopRamp(0.25);
     motor.configFactoryDefault();
@@ -122,12 +114,12 @@ public class Paneler extends Subsystem {
     motor.configNeutralDeadband(0);
     encoder = new MagEncoder(motor, Constants.paneler.GEARING);
     resetEncoder();
+
+    setDevices(new MotorGroup(motor), piston, sensor, encoder);
   }
 
   //Reset
-  public void disabled() {
+  public void reset() {
     resetEncoder();
-    stop();
-    setPiston(false);
   }
 }

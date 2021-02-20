@@ -2,7 +2,7 @@
 package com.team5104.frc2021.teleop;
 
 import com.team5104.frc2021.Controls;
-import com.team5104.lib.managers.TeleopController;
+import com.team5104.lib.teleop.TeleopController;
 import com.team5104.frc2021.subsystems.Drive;
 
 public class DriveController extends TeleopController {
@@ -16,7 +16,7 @@ public class DriveController extends TeleopController {
   protected void update() {
     if (Controls.DRIVE_KICKSTAND.get())
       kickstand = !kickstand;
-    
+
     double forward = Controls.DRIVE_FORWARD.get() - Controls.DRIVE_REVERSE.get();
     Controls.DRIVE_TURN.changeCurveX1((1 - Math.abs(forward)) * (1 - TURN_SPEED_ADJ) + TURN_SPEED_ADJ);
     double turn = Controls.DRIVE_TURN.get();

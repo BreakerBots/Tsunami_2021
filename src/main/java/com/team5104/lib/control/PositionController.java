@@ -1,6 +1,6 @@
 package com.team5104.lib.control;
 
-import com.team5104.lib.ConstantsUtils.ServoConstants;
+import com.team5104.lib.subsystem.ServoSubsystem.ServoConstants;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;

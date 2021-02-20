@@ -1,12 +1,13 @@
-package com.team5104.lib.sensors;
+package com.team5104.lib.devices;
 
 import com.revrobotics.ColorSensorV3;
+import com.team5104.lib.devices.Health.Status;
 import edu.wpi.first.wpilibj.I2C.Port;
 
 /**
  * A wrapper class for the REV Color Sensor V3 that rounds the color to the nearest of the constant colors.
  */
-public class ColorSensor {
+public class ColorSensor extends Device {
     public enum PanelColor {
         RED, GREEN, BLUE, YELLOW;
 
@@ -24,6 +25,14 @@ public class ColorSensor {
             new PercentColor(0.173, 0.485, 0.388),
             new PercentColor(0.311, 0.543, 0.146)
     };
+
+    //Device
+    public Health getHealth() {
+        return new Health(Status.GOOD);
+    }
+    public void stop() {
+        // do nothing
+    }
 
     //Variables
     private final ColorSensorV3 colorSensor;

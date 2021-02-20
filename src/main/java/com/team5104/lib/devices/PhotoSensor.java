@@ -1,15 +1,16 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
-package com.team5104.lib.sensors;
+package com.team5104.lib.devices;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 
-/**
- * A wrapper class for digital sensors plugged into the RoboRIO.
- * Used mostly so that digital sensors can be plugged into analog ports
- */
-public class Sensor {
-    public enum PortType {DIGITAL, ANALOG}
+/** A wrapper class of DigitalInput and AnalogInput to manager
+ * Banner Photoelectric Sensors (that can be plugged into either ports) */
+public class PhotoSensor {
+    public enum PortType {
+        DIGITAL,
+        ANALOG
+    }
 
     private static final double ANALOG_TRIGGER_VALUE = 2.5;
 
@@ -25,7 +26,7 @@ public class Sensor {
      * @param portType The port type on the RoboRIO that the sensor is plugged into
      * @param port     The port number on the RoboRIO that the sensor is plugged into
      */
-    public Sensor(PortType portType, int port) { this(portType, port, false); }
+    public PhotoSensor(PortType portType, int port) { this(portType, port, false); }
 
     /**
      * Creates a Sensor object of the specifed port type, port number, and inversion.
@@ -34,7 +35,7 @@ public class Sensor {
      * @param port     The port number on the RoboRIO that the sensor is plugged into
      * @param inverted Will flip the value that the sensor reads. See get() for more information.
      */
-    public Sensor(PortType portType, int port, boolean inverted) {
+    public PhotoSensor(PortType portType, int port, boolean inverted) {
         if (portType == PortType.ANALOG)
             analogInput = new AnalogInput(port);
         else digitalInput = new DigitalInput(port);

@@ -1,17 +1,16 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package com.team5104.lib.auto;
 
-import com.team5104.lib.Characterizer;
+import com.team5104.frc2021.auto.actions.DriveTrajectory;
+import com.team5104.lib.Compressor;
 import com.team5104.lib.Looper;
 import com.team5104.lib.Looper.Crash;
 import com.team5104.lib.Looper.Loop;
 import com.team5104.lib.console;
 import com.team5104.lib.setup.RobotState;
+import com.team5104.lib.subsystem.Characterizer;
 import com.team5104.lib.webapp.Plotter;
 import com.team5104.lib.webapp.Plotter.InputMode;
-import com.team5104.frc2021.auto.actions.DriveTrajectory;
-import com.team5104.frc2021.teleop.CompressorController;
-import com.team5104.lib.managers.Subsystem;
 import com.team5104.lib.webapp.Webapp;
 
 /** manages the running of an autonomous path and characterizing */
@@ -30,7 +29,7 @@ public class AutoManager {
          Calls action init(), isFinished(), end(), and getValue() but not update() <-- called below */
       pathThread = new Thread(() -> {
         try {
-          console.log("Running auto path: " + targetPath.getClass().getSimpleName());
+          console.log("Running " + targetPath.getClass().getSimpleName());
           targetPath.start();
           console.log(targetPath.getClass().getSimpleName() + " finished");
         } catch (Exception e) { Looper.logCrash(new Crash(e)); }
@@ -47,17 +46,14 @@ public class AutoManager {
     if (Characterizer.isRunning())
       Characterizer.disabled();
   }
-  
+
   //Init
   public static void setTargetPath(AutoPath path) {
-    console.log("Setting target auto path to: " + path.getClass().getSimpleName());
+    console.log("target path is now " + path.getClass().getSimpleName());
     targetPath = path;
   }
   public static AutoPath getTargetPath() {
     return targetPath;
-  }
-  public static void characterize(Class<? extends Subsystem> targetSubsystem) {
-    Characterizer.init(targetSubsystem);
   }
 
   //Update
@@ -72,7 +68,7 @@ public class AutoManager {
 
     //stop compressor
     if (!RobotState.isSimulation())
-      CompressorController.stop();
+      Compressor.stop();
 
     //update odometry
     Odometry.update();

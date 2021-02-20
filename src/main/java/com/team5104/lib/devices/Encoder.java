@@ -1,12 +1,13 @@
-package com.team5104.lib.sensors;
+package com.team5104.lib.devices;
 
+import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team5104.lib.motion.TalonSim;
 import edu.wpi.first.wpilibj.util.Units;
 
-public abstract class Encoder {
+public abstract class Encoder extends Device {
     public double gearing, ticksPerRev;
 
     public Encoder(double gearing, double ticksPerRev) {
@@ -66,6 +67,14 @@ public abstract class Encoder {
         public void setTicks(double ticks) {
             motorController.setSelectedSensorPosition(ticks);
         }
+
+        public Health getHealth() {
+            Faults faults = new Faults();
+            motorController.getFaults(faults);
+            return new Health(faults);
+        }
+
+        public void stop() { /* do nothing */ }
     }
 
     public static class MagEncoder extends CTRE_Encoder {

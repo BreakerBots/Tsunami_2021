@@ -11,36 +11,38 @@ import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.Mode;
 import com.team5104.lib.*;
 import com.team5104.lib.control.PositionController;
-import com.team5104.lib.managers.Subsystem;
-import com.team5104.lib.sensors.Encoder.FalconEncoder;
-import com.team5104.lib.sensors.Limelight;
-import com.team5104.lib.webapp.Tuner;
+import com.team5104.lib.devices.Encoder.FalconEncoder;
+import com.team5104.lib.devices.Limelight;
+import com.team5104.lib.devices.MotorGroup;
+import com.team5104.lib.subsystem.ServoSubsystem;
 
-public class Turret extends Subsystem {
+public class Turret extends ServoSubsystem {
   private static TalonFX motor;
   private static FalconEncoder encoder;
   private static PositionController controller;
   private static LatencyCompensator latencyCompensator;
   private static MovingAverage outputAverage;
   private static double targetAngle = 0, fieldOrientedOffset = 0, tunerFieldOrientedOffsetAdd;
-  
+
   //Loop
   public void update() {
     //Automatic
     if (Superstructure.isEnabled()) {
       //Calibrating
-      if (isCalibrating()) {
+      if (is(SubsystemMode.CALIBRATING)) {
+        setFiniteState("Calibrating");
         enableSoftLimits(false);
-        setPercentOutput(Constants.turret.CALIBRATE_SPEED);
+        setVoltage(Constants.turret.CALIBRATE_SPEED);
       }
 
       //Characterizing
-      else if (isCharacterizing()) {
+      else if (is(SubsystemMode.CHARACTERIZING)) {
+        setFiniteState("Characterizing");
         //do nothing
       }
-      
-      //Vision
+
       else if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
+        setFiniteState("Vision");
         if (/*Limelight.hasTarget() &&*/ Superstructure.is(Mode.AIMING)) {
           setAngle(
               latencyCompensator.getValueInHistory(Limelight.getLatency()) - Limelight.getTargetX()
@@ -49,16 +51,18 @@ public class Turret extends Subsystem {
         else setAngle(targetAngle);
       }
 
-      //Field Oriented Mode
-      else setAngle(
-        Util.wrap180(
-          Drive.getHeading() + fieldOrientedOffset + tunerFieldOrientedOffsetAdd
-        )
-      );
+      else {
+        setFiniteState("Field-Oriented");
+        setAngle(
+            Util.wrap180(
+                Drive.getHeading() + fieldOrientedOffset + tunerFieldOrientedOffsetAdd
+            )
+        );
+      }
     }
-    
-    //Disabled
+
     else {
+      setFiniteState("Stopped");
       stop();
       targetAngle = Util.wrap180(Drive.getHeading() + fieldOrientedOffset);
       controller.calculate(getAngle(), targetAngle);
@@ -68,12 +72,12 @@ public class Turret extends Subsystem {
   //Fast Loop
   public void fastUpdate() {
     //Exit Calibration
-    if (isCalibrating() && leftLimitHit()) {
+    if (is(SubsystemMode.CALIBRATING) && leftLimitHit()) {
       console.log("finished calibration!");
       Filer.createFile("/tmp/turret_calibrated.txt");
-      stopCalibrating();
+      setMode(SubsystemMode.OPERATING, true);
     }
-    
+
     //Zero Encoder
     if (leftLimitHit()) {
       resetEncoder(Constants.turret.ZERO);
@@ -81,18 +85,6 @@ public class Turret extends Subsystem {
     }
 
     latencyCompensator.update();
-  }
-  
-  //Debugging
-  public void debug() {
-    Tuner.setTunerOutput("Turret FF", controller.getLastFFOutput());
-    Tuner.setTunerOutput("Turret PID", controller.getLastPIDOutput());
-    Tuner.setTunerOutput("Turret Error", controller.getLastError());
-    Tuner.setTunerOutput("Turret Angle", getAngle());
-    Tuner.setTunerOutput("Turret Target Angle", targetAngle);
-    Constants.turret.KP = Tuner.getTunerInputDouble("Turret KP", Constants.turret.KP);
-    Constants.turret.KD = Tuner.getTunerInputDouble("Turret KD", Constants.turret.KD);
-    controller.setPID(Constants.turret.KP, 0, Constants.turret.KD);
   }
 
   //Internal Functions
@@ -103,14 +95,8 @@ public class Turret extends Subsystem {
   }
   private void setVoltage(double volts) {
     volts = Util.limit(volts, -Constants.turret.VOLT_LIMIT, Constants.turret.VOLT_LIMIT);
-    setPercentOutput(volts / motor.getBusVoltage());
-  }
-  private void setPercentOutput(double percent) {
     motor.setNeutralMode(NeutralMode.Brake);
-    motor.set(ControlMode.PercentOutput, percent);
-  }
-  private void stop() {
-    motor.set(ControlMode.Disabled, 0);
+    motor.set(ControlMode.PercentOutput, volts / motor.getBusVoltage());
   }
   private void resetEncoder(double angle) {
     encoder.setComponentRevs(angle / 360d);
@@ -140,7 +126,9 @@ public class Turret extends Subsystem {
   }
 
   //Config
-  public void init() {
+  public Turret() {
+    super(Constants.turret);
+
     motor = new TalonFX(Ports.TURRET_MOTOR);
     motor.configFactoryDefault();
     motor.setInverted(Constants.robot.switchOnBot(false, true));
@@ -151,7 +139,7 @@ public class Turret extends Subsystem {
     motor.configReverseSoftLimitThreshold((int) encoder.componentRevsToTicks(Constants.turret.SOFT_RIGHT / 360d));
     enableSoftLimits(false);
     motor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled);
-    
+
     controller = new PositionController(Constants.turret);
     latencyCompensator = new LatencyCompensator(() -> getAngle());
     outputAverage = new MovingAverage(4, 0);
@@ -165,14 +153,15 @@ public class Turret extends Subsystem {
     //Only calibrate once per roborio boot while not.
     if (!Filer.fileExists("/tmp/turret_calibrated.txt")) {
       console.log("ready to calibrate!");
-      startCalibrating();
+      setMode(SubsystemMode.CALIBRATING);
     }
     else enableSoftLimits(true);
+
+    setDevices(new MotorGroup(motor), encoder);
   }
 
   //Reset
-  public void disabled() {
-    stop();
+  public void reset() {
     motor.setNeutralMode(NeutralMode.Coast);
     latencyCompensator.reset();
     outputAverage.reset();

@@ -8,39 +8,39 @@ import com.team5104.frc2021.Constants;
 import com.team5104.frc2021.Ports;
 import com.team5104.frc2021.teleop.DriveController.DriveSignal;
 import com.team5104.frc2021.teleop.DriveController.DriveSignal.DriveUnit;
-import com.team5104.lib.managers.Subsystem;
+import com.team5104.lib.devices.Encoder;
+import com.team5104.lib.devices.Encoder.EncoderSim;
+import com.team5104.lib.devices.Encoder.FalconEncoder;
+import com.team5104.lib.devices.Gyro;
+import com.team5104.lib.devices.MotorGroup;
 import com.team5104.lib.motion.TalonSim;
-import com.team5104.lib.sensors.Encoder;
-import com.team5104.lib.sensors.Encoder.EncoderSim;
-import com.team5104.lib.sensors.Encoder.FalconEncoder;
-import com.team5104.lib.sensors.Gyro;
 import com.team5104.lib.setup.RobotState;
+import com.team5104.lib.subsystem.ServoSubsystem;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.util.Units;
 
-public class Drive extends Subsystem {
+public class Drive extends ServoSubsystem {
   private static BaseTalon falconL1, falconL2, falconR1, falconR2;
   private static DifferentialDrivetrainSim drivetrainSim;
   private static Encoder leftEncoder, rightEncoder;
   private static Gyro gyro;
-  
+
   //Update
   private static DriveSignal signal = new DriveSignal();
   public void update() {
     if (RobotState.isEnabled() && signal.unit == DriveSignal.DriveUnit.VOLTAGE) {
-      setMotors(
-        signal.leftSpeed / falconL1.getBusVoltage(),
-        signal.rightSpeed / falconR1.getBusVoltage(),
-        ControlMode.PercentOutput);
+      falconL1.set(ControlMode.PercentOutput, signal.leftSpeed / falconL1.getBusVoltage());
+      falconR1.set(ControlMode.PercentOutput, signal.rightSpeed / falconR1.getBusVoltage());
     }
-    else {
-      stopMotors();
-    }
+    else stop();
 
     signal = new DriveSignal();
+
+    if (RobotState.isSimulation())
+      updateSim();
   }
   public void updateSim() {
     ((TalonSim) falconL1).update();
@@ -64,20 +64,9 @@ public class Drive extends Subsystem {
     );
     gyro.set(-drivetrainSim.getHeading().getDegrees());
   }
-  
-  //Internal Functions
-  void setMotors(double leftSpeed, double rightSpeed, ControlMode controlMode) {
-    falconL1.set(controlMode, leftSpeed);
-    falconR1.set(controlMode, rightSpeed);
-  }
-  void stopMotors() {
-    falconL1.set(ControlMode.Disabled, 0);
-    falconR1.set(ControlMode.Disabled, 0);
-  }
-  
+
   //External Functions
   public static void set(DriveSignal signal) { com.team5104.frc2021.subsystems.Drive.signal = signal; }
-  public static void stop() { signal = new DriveSignal(); }
   public static double getHeading() {
     return (gyro == null) ? 0 : gyro.get();
   }
@@ -89,7 +78,7 @@ public class Drive extends Subsystem {
       rightEncoder.getComponentRPS() * Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) * Math.PI
     };
   }
-  public static void reset() {
+  public static void zero() {
     if (gyro != null)
       gyro.reset();
     if (leftEncoder != null) {
@@ -99,9 +88,17 @@ public class Drive extends Subsystem {
     if (RobotState.isSimulation())
       drivetrainSim.setPose(new Pose2d());
   }
-  
+
   //Config
-  public void init() {
+  public Drive() {
+    super(Constants.drive);
+
+    //alt constructor if simulation
+    if (RobotState.isSimulation()) {
+      initSim();
+      return;
+    }
+
     falconL1 = new TalonFX(Ports.DRIVE_MOTOR_L1);
     falconL2 = new TalonFX(Ports.DRIVE_MOTOR_L2);
     falconR1 = new TalonFX(Ports.DRIVE_MOTOR_R1);
@@ -109,11 +106,11 @@ public class Drive extends Subsystem {
     gyro = new Gyro.GyroPigeon(Ports.DRIVE_GYRO);
     leftEncoder = new FalconEncoder((TalonFX) falconL1, Constants.drive.GEARING);
     rightEncoder = new FalconEncoder((TalonFX) falconR1, Constants.drive.GEARING);
-    
+
     falconL1.configFactoryDefault();
     falconL2.configFactoryDefault();
     falconL2.set(ControlMode.Follower, falconL1.getDeviceID());
-    
+
     falconR1.configFactoryDefault();
     falconR2.configFactoryDefault();
     falconR2.set(ControlMode.Follower, falconR1.getDeviceID());
@@ -129,8 +126,7 @@ public class Drive extends Subsystem {
         (Double left, Double right) -> set(new DriveSignal(left, right, DriveUnit.VOLTAGE))
     );
 
-    stopMotors();
-    reset();
+    setDevices(new MotorGroup(falconL1, falconR1), leftEncoder, rightEncoder, gyro);
   }
   public void initSim() {
     falconL1 = new TalonSim(Ports.DRIVE_MOTOR_L1);
@@ -164,12 +160,6 @@ public class Drive extends Subsystem {
         (Double left, Double right) -> set(new DriveSignal(left, right, DriveUnit.VOLTAGE))
     );
 
-    stopMotors();
-    reset();
-  }
-  
-  //Reset
-  public void disabled() {
-    stop();
+    setDevices(new MotorGroup(falconL1, falconR1), leftEncoder, rightEncoder, gyro);
   }
 }

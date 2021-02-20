@@ -2,6 +2,7 @@
 package com.team5104.frc2021.auto.actions;
 
 import com.team5104.frc2021.Constants;
+import com.team5104.frc2021.subsystems.Drive;
 import com.team5104.frc2021.teleop.DriveController.DriveSignal;
 import com.team5104.frc2021.teleop.DriveController.DriveSignal.DriveUnit;
 import com.team5104.lib.auto.AutoAction;
@@ -52,7 +53,7 @@ public class DriveTrajectory extends AutoAction {
       );
 
     // Create a voltage constraint to ensure we don't accelerate too fast
-    DifferentialDriveVoltageConstraint autoVoltageConstraint = 
+    DifferentialDriveVoltageConstraint autoVoltageConstraint =
         new DifferentialDriveVoltageConstraint(
             feedforward,
             kinematics,
@@ -72,7 +73,7 @@ public class DriveTrajectory extends AutoAction {
         Position.toPose2dMeters(waypoints),
         config
       );
-    
+
     follower = new RamseteController(
         CORRECTION_FACTOR,
         DAMPENING_FACTOR
@@ -95,7 +96,7 @@ public class DriveTrajectory extends AutoAction {
     Trajectory.State initialState = trajectory.sample(0);
     lastSpeeds = kinematics.toWheelSpeeds(
       new ChassisSpeeds(
-        initialState.velocityMetersPerSecond, 
+        initialState.velocityMetersPerSecond,
         0,
         initialState.curvatureRadPerMeter * initialState.velocityMetersPerSecond
       )
@@ -128,7 +129,7 @@ public class DriveTrajectory extends AutoAction {
       );
 
     double leftFeedback = leftController.calculate(
-        Odometry.getWheelSpeeds().leftMetersPerSecond, 
+        Odometry.getWheelSpeeds().leftMetersPerSecond,
         targetWheelSpeeds.leftMetersPerSecond
       );
 
@@ -159,9 +160,9 @@ public class DriveTrajectory extends AutoAction {
 
   public void end() {
     timer.stop();
-    com.team5104.frc2021.subsystems.Drive.stop();
+    Drive.set(new DriveSignal()); //stop
     console.log(
-        "Trajectory Finished in " + 
+        "Trajectory Finished in " +
         console.sets.getTime("RunTrajectoryTime") + "s" +
         ", at: " + Odometry.getPositionFeet()
     );

@@ -6,9 +6,12 @@ import com.team5104.frc2021.Superstructure.FlywheelState;
 import com.team5104.frc2021.Superstructure.Mode;
 import com.team5104.frc2021.Superstructure.PanelState;
 import com.team5104.frc2021.Superstructure.Target;
-import com.team5104.lib.console;
-import com.team5104.lib.managers.TeleopController;
 import com.team5104.frc2021.subsystems.Climber;
+import com.team5104.lib.Compressor;
+import com.team5104.lib.console;
+import com.team5104.lib.setup.RobotState;
+import com.team5104.lib.setup.RobotState.RobotMode;
+import com.team5104.lib.teleop.TeleopController;
 
 public class SuperstructureController extends TeleopController {
   protected void update() {
@@ -60,7 +63,7 @@ public class SuperstructureController extends TeleopController {
       }
     }
 
-    //Shooter
+    // Shooter
     if (Controls.SHOOT.get()) {
       if (Superstructure.is(Mode.SHOOTING) || Superstructure.is(Mode.AIMING)) {
         Superstructure.set(Mode.IDLE);
@@ -107,5 +110,15 @@ public class SuperstructureController extends TeleopController {
       }
     }
     Climber.climberManual = Controls.CLIMBER_WINCH.get();
+
+    // Compressor
+    if (RobotState.getMode() == RobotMode.TELEOP) {
+      if (Controls.COMPRESSOR_TOGGLE.get()) {
+        if (Compressor.isRunning()) {
+          Compressor.stop();
+        }
+        else Compressor.start();
+      }
+    }
   }
 }

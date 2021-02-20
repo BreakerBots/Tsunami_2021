@@ -11,47 +11,47 @@ import com.team5104.lib.LatchedBoolean;
 import com.team5104.lib.LatchedBoolean.LatchedBooleanMode;
 import com.team5104.lib.MovingAverage;
 import com.team5104.lib.console;
-import com.team5104.lib.managers.Subsystem;
-import com.team5104.lib.sensors.Encoder.FalconEncoder;
-import com.team5104.lib.sensors.Sensor;
-import com.team5104.lib.sensors.Sensor.PortType;
-import com.team5104.lib.webapp.Tuner;
+import com.team5104.lib.devices.Encoder.FalconEncoder;
+import com.team5104.lib.devices.MotorGroup;
+import com.team5104.lib.devices.PhotoSensor;
+import com.team5104.lib.devices.PhotoSensor.PortType;
+import com.team5104.lib.subsystem.ServoSubsystem;
 import edu.wpi.first.wpilibj.controller.PIDController;
 
-public class Hopper extends Subsystem {
+public class Hopper extends ServoSubsystem {
   private static VictorSPX startMotor, feederMotor;
   private static TalonFX indexMotor;
   private static FalconEncoder indexEncoder;
-  private static Sensor entrySensor, endSensor;
+  private static PhotoSensor entrySensor, endSensor;
   private static LatchedBoolean entrySensorLatch;
   private static MovingAverage isFullAverage, hasFed, entrySensorAverage;
   private static PIDController controller;
   private static boolean isIndexing;
   private static double targetIndexPosition;
-  
+
   //Loop
   public void update() {
-    //Force Stopped
     if (Superstructure.isClimbing() || Superstructure.isPaneling() || Superstructure.isDisabled()) {
+      setFiniteState("Stopped");
       stopAll();
     }
 
-    //Characterizing
-    else if (isCharacterizing()) {
+    else if (is(SubsystemMode.CHARACTERIZING)) {
+      setFiniteState("Characterizing");
       //do nothing
     }
-    
-    //Shooting
+
     else if (Superstructure.is(Mode.SHOOTING)) {
+      setFiniteState("Shooting");
       setIndexer(Constants.hopper.FEED_SPEED);
       setFeeder(Constants.hopper.FEED_SPEED);
       setStart(Constants.hopper.FEED_SPEED);
     }
-    
-    //Indexing
+
     else {
+      setFiniteState("Indexing");
       //Indexing
-      isIndexing = !isEndSensorTripped() && (isEntrySensorTrippedAvg() || 
+      isIndexing = !isEndSensorTripped() && (isEntrySensorTrippedAvg() ||
           (getIndexPosition() + Constants.hopper.TOLERANCE) < targetIndexPosition);
       if (entrySensorLatch.get(isEntrySensorTrippedAvg())) {
         console.log("i gots da ball");
@@ -59,7 +59,7 @@ public class Hopper extends Subsystem {
         controller.reset();
         resetIndexerEncoder();
       }
-      
+
       //Indexer and Feeder
       if (isIndexing) {
         setIndexer(
@@ -71,7 +71,7 @@ public class Hopper extends Subsystem {
         setIndexer(0);
         setFeeder(0);
       }
-      
+
       //Entry
       if (Superstructure.is(Mode.INTAKE))
         setStart(Constants.hopper.START_SPEED_INTAKING);
@@ -79,27 +79,10 @@ public class Hopper extends Subsystem {
         setStart(Constants.hopper.START_SPEED_INDEXING);
       else setStart(0);
     }
-    
+
     hasFed.update(Superstructure.is(Mode.SHOOTING));
     entrySensorAverage.update(entrySensor.get());
     isFullAverage.update(isFull());
-  }
-  
-  //Debugging
-  public void debug() {
-    //Constants.HOPPER_INDEX_BALL_SIZE = Tuner.getTunerInputDouble("Hopper Indexer Ball Size", Constants.HOPPER_INDEX_BALL_SIZE);
-    Constants.hopper.KP = Tuner.getTunerInputDouble("Hopper Index KP", Constants.hopper.KP);
-    Constants.hopper.KI = Tuner.getTunerInputDouble("Hopper Index KI", Constants.hopper.KI);
-    Constants.hopper.KD = Tuner.getTunerInputDouble("Hopper Index KD", Constants.hopper.KD);
-    Constants.hopper.TOLERANCE = Tuner.getTunerInputDouble("Hopper Index Tol", Constants.hopper.TOLERANCE);
-    Constants.hopper.FEED_SPEED = Tuner.getTunerInputDouble("Hopper Feed Speed", Constants.hopper.FEED_SPEED);
-    Tuner.setTunerOutput("Hopper Target", targetIndexPosition);
-    Tuner.setTunerOutput("Hopper Position", getIndexPosition());
-    Tuner.setTunerOutput("Hopper Output", indexMotor.getMotorOutputVoltage());
-    Tuner.setTunerOutput("Hopper Indexing", isIndexing);
-    Tuner.setTunerOutput("Hopper Full", isFull());
-    Tuner.setTunerOutput("Hopper Entry", isEntrySensorTrippedAvg());
-    controller.setPID(Constants.hopper.KP, Constants.hopper.KI, Constants.hopper.KD);
   }
 
   //Internal Functions
@@ -126,7 +109,7 @@ public class Hopper extends Subsystem {
   public static boolean isEndSensorTripped() {
     return endSensor.get();
   }
-  
+
   //External Functions
   public static boolean isEmpty() {
     return (indexMotor == null) ? false : !isEndSensorTripped() && !isEntrySensorTrippedAvg();
@@ -146,9 +129,11 @@ public class Hopper extends Subsystem {
   public static double getIndexPosition() {
     return (indexMotor == null) ? 0 : indexEncoder.getComponentRevs();
   }
-  
+
   //Config
-  public void init() {
+  public Hopper() {
+    super(Constants.hopper);
+
     startMotor = new VictorSPX(Ports.HOPPER_START_MOTOR);
     startMotor.configFactoryDefault();
     startMotor.setInverted(Constants.robot.switchOnBot(false, true));
@@ -156,32 +141,33 @@ public class Hopper extends Subsystem {
     feederMotor = new VictorSPX(Ports.HOPPER_FEEDER_MOTOR);
     feederMotor.configFactoryDefault();
     feederMotor.setInverted(Constants.robot.switchOnBot(false, true));
-    
+
     indexMotor = new TalonFX(Ports.HOPPER_INDEX_MOTOR);
     indexMotor.configFactoryDefault();
     indexMotor.setInverted(true);
     indexEncoder = new FalconEncoder(indexMotor, Constants.hopper.GEARING);
 
-    entrySensor = new Sensor(PortType.ANALOG, Ports.HOPPER_SENSOR_START,
-                             Constants.robot.switchOnBot(false, true));
-    endSensor = new Sensor(PortType.ANALOG, Ports.HOPPER_SENSOR_END,
-                           Constants.robot.switchOnBot(false, true));
-    
+    entrySensor = new PhotoSensor(PortType.ANALOG, Ports.HOPPER_SENSOR_START,
+                                  Constants.robot.switchOnBot(false, true));
+    endSensor = new PhotoSensor(PortType.ANALOG, Ports.HOPPER_SENSOR_END,
+                                Constants.robot.switchOnBot(false, true));
+
     entrySensorLatch = new LatchedBoolean(LatchedBooleanMode.RISING);
     isFullAverage = new MovingAverage(200, 0);
     hasFed = new MovingAverage(100, 0);
     entrySensorAverage = new MovingAverage(4, false);
-    
+
     controller = new PIDController(
         Constants.hopper.KP, Constants.hopper.KI, Constants.hopper.KD
       );
 
     configCharacterization(indexEncoder, (double voltage) -> setIndexer(voltage));
+
+    setDevices(new MotorGroup(startMotor, feederMotor, indexMotor));
   }
 
   //Reset
-  public void disabled() {
-    stopAll();
+  public void reset() {
     resetIndexerEncoder();
     targetIndexPosition = 0;
   }

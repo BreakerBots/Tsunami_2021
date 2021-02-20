@@ -6,8 +6,8 @@ import com.team5104.lib.LatchedBoolean;
 import com.team5104.lib.LatchedBoolean.LatchedBooleanMode;
 import com.team5104.lib.MovingAverage;
 import com.team5104.lib.console;
-import com.team5104.lib.sensors.Limelight;
-import com.team5104.lib.sensors.Limelight.LEDMode;
+import com.team5104.lib.devices.Limelight;
+import com.team5104.lib.devices.Limelight.LEDMode;
 
 /** The Superstructure is a massive state machine for all subsystems, except drive. */
 public class Superstructure {
@@ -21,7 +21,7 @@ public class Superstructure {
   public enum PanelState { ROTATION, POSITION }
   public enum FlywheelState { STOPPED, SPINNING }
   public enum Target { LOW, HIGH }
-  
+
   private static Mode mode = Mode.IDLE;
   private static PanelState panelState = PanelState.ROTATION;
   private static FlywheelState flywheelState = FlywheelState.STOPPED;
@@ -30,7 +30,7 @@ public class Superstructure {
   private static LatchedBoolean flywheelOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING), hoodOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING),
                   turretOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING), limelightOn = new LatchedBoolean();
   private static MovingAverage readyToFire = new MovingAverage(15, false);
-  
+
   //External Functions
   public static boolean is(Mode mode) { return mode == Superstructure.mode; }
   public static void set(Mode mode) { Superstructure.mode = mode; }
@@ -47,7 +47,7 @@ public class Superstructure {
   public static boolean is(Target target) { return target == Superstructure.target; }
   public static boolean isClimbing() { return is(Mode.CLIMBER_DEPLOYING) || is(Mode.CLIMBING); }
   public static boolean isPaneling() { return is(Mode.PANEL_DEPLOYING) || is(Mode.PANELING); }
-  
+
   //Loop
   protected static void update() {
     //Exit Paneling
@@ -55,20 +55,20 @@ public class Superstructure {
       Superstructure.set(Mode.IDLE);
       console.log("finished paneling... idling");
     }
-    
+
     //Exit Intake
     if (is(Mode.INTAKE) && Hopper.isFull()) {
       set(Mode.IDLE);
       console.log("hopper full... idling");
     }
-    
+
     //Exit Shooting
     if (is(Mode.SHOOTING) && !Hopper.isFullAverage() && Hopper.hasFedAverage()) {
       set(Mode.IDLE);
       set(FlywheelState.STOPPED);
       console.log("done shooting... idling");
     }
-    
+
     //Start Shooting after done Aiming
     if (flywheelOnTarget.get(Flywheel.isSpedUp()) && is(Mode.AIMING))
       console.log("sped up");
@@ -81,12 +81,12 @@ public class Superstructure {
       set(Mode.SHOOTING);
       console.log("finished aiming... shooting");
     }
-    
+
     //Spin Flywheel while Shooting
     if (is(Mode.SHOOTING) || is(Mode.AIMING)) {
       set(FlywheelState.SPINNING);
     }
-    
+
     //Limelight
     if (limelightOn.get(is(Mode.AIMING) || is(Mode.SHOOTING))) {
       if (is(Mode.AIMING) || is(Mode.SHOOTING))
@@ -95,7 +95,7 @@ public class Superstructure {
         Limelight.setLEDMode(LEDMode.OFF);
     }
   }
-  
+
   //Reset
   protected static void reset() {
     console.log("resetting!");

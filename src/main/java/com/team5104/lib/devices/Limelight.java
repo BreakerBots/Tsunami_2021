@@ -1,4 +1,4 @@
-package com.team5104.lib.sensors;
+package com.team5104.lib.devices;
 
 import com.team5104.lib.LatchedBoolean;
 import com.team5104.lib.LatchedBoolean.LatchedBooleanMode;
