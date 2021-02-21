@@ -10,7 +10,6 @@ import com.team5104.lib.MovingAverage;
 import com.team5104.lib.Util;
 import com.team5104.lib.control.VelocityController;
 import com.team5104.lib.devices.Encoder.FalconEncoder;
-import com.team5104.lib.devices.MotorGroup;
 import com.team5104.lib.subsystem.ServoSubsystem;
 
 public class Flywheel extends ServoSubsystem {
@@ -97,7 +96,5 @@ public class Flywheel extends ServoSubsystem {
     avgRPM = new MovingAverage(50, 0);
 
     configCharacterization(encoder, (double voltage) -> setVoltage(voltage));
-
-    setDevices(new MotorGroup(motor1), encoder);
   }
 }

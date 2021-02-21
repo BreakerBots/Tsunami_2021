@@ -11,7 +11,6 @@ import com.team5104.lib.console;
 import com.team5104.lib.devices.ColorSensor;
 import com.team5104.lib.devices.ColorSensor.PanelColor;
 import com.team5104.lib.devices.Encoder.MagEncoder;
-import com.team5104.lib.devices.MotorGroup;
 import com.team5104.lib.devices.Solenoid;
 import com.team5104.lib.subsystem.ServoSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -114,8 +113,6 @@ public class Paneler extends ServoSubsystem {
     motor.configNeutralDeadband(0);
     encoder = new MagEncoder(motor, Constants.paneler.GEARING);
     resetEncoder();
-
-    setDevices(new MotorGroup(motor), piston, sensor, encoder);
   }
 
   //Reset

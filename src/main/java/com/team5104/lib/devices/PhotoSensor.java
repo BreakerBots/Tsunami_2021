@@ -1,12 +1,13 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package com.team5104.lib.devices;
 
+import com.team5104.lib.devices.Health.Status;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 /** A wrapper class of DigitalInput and AnalogInput to manager
  * Banner Photoelectric Sensors (that can be plugged into either ports) */
-public class PhotoSensor {
+public class PhotoSensor extends Device {
     public enum PortType {
         DIGITAL,
         ANALOG
@@ -56,4 +57,10 @@ public class PhotoSensor {
             return analogInput.getVoltage() > ANALOG_TRIGGER_VALUE ^ inverted;
         return digitalInput.get() ^ inverted;
     }
+
+    public Health getHealth() {
+        return new Health(Status.GOOD);
+    }
+
+    public void stop() { }
 }

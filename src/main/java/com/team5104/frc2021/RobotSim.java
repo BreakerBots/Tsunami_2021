@@ -1,7 +1,7 @@
 package com.team5104.frc2021;
 
 import com.team5104.frc2021.auto.paths.AutoNavSlalom;
-import com.team5104.frc2021.subsystems.*;
+import com.team5104.frc2021.subsystems.Drive;
 import com.team5104.lib.auto.AutoManager;
 import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.dashboard.Dashboard;

@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.team5104.frc2021.Ports;
 import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.Mode;
-import com.team5104.lib.devices.MotorGroup;
 import com.team5104.lib.devices.Solenoid;
 import com.team5104.lib.subsystem.Subsystem;
 
@@ -37,7 +36,5 @@ public class Climber extends Subsystem {
     motor = new TalonFX(Ports.CLIMBER_MOTOR);
     motor.configFactoryDefault();
     motor.setInverted(false);
-
-    setDevices(new MotorGroup(motor), deployerPiston, brakePiston);
   }
 }

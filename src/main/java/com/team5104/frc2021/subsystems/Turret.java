@@ -13,7 +13,6 @@ import com.team5104.lib.*;
 import com.team5104.lib.control.PositionController;
 import com.team5104.lib.devices.Encoder.FalconEncoder;
 import com.team5104.lib.devices.Limelight;
-import com.team5104.lib.devices.MotorGroup;
 import com.team5104.lib.subsystem.ServoSubsystem;
 
 public class Turret extends ServoSubsystem {
@@ -156,8 +155,6 @@ public class Turret extends ServoSubsystem {
       setMode(SubsystemMode.CALIBRATING);
     }
     else enableSoftLimits(true);
-
-    setDevices(new MotorGroup(motor), encoder);
   }
 
   //Reset

@@ -15,7 +15,6 @@ import com.team5104.lib.console;
 import com.team5104.lib.control.PositionController;
 import com.team5104.lib.devices.Encoder.MagEncoder;
 import com.team5104.lib.devices.Limelight;
-import com.team5104.lib.devices.MotorGroup;
 import com.team5104.lib.subsystem.ServoSubsystem;
 
 public class Hood extends ServoSubsystem {
@@ -154,8 +153,6 @@ public class Hood extends ServoSubsystem {
       () -> encoder.getComponentRPS() * 360d,
       (double voltage) -> setVoltage(voltage)
     );
-
-    setDevices(new MotorGroup(motor), encoder);
   }
 
   //Reset

@@ -2,6 +2,8 @@ package com.team5104.lib.devices;
 
 import com.ctre.phoenix.motorcontrol.Faults;
 
+import java.util.List;
+
 public class Health {
   public enum Status {
     GOOD(2),
@@ -69,18 +71,7 @@ public class Health {
   public String getError() {
     return error;
   }
-  public static Health merge(Health[] healths) {
-    int worstVal = Status.GOOD.val;
-    String worstError = null;
-    for (Health health : healths) {
-      if (health.getStatus().val < worstVal) {
-        worstVal = health.getStatus().val;
-        worstError = health.getError();
-      }
-    }
-    return new Health(Status.from(worstVal), worstError);
-  }
-  public static Health merge(Device[] devices) {
+  public static Health merge(List<Device> devices) {
     int worstVal = Status.GOOD.val;
     String worstError = null;
     for (Device device : devices) {

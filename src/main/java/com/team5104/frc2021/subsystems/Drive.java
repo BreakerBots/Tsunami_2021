@@ -12,7 +12,6 @@ import com.team5104.lib.devices.Encoder;
 import com.team5104.lib.devices.Encoder.EncoderSim;
 import com.team5104.lib.devices.Encoder.FalconEncoder;
 import com.team5104.lib.devices.Gyro;
-import com.team5104.lib.devices.MotorGroup;
 import com.team5104.lib.motion.TalonSim;
 import com.team5104.lib.setup.RobotState;
 import com.team5104.lib.subsystem.ServoSubsystem;
@@ -23,7 +22,8 @@ import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.util.Units;
 
 public class Drive extends ServoSubsystem {
-  private static BaseTalon falconL1, falconL2, falconR1, falconR2;
+  private static BaseTalon falconL1, falconL2;
+  private BaseTalon falconR1, falconR2;
   private static DifferentialDrivetrainSim drivetrainSim;
   private static Encoder leftEncoder, rightEncoder;
   private static Gyro gyro;
@@ -125,8 +125,6 @@ public class Drive extends ServoSubsystem {
         () -> gyro.getRadians(),
         (Double left, Double right) -> set(new DriveSignal(left, right, DriveUnit.VOLTAGE))
     );
-
-    setDevices(new MotorGroup(falconL1, falconR1), leftEncoder, rightEncoder, gyro);
   }
   public void initSim() {
     falconL1 = new TalonSim(Ports.DRIVE_MOTOR_L1);
@@ -159,7 +157,5 @@ public class Drive extends ServoSubsystem {
         () -> gyro.getRadians(),
         (Double left, Double right) -> set(new DriveSignal(left, right, DriveUnit.VOLTAGE))
     );
-
-    setDevices(new MotorGroup(falconL1, falconR1), leftEncoder, rightEncoder, gyro);
   }
 }

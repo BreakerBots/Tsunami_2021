@@ -12,7 +12,6 @@ import com.team5104.lib.LatchedBoolean.LatchedBooleanMode;
 import com.team5104.lib.MovingAverage;
 import com.team5104.lib.console;
 import com.team5104.lib.devices.Encoder.FalconEncoder;
-import com.team5104.lib.devices.MotorGroup;
 import com.team5104.lib.devices.PhotoSensor;
 import com.team5104.lib.devices.PhotoSensor.PortType;
 import com.team5104.lib.subsystem.ServoSubsystem;
@@ -162,8 +161,6 @@ public class Hopper extends ServoSubsystem {
       );
 
     configCharacterization(indexEncoder, (double voltage) -> setIndexer(voltage));
-
-    setDevices(new MotorGroup(startMotor, feederMotor, indexMotor));
   }
 
   //Reset

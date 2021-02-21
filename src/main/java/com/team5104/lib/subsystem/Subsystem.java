@@ -1,8 +1,15 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package com.team5104.lib.subsystem;
 
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.team5104.lib.devices.Device;
 import com.team5104.lib.devices.Health;
+import com.team5104.lib.devices.MotorDevice;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A snickers wrapper of all the requirements of a subsystem.
@@ -17,13 +24,12 @@ public abstract class Subsystem {
   }
 
   SubsystemMode mode = SubsystemMode.DETACHED;
+  private List<Device> devices = new ArrayList<>();
   private String finiteState = "Not Set";
   private SubsystemConstants constants;
-  private Device[] devices;
 
   /** Base Constructor
-   * @param constants Link SubsystemConstants class from Constants.java
-   * @warn MAKE SURE TO CALL .setDevices()!! */
+   * @param constants Link SubsystemConstants class from Constants.java */
   public Subsystem(SubsystemConstants constants) {
     this.constants = constants;
   }
@@ -41,10 +47,44 @@ public abstract class Subsystem {
   public static class SubsystemConstants { }
 
   //Built-In
+  /** Identifies all devices in the subsystem */
+  final void identifyDevices() throws IllegalAccessException {
+    Field[] fields = this.getClass().getDeclaredFields();
+    for (Field field : fields) {
+      //if device or motor
+      if (Device.class.isAssignableFrom(field.getType()) ||
+          BaseMotorController.class.isAssignableFrom(field.getType())) {
+        //make sure we can read it
+        field.setAccessible(true);
+
+        //get the obj
+        Object obj;
+        if (Modifier.isStatic(field.getModifiers()))
+          obj = field.get(null);
+        else obj = field.get(this);
+
+        //turn motor into MotorDevice
+        if (BaseMotorController.class.isAssignableFrom(field.getType()) && obj != null) {
+          obj = new MotorDevice((BaseMotorController) obj);
+        }
+
+        //add obj to list
+        if (obj != null)
+          devices.add((Device) obj);
+
+        //prevent ability to read
+        field.setAccessible(false);
+      }
+    }
+  }
+
   /** Stops all devices on the subsystem */
   public final void stop() {
-    for (Device device : devices)
-      device.stop();
+    if (devices != null && devices.size() > 0) {
+      for (Device device : devices) {
+        device.stop();
+      }
+    }
   }
 
   /** @return the merged health of all devices */
@@ -88,12 +128,6 @@ public abstract class Subsystem {
     //otherwise free to do anything
     this.mode = mode;
     return true;
-  }
-  /** YOU MUST CALL THIS IN THE CONSTRUCTOR!!!
-   * Sets the devices on the subsystem
-   * @param devices all the devices in the subsystem */
-  public void setDevices(Device... devices) {
-    this.devices = devices;
   }
   /** Sets the finite state (the current state in time that doesnt rely
    * on past values) of the subsystem to be displayed on the dashboard */

@@ -19,6 +19,7 @@ public class SubsystemManager {
     for (Subsystem subsystem : attachedSubsystems) {
       try {
         subsystem.mode = SubsystemMode.OPERATING;
+        subsystem.identifyDevices();
         subsystem.reset();
         message += subsystem.getClass().getSimpleName() + ", ";
       } catch (Exception e) { Looper.logCrash(new Crash(e)); }

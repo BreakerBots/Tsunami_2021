@@ -143,15 +143,15 @@ public class Looper {
   /** Logs a crash that occurred */
   public static void logCrash(Crash crash) {
     try {
-      if (!crash.equals(lastCrash) && System.currentTimeMillis() > timeSinceLastCrash + 5000) {
+      if (lastCrash == null || !crash.equals(lastCrash) && System.currentTimeMillis() > timeSinceLastCrash + 5000) {
         System.out.println('\n');
-        console.error("Caught fatal error at " + crash.loop.name + " thread!\n" +
+        console.error("Caught fatal error at " + crash.getLoopName() + " thread!\n" +
                       exceptionToString(crash.exception) + "Robot should work, but yours is bad!\n"
         );
         lastCrash = crash;
         timeSinceLastCrash = System.currentTimeMillis();
       }
-    } catch (Exception e) { console.error("error in Looper.logCrash() method"); }
+    } catch (Exception e) { console.error("error in Looper.logCrash() method", exceptionToString(e)); }
   }
   public static class Crash {
     Loop loop;
@@ -173,6 +173,12 @@ public class Looper {
             this.exception.toString().equals(otherCrash.exception.toString())
         );
       } catch (Exception e) { return false; }
+    }
+
+    public String getLoopName() {
+      if (loop == null)
+        return "Unknown";
+      else return loop.name;
     }
   }
   private static Crash lastCrash;
