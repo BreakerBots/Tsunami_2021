@@ -28,9 +28,9 @@ public class Hood extends ServoSubsystem {
   public void update() {
     //Automatic
     if (Superstructure.isEnabled()) {
-      if (is(SubsystemMode.CALIBRATING)) {
-        setFiniteState("Calibrating");
-        setPercentOutput(-Constants.hood.CALIBRATE_SPEED);
+      if (is(SubsystemMode.HOMING)) {
+        setFiniteState("Homing");
+        setPercentOutput(-Constants.hood.HOMING_SPEED);
       }
 
       else if (is(SubsystemMode.CHARACTERIZING)) {
@@ -70,9 +70,9 @@ public class Hood extends ServoSubsystem {
 
   //Fast Loop
   public void fastUpdate() {
-    //Exit Calibrating
-    if (is(SubsystemMode.CALIBRATING) && backLimitHit()) {
-      console.log("finished calibration!");
+    //Exit Homing
+    if (is(SubsystemMode.HOMING) && backLimitHit()) {
+      console.log("finished homing!");
       setMode(SubsystemMode.OPERATING, true);
     }
 
@@ -145,8 +145,8 @@ public class Hood extends ServoSubsystem {
     controller.setP(getKP());
     visionFilter = new MovingAverage(3, 0);
 
-    console.log("ready to calibrate!");
-    setMode(SubsystemMode.CALIBRATING);
+    console.log("ready to home!");
+    setMode(SubsystemMode.HOMING);
 
     configCharacterization(
       () -> encoder.getComponentRevs() * 360d,
@@ -159,9 +159,9 @@ public class Hood extends ServoSubsystem {
   public void reset() {
     stop();
 
-    if (!is(SubsystemMode.CALIBRATING)) {
-      console.log("ready to calibrate!");
-      setMode(SubsystemMode.CALIBRATING);
+    if (!is(SubsystemMode.HOMING)) {
+      console.log("ready to home!");
+      setMode(SubsystemMode.HOMING);
     }
   }
 }

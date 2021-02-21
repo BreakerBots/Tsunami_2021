@@ -29,7 +29,7 @@ public class Flywheel extends ServoSubsystem {
     }
 
     else if (is(SubsystemMode.CHARACTERIZING)) {
-      setFiniteState("Calibrating");
+      setFiniteState("Characterizing");
       setRampRate(Constants.flywheel.RAMP_RATE_UP);
     }
 

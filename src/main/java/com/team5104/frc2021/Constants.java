@@ -61,7 +61,7 @@ public class Constants {
 
         public double TOL = 3;
         public double EQ_CONST = 0;
-        public double CALIBRATE_SPEED = 0.4;
+        public double HOMING_SPEED = 0.4;
     }
 
     //Hopper
@@ -97,7 +97,7 @@ public class Constants {
         public double MAX_ACC = 2000;
         public double GEARING = (8.0 / 60.0 /*gear*/) / (22.0 / 150.0 /*sprocket*/);
 
-        public double CALIBRATE_SPEED = 1.8;
+        public double HOMING_SPEED = 1.8;
         public double VOLT_LIMIT = 6;
         public double VISION_TOL = 6;
         public double SOFT_LEFT = switchOnBot(120, 110);

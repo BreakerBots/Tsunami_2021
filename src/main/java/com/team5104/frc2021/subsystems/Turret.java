@@ -27,11 +27,11 @@ public class Turret extends ServoSubsystem {
   public void update() {
     //Automatic
     if (Superstructure.isEnabled()) {
-      //Calibrating
-      if (is(SubsystemMode.CALIBRATING)) {
-        setFiniteState("Calibrating");
+      //Homing
+      if (is(SubsystemMode.HOMING)) {
+        setFiniteState("Homing");
         enableSoftLimits(false);
-        setVoltage(Constants.turret.CALIBRATE_SPEED);
+        setVoltage(Constants.turret.HOMING_SPEED);
       }
 
       //Characterizing
@@ -70,10 +70,10 @@ public class Turret extends ServoSubsystem {
 
   //Fast Loop
   public void fastUpdate() {
-    //Exit Calibration
-    if (is(SubsystemMode.CALIBRATING) && leftLimitHit()) {
-      console.log("finished calibration!");
-      Filer.createFile("/tmp/turret_calibrated.txt");
+    //Exit Homing
+    if (is(SubsystemMode.HOMING) && leftLimitHit()) {
+      console.log("finished homing!");
+      Filer.createFile("/tmp/turret_homed.txt");
       setMode(SubsystemMode.OPERATING, true);
     }
 
@@ -149,10 +149,10 @@ public class Turret extends ServoSubsystem {
         (double voltage) -> setVoltage(voltage)
     );
 
-    //Only calibrate once per roborio boot while not.
-    if (!Filer.fileExists("/tmp/turret_calibrated.txt")) {
-      console.log("ready to calibrate!");
-      setMode(SubsystemMode.CALIBRATING);
+    //Only home once per roborio boot while not.
+    if (!Filer.fileExists("/tmp/turret_homed.txt")) {
+      console.log("ready to home!");
+      setMode(SubsystemMode.HOMING);
     }
     else enableSoftLimits(true);
   }

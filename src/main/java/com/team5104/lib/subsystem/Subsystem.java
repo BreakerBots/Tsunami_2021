@@ -19,7 +19,7 @@ public abstract class Subsystem {
     DETACHED,
     DISABLED,
     OPERATING, //running normally
-    CALIBRATING,
+    HOMING,
     CHARACTERIZING
   }
 
@@ -119,9 +119,9 @@ public abstract class Subsystem {
       return true;
     }
 
-    //cant get out of disabled, calibrating, or characterizing wo/ forcing it
+    //cant get out of disabled, homing, or characterizing wo/ forcing it
     if (this.mode == SubsystemMode.DISABLED ||
-        this.mode == SubsystemMode.CALIBRATING ||
+        this.mode == SubsystemMode.HOMING ||
         this.mode == SubsystemMode.CHARACTERIZING)
       return false;
 
