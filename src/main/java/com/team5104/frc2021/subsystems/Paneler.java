@@ -17,12 +17,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 
 public class Paneler extends ServoSubsystem {
-  private static ColorSensor sensor;
-  private static TalonSRX motor;
+  private ColorSensor sensor;
+  private TalonSRX motor;
   private static MagEncoder encoder;
-  private static Solenoid piston;
+  private Solenoid piston;
   private static boolean complete;
-  private static int end;
+  private int end;
 
   //Loop
   public void update() {

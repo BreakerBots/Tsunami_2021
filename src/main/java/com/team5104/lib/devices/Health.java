@@ -1,6 +1,7 @@
 package com.team5104.lib.devices;
 
 import com.ctre.phoenix.motorcontrol.Faults;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.List;
 
@@ -84,6 +85,7 @@ public class Health {
   }
 
   //To String
+  @JsonValue
   public String toString() {
     return status.toString() + (error != null ? (" " + error) : "");
   }

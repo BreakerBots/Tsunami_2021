@@ -1,9 +1,9 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package com.team5104.lib;
 
+import com.team5104.lib.Looper.TimedLoop;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import com.team5104.lib.Looper.TimedLoop;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * <h1>Console</h1>
@@ -100,10 +101,10 @@ public class console {
     // -- System Logging/Thread/Loop
     private static ArrayList<String> buffer = new ArrayList();
     public static void init() {
-        buffer.clear();
         Looper.registerLoop(new TimedLoop("Console", () -> {
-            for (String line : buffer)
-                System.out.println(line);
+            for (Iterator<String> iterator = buffer.iterator(); iterator.hasNext(); ) {
+                System.out.println(iterator.next());
+            }
             buffer.clear();
         }, 1, 100));
     }

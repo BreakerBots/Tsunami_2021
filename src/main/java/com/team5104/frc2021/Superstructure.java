@@ -1,6 +1,8 @@
 /*BreakerBots Robotics Team 2020*/
 package com.team5104.frc2021;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.team5104.frc2021.subsystems.*;
 import com.team5104.lib.LatchedBoolean;
 import com.team5104.lib.LatchedBoolean.LatchedBooleanMode;
@@ -10,6 +12,7 @@ import com.team5104.lib.devices.Limelight;
 import com.team5104.lib.devices.Limelight.LEDMode;
 
 /** The Superstructure is a massive state machine for all subsystems, except drive. */
+@JsonPropertyOrder({ "mode", "panelState", "target" })
 public class Superstructure {
   //States and Variables
   public enum Mode {
@@ -32,21 +35,32 @@ public class Superstructure {
   private static MovingAverage readyToFire = new MovingAverage(15, false);
 
   //External Functions
-  public static boolean is(Mode mode) { return mode == Superstructure.mode; }
-  public static void set(Mode mode) { Superstructure.mode = mode; }
   public static boolean isEnabled() { return isEnabled; }
   public static boolean isDisabled() { return !isEnabled; }
   public static void enable() { isEnabled = true; }
   public static void disable() { isEnabled = false; }
 
+  public static boolean is(Mode mode) { return mode == Superstructure.mode; }
+  @JsonGetter("mode")
+  public Mode getMode() { return mode; }
+  public static void set(Mode mode) { Superstructure.mode = mode; }
+
   public static void set(PanelState panelState) { Superstructure.panelState = panelState; }
+  @JsonGetter("panelState")
+  public PanelState getPanelState() { return panelState; }
   public static boolean is(PanelState panelState) { return panelState == Superstructure.panelState; }
+
   public static void set(FlywheelState shooterWheelState) { Superstructure.flywheelState = shooterWheelState; }
   public static boolean is(FlywheelState flywheelState) { return flywheelState == Superstructure.flywheelState; }
+
   public static void set(Target target) { Superstructure.target = target; }
+  @JsonGetter("target")
+  public Target getTarget() { return target; }
   public static boolean is(Target target) { return target == Superstructure.target; }
+
   public static boolean isClimbing() { return is(Mode.CLIMBER_DEPLOYING) || is(Mode.CLIMBING); }
   public static boolean isPaneling() { return is(Mode.PANEL_DEPLOYING) || is(Mode.PANELING); }
+
 
   //Loop
   protected static void update() {

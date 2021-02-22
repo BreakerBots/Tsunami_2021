@@ -16,11 +16,13 @@ public class Climber extends Subsystem {
   //Loop
   public void update() {
     if (Superstructure.isEnabled() && Superstructure.isClimbing()) {
+      setFiniteState("Climbing");
       brakePiston.set(false);
       deployerPiston.set(Superstructure.is(Mode.CLIMBER_DEPLOYING));
       motor.set(ControlMode.PercentOutput, climberManual);
     }
     else {
+      setFiniteState("Stopped");
       brakePiston.set(true);
       deployerPiston.set(false);
       stop();

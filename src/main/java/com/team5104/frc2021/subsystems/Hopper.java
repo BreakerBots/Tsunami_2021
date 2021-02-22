@@ -22,11 +22,11 @@ public class Hopper extends ServoSubsystem {
   private static TalonFX indexMotor;
   private static FalconEncoder indexEncoder;
   private static PhotoSensor entrySensor, endSensor;
-  private static LatchedBoolean entrySensorLatch;
+  private LatchedBoolean entrySensorLatch;
   private static MovingAverage isFullAverage, hasFed, entrySensorAverage;
-  private static PIDController controller;
+  private PIDController controller;
   private static boolean isIndexing;
-  private static double targetIndexPosition;
+  private double targetIndexPosition;
 
   //Loop
   public void update() {

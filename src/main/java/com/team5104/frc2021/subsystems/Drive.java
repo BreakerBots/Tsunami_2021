@@ -22,8 +22,7 @@ import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.util.Units;
 
 public class Drive extends ServoSubsystem {
-  private static BaseTalon falconL1, falconL2;
-  private BaseTalon falconR1, falconR2;
+  private BaseTalon falconL1, falconL2, falconR1, falconR2;
   private static DifferentialDrivetrainSim drivetrainSim;
   private static Encoder leftEncoder, rightEncoder;
   private static Gyro gyro;
@@ -32,10 +31,14 @@ public class Drive extends ServoSubsystem {
   private static DriveSignal signal = new DriveSignal();
   public void update() {
     if (RobotState.isEnabled() && signal.unit == DriveSignal.DriveUnit.VOLTAGE) {
+      setFiniteState("Driving");
       falconL1.set(ControlMode.PercentOutput, signal.leftSpeed / falconL1.getBusVoltage());
       falconR1.set(ControlMode.PercentOutput, signal.rightSpeed / falconR1.getBusVoltage());
     }
-    else stop();
+    else {
+      setFiniteState("Stopped");
+      stop();
+    }
 
     signal = new DriveSignal();
 

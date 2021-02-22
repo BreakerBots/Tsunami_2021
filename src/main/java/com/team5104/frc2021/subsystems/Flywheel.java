@@ -16,7 +16,7 @@ public class Flywheel extends ServoSubsystem {
   private static TalonFX motor1, motor2;
   private static FalconEncoder encoder;
   private static MovingAverage avgRPM;
-  private static VelocityController controller;
+  private VelocityController controller;
 
   //Loop
   public void update() {

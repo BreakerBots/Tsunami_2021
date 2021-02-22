@@ -67,4 +67,9 @@ public class SubsystemManager {
       } catch (Exception e) { Looper.logCrash(new Crash(e)); }
     }
   }
+
+  /** Returns the attached subsystems */
+  public static Subsystem[] getSubsystems() {
+    return attachedSubsystems;
+  }
 }

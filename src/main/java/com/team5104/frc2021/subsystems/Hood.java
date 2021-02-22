@@ -21,7 +21,7 @@ public class Hood extends ServoSubsystem {
   private static TalonSRX motor;
   private static MagEncoder encoder;
   private static MovingAverage visionFilter;
-  private static PositionController controller;
+  private PositionController controller;
   private static double targetAngle = 0;
 
   //Loop

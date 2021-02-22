@@ -18,9 +18,9 @@ import com.team5104.lib.subsystem.ServoSubsystem;
 public class Turret extends ServoSubsystem {
   private static TalonFX motor;
   private static FalconEncoder encoder;
-  private static PositionController controller;
-  private static LatencyCompensator latencyCompensator;
-  private static MovingAverage outputAverage;
+  private PositionController controller;
+  private LatencyCompensator latencyCompensator;
+  private MovingAverage outputAverage;
   private static double targetAngle = 0, fieldOrientedOffset = 0, tunerFieldOrientedOffsetAdd;
 
   //Loop

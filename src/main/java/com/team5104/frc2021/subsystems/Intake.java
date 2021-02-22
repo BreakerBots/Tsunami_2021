@@ -10,8 +10,8 @@ import com.team5104.lib.devices.Solenoid;
 import com.team5104.lib.subsystem.Subsystem;
 
 public class Intake extends Subsystem {
-  private static VictorSPX motor;
-  private static Solenoid piston;
+  private VictorSPX motor;
+  private Solenoid piston;
 
   //Loop
   public void update() {

@@ -1,0 +1,51 @@
+{
+  "pageData": {
+    "url": "/",
+    "Superstructure": {
+      "mode": "IDLE",
+      "flywheelState": "STOPPED",
+      "panelState": "ROTATION",
+      "target": "HIGH"
+    },
+    "Drive": {
+      "finiteState": "Stopped",
+      "health": "GOOD",
+      "mode": "OPERATING"
+    },
+    "Intake": {
+      "finiteState": "Stopped",
+      "health": "GOOD",
+      "mode": "OPERATING"
+    },
+    "Climber": {
+      "finiteState": "Stopped",
+      "health": "GOOD",
+      "mode": "OPERATING"
+    },
+    "Flywheel": {
+      "finiteState": "Stopped",
+      "health": "GOOD",
+      "mode": "OPERATING"
+    },
+    "Hood": {
+      "finiteState": "Stopped",
+      "health": "GOOD",
+      "mode": "HOMING"
+    },
+    "Paneler": {
+      "finiteState": "Stopped",
+      "health": "GOOD",
+      "mode": "OPERATING"
+    },
+    "Turret": {
+      "finiteState": "Stopped",
+      "health": "GOOD",
+      "mode": "OPERATING"
+    }
+  },
+  "robotData": {
+    "fpgaTimestamp": 1,
+    "batteryVoltage": 12.0,
+    "mode": "DISABLED"
+  }
+}

@@ -2,6 +2,8 @@
 package com.team5104.lib.subsystem;
 
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.team5104.lib.devices.Device;
 import com.team5104.lib.devices.Health;
 import com.team5104.lib.devices.MotorDevice;
@@ -11,9 +13,8 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A snickers wrapper of all the requirements of a subsystem.
- */
+/** A snickers wrapper of all the requirements of a subsystem. */
+@JsonPropertyOrder({ "mode", "health", "finiteState" })
 public abstract class Subsystem {
   public enum SubsystemMode {
     DETACHED,
@@ -88,10 +89,12 @@ public abstract class Subsystem {
   }
 
   /** @return the merged health of all devices */
+  @JsonGetter("health")
   public Health getHealth() {
     return Health.merge(devices);
   }
   /** @return the current SubsystemMode */
+  @JsonGetter("mode")
   public SubsystemMode getMode() {
     return mode;
   }
@@ -100,6 +103,7 @@ public abstract class Subsystem {
     return this.mode == mode;
   }
   /** @return the finite state of the subsystem */
+  @JsonGetter("finiteState")
   public String getFiniteState() { return finiteState; }
 
   /** Attempts to change the Subsystem Mode @param mode
