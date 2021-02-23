@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj.util.Units;
 import java.util.ArrayList;
 import java.util.List;
 
-/** 
+/**
  * A class that helps store a field-relative position in feet
  * */
 public class Position {
 
   private double xFeet, yFeet, degrees;
-  
+
   public Position(Pose2d poseMeters) {
     this(
         Units.metersToFeet(poseMeters.getTranslation().getX()),
@@ -30,15 +30,15 @@ public class Position {
     this.yFeet = yFeet;
     this.degrees = degrees;
   }
-  
+
   public double getXFeet() {
     return xFeet;
   }
-  
+
   public double getYFeet() {
     return yFeet;
   }
-  
+
   public double getDegrees() {
     return degrees;
   }
@@ -56,7 +56,7 @@ public class Position {
         Rotation2d.fromDegrees(degrees)
       );
   }
-  
+
   public Pose2d toPose2dMeters() {
     return new Pose2d(
         Units.feetToMeters(xFeet),
@@ -72,7 +72,7 @@ public class Position {
         "deg: " + Util.round(degrees, 2) +
       "}";
   }
-  
+
   public static List<Position> fromStates(List<State> states) {
     List<Position> positions = new ArrayList<Position>();
     for (State state : states) {

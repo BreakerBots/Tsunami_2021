@@ -80,6 +80,7 @@ public class Dashboard extends WebSocketServer {
       ObjectMapper mapper = new ObjectMapper();
       JsonNode node = mapper.readTree(message);
 
+      //Inputs
       if (node.has("url")) {
         url = node.get("url").asText();
 
@@ -97,6 +98,9 @@ public class Dashboard extends WebSocketServer {
         else if (newRobotMode.equals(RobotMode.DISABLED.toString())) {
           DriverStationSim.setEnabled(false);
         }
+      }
+      if (node.has("trajectories")) {
+        DashboardAuto.handleTrajectory(node);
       }
       //TODO other inputs
 

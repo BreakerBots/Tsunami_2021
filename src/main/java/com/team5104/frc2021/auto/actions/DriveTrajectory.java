@@ -19,10 +19,13 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.util.Units;
+
+import java.util.List;
 
 /**
  * Follow a trajectory using the Breaker Trajectory Follower (Ramses Follower)
@@ -85,6 +88,11 @@ public class DriveTrajectory extends AutoAction {
       Plotter.plotAll(Position.fromStates(trajectory.getStates()), Plotter.Color.RED);
   }
 
+  public List<State> getPoints() {
+    return trajectory.getStates();
+  }
+
+  @Deprecated
   public void plot() {
     Plotter.plotAll(Position.fromStates(trajectory.getStates()), Plotter.Color.RED);
   }

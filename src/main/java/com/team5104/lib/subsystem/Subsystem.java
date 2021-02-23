@@ -103,7 +103,7 @@ public abstract class Subsystem {
     return this.mode == mode;
   }
   /** @return the finite state of the subsystem */
-  @JsonGetter("finiteState")
+  @JsonGetter("state")
   public String getFiniteState() { return finiteState; }
 
   /** Attempts to change the Subsystem Mode @param mode
