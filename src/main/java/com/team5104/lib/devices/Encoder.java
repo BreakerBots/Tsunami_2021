@@ -21,11 +21,11 @@ public abstract class Encoder extends Device {
     public abstract double getTicksPer100Ms();
 
     public double getComponentRevs() {
-        return getTicks() / (ticksPerRev / gearing);
+        return getTicks() / (gearing / ticksPerRev); //ticks to revs
     }
 
     public double getComponentRPS() {
-        return getTicksPer100Ms() / (ticksPerRev / gearing) * 10.0;
+        return getTicksPer100Ms() / (gearing / ticksPerRev) * 10.0; //ticks to rev vel
     }
 
     public double getComponentRPM() {
@@ -33,7 +33,7 @@ public abstract class Encoder extends Device {
     }
 
     public double componentRevsToTicks(double componentRevs) {
-        return componentRevs * (ticksPerRev / gearing);
+        return componentRevs * (ticksPerRev / gearing); //revs to ticks
     }
 
     //Set
@@ -44,7 +44,7 @@ public abstract class Encoder extends Device {
     }
 
     public void setComponentRevs(double componentRevs) {
-        setTicks(componentRevs * (ticksPerRev / gearing));
+        setTicks(componentRevsToTicks(componentRevs));
     }
 
     //Sub Classes
