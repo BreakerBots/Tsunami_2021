@@ -11,7 +11,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * <h1>Console</h1>
@@ -99,13 +101,17 @@ public class console {
     }
 
     // -- System Logging/Thread/Loop
-    private static ArrayList<String> buffer = new ArrayList();
+    private static volatile List<String> buffer = Collections.synchronizedList(new ArrayList<String>());
     public static void init() {
         Looper.registerLoop(new TimedLoop("Console", () -> {
-            for (Iterator<String> iterator = buffer.iterator(); iterator.hasNext(); ) {
-                System.out.println(iterator.next());
-            }
-            buffer.clear();
+            try {
+                StringBuilder build = new StringBuilder();
+                for (Iterator<String> iterator = buffer.iterator(); iterator.hasNext();) {
+                    build.append(iterator.next() + "\n");
+                }
+                buffer.clear();
+                System.out.print(build.toString());
+            } catch (Exception e) {}
         }, 1, 100));
     }
     public static void addToPrintBuffer(String line) {

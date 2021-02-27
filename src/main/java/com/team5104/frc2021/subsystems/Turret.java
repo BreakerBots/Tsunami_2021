@@ -13,6 +13,7 @@ import com.team5104.lib.*;
 import com.team5104.lib.control.PositionController;
 import com.team5104.lib.devices.Encoder.FalconEncoder;
 import com.team5104.lib.devices.Limelight;
+import com.team5104.lib.setup.RobotState;
 import com.team5104.lib.subsystem.ServoSubsystem;
 
 public class Turret extends ServoSubsystem {
@@ -21,7 +22,7 @@ public class Turret extends ServoSubsystem {
   private PositionController controller;
   private LatencyCompensator latencyCompensator;
   private MovingAverage outputAverage;
-  private static double targetAngle = 0, fieldOrientedOffset = 0, tunerFieldOrientedOffsetAdd;
+  private static double targetAngle = 0, fieldOrientedOffset = 0;
 
   //Loop
   public void update() {
@@ -54,7 +55,7 @@ public class Turret extends ServoSubsystem {
         setFiniteState("Field-Oriented");
         setAngle(
             Util.wrap180(
-                Drive.getHeading() + fieldOrientedOffset + tunerFieldOrientedOffsetAdd
+                Drive.getHeading() + fieldOrientedOffset
             )
         );
       }
@@ -111,7 +112,7 @@ public class Turret extends ServoSubsystem {
     return encoder.getComponentRevs() * 360d;
   }
   public static boolean leftLimitHit() {
-    if (motor == null) return true;
+    if (motor == null || RobotState.isSimulation()) return true;
     else if (Constants.robot.id == 0)
       return motor.isFwdLimitSwitchClosed() == 1;
     return motor.isRevLimitSwitchClosed() == 1;
