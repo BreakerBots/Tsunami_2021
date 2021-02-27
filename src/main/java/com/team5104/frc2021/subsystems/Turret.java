@@ -140,7 +140,16 @@ public class Turret extends ServoSubsystem {
     enableSoftLimits(false);
     motor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled);
 
-    controller = new PositionController(Constants.turret);
+    controller = new PositionController(
+        Constants.turret.KP,
+        Constants.turret.KI,
+        Constants.turret.KD,
+        Constants.turret.MAX_VEL,
+        Constants.turret.MAX_ACC,
+        Constants.turret.KS,
+        Constants.turret.KV,
+        Constants.turret.KA
+    );
     latencyCompensator = new LatencyCompensator(() -> getAngle());
     outputAverage = new MovingAverage(4, 0);
 

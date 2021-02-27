@@ -1,6 +1,5 @@
 package com.team5104.lib.control;
 
-import com.team5104.lib.subsystem.ServoSubsystem.ServoConstants;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 
@@ -9,9 +8,9 @@ public class VelocityController {
     private final SimpleMotorFeedforward ff;
     private double lastPIDOutput, lastFFOutput, lastOutput;
 
-    public VelocityController(ServoConstants constants) {
-        this(constants.KP, constants.KI, constants.KD, constants.KS, constants.KV, constants.KA);
-    }
+//    public VelocityController(ServoConstants constants) {
+//        this(constants.KP, constants.KI, constants.KD, constants.KS, constants.KV, constants.KA);
+//    }
 
     public VelocityController(double kP, double kI, double kD,
                               double kS, double kV, double kA) {

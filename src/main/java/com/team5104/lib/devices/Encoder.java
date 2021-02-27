@@ -21,11 +21,11 @@ public abstract class Encoder extends Device {
     public abstract double getTicksPer100Ms();
 
     public double getComponentRevs() {
-        return getTicks() / (gearing / ticksPerRev); //ticks to revs
+        return getTicks() * (gearing / ticksPerRev); //ticks to revs
     }
 
     public double getComponentRPS() {
-        return getTicksPer100Ms() / (gearing / ticksPerRev) * 10.0; //ticks to rev vel
+        return getTicksPer100Ms() * (gearing / ticksPerRev) * 10.0; //ticks to rev vel
     }
 
     public double getComponentRPM() {

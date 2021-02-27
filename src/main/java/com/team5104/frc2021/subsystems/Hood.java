@@ -141,7 +141,16 @@ public class Hood extends ServoSubsystem {
     motor.configForwardSoftLimitThreshold((int) encoder.componentRevsToTicks(38 / 360d));
     motor.configForwardSoftLimitEnable(false);
 
-    controller = new PositionController(Constants.hood);
+    controller = new PositionController(
+        Constants.hood.KP,
+        Constants.hood.KI,
+        Constants.hood.KD,
+        Constants.hood.MAX_VEL,
+        Constants.hood.MAX_ACC,
+        Constants.hood.KS,
+        Constants.hood.KV,
+        Constants.hood.KA
+    );
     controller.setP(getKP());
     visionFilter = new MovingAverage(3, 0);
 

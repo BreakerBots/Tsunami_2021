@@ -87,7 +87,7 @@ public class Constants {
     //Turret
     public static TurretConstants turret = new TurretConstants();
     public static class TurretConstants extends ServoConstants {
-        public double KP = switchOnBot(0.2, 0.2);
+        public double KP = 0.2;
         public double KI = 0;
         public double KD = switchOnBot(0.01, 0.0);
         public double KS = switchOnBot(.2/*0.258*/, 0.35);

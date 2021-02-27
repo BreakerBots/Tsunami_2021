@@ -92,7 +92,14 @@ public class Flywheel extends ServoSubsystem {
 
     encoder = new FalconEncoder(motor1, Constants.flywheel.GEARING);
 
-    controller = new VelocityController(Constants.flywheel);
+    controller = new VelocityController(
+        Constants.flywheel.KP,
+        Constants.flywheel.KI,
+        Constants.flywheel.KD,
+        Constants.flywheel.KS,
+        Constants.flywheel.KV,
+        Constants.flywheel.KA
+    );
     avgRPM = new MovingAverage(50, 0);
 
     configCharacterization(encoder, (double voltage) -> setVoltage(voltage));
