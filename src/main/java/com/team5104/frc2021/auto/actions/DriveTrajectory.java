@@ -10,6 +10,7 @@ import com.team5104.lib.auto.AutoManager;
 import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.auto.Position;
 import com.team5104.lib.console;
+import com.team5104.lib.dashboard.DashboardTrajectory;
 import com.team5104.lib.webapp.Plotter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -149,7 +150,7 @@ public class DriveTrajectory extends AutoAction {
     lastTime = curTime;
     lastSpeeds = targetWheelSpeeds;
 
-    com.team5104.frc2021.subsystems.Drive.set(new DriveSignal(
+    Drive.set(new DriveSignal(
         leftFeedforward + leftFeedback,
         rightFeedforward + rightFeedback,
         DriveUnit.VOLTAGE
@@ -160,6 +161,7 @@ public class DriveTrajectory extends AutoAction {
                    Odometry.getPositionFeet().getYFeet(),
                    Plotter.Color.ORANGE);
     }
+    DashboardTrajectory.sendOdometry();
   }
 
   public boolean isFinished() {

@@ -20,13 +20,13 @@ public class ExamplePath extends AutoPath {
     if (run(new PickupBall(2000, false))) {
       run(new DriveTrajectory(false,
         new Position(15, 15, 90),
-        new Position(0, 30, 90)
+        new Position(0.1, 30, 90)
       ));
     }
     else {
       run(new DriveTrajectory(false,
-                new Position(15, 15, 90),
-                new Position(30, 30, 90)
+        new Position(15, 15, 90),
+        new Position(30, 30, 90)
       ));
     }
   }

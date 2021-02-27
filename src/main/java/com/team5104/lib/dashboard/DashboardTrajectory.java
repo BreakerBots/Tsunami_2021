@@ -3,15 +3,21 @@ package com.team5104.lib.dashboard;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.team5104.frc2021.auto.actions.DriveTrajectory;
+import com.team5104.lib.auto.AutoManager;
+import com.team5104.lib.auto.AutoPath;
+import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.auto.Position;
 import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.util.Units;
 
 import java.util.List;
 
-public class DashboardAuto {
-  public static void handleTrajectory(JsonNode node) {
-    JsonNode trajectoryNodes = node.get("trajectories");
+/** Processes dashboard data for trajectories */
+public class DashboardTrajectory {
+  /** Process JSON data of a trajectory and send
+   * back the generated points. */
+  public static void processAndSend(JsonNode trajectoryNodes) throws Exception {
+    //process trajectories
     int trajectoriesSize = trajectoryNodes.size();
     DataConstructor trajectoryData = new DataConstructor();
     for (int t = 0; t < trajectoriesSize; t++) {
@@ -28,11 +34,50 @@ public class DashboardAuto {
       );
       trajectoryData.put("traj"+t, new PlottableTrajectory(traj.getPoints()));
     }
+
+    //send trajectories
     DataConstructor data = new DataConstructor();
     data.put("trajectory", trajectoryData);
     Dashboard.sendMessage(data.toString());
   }
 
+  /** Sets the AutoManager's target path from JSON data */
+  public static void setTargetPath(JsonNode targetPathNode) throws Exception {
+    //set target path
+    AutoManager.setTargetPath(
+        (AutoPath) Class.forName(targetPathNode.asText()).getConstructor().newInstance()
+    );
+  }
+
+  /** Sends the AutoManager's target path */
+  public static void sendTargetPath() {
+    DataConstructor data = new DataConstructor();
+    data.put("targetPath", AutoManager.getTargetPath().getClass().getSimpleName());
+    Dashboard.sendMessage(data.toString());
+  }
+
+  /** Sends out Odometry data */
+  private static boolean firstOdometryPoint = true;
+  public static void sendOdometry() {
+    DataConstructor odometryData = new DataConstructor();
+    Position pos = Odometry.getPositionFeet();
+    odometryData.put("xfeet", pos.getXFeet());
+    odometryData.put("yfeet", pos.getYFeet());
+    odometryData.put("deg", pos.getDegrees());
+    odometryData.put("first", firstOdometryPoint);
+    DataConstructor data = new DataConstructor();
+    data.put("odometry", odometryData);
+    Dashboard.sendMessage(data.toString());
+    firstOdometryPoint = false;
+  }
+
+  /** Sets up for new path */
+  public static void alertStartingPath() {
+    firstOdometryPoint = true;
+  }
+
+  /** A util file for processAndSend() that stores
+   * trajectories as arrays of x and y points */
   private static class PlottableTrajectory {
     public static final double SCALE_FACTOR = 4;
     public double[] x;

@@ -7,7 +7,7 @@ import com.team5104.lib.console;
 import com.team5104.lib.setup.RobotState;
 
 public class PickupBall extends AutoAction {
-    private boolean intaked, simulationValue;
+  private boolean intaked, simulationValue;
   private long startTime;
   private int timeoutMs;
 
@@ -25,16 +25,18 @@ public class PickupBall extends AutoAction {
     }
 
     public void update() {
-        if (RobotState.isSimulation() ? false : Hopper.isEntrySensorTrippedAvg())
+        if (!RobotState.isSimulation() && Hopper.isEntrySensorTrippedAvg())
             intaked = true;
     }
 
     public boolean isFinished() {
+        if (RobotState.isSimulation())
+          return true;
         return intaked || (System.currentTimeMillis() >= startTime + timeoutMs);
     }
 
     public void end() {
-      
+
     }
 
     public boolean getValue() {

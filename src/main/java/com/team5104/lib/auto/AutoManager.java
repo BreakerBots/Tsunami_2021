@@ -7,6 +7,7 @@ import com.team5104.lib.Looper;
 import com.team5104.lib.Looper.Crash;
 import com.team5104.lib.Looper.Loop;
 import com.team5104.lib.console;
+import com.team5104.lib.dashboard.DashboardTrajectory;
 import com.team5104.lib.setup.RobotState;
 import com.team5104.lib.subsystem.Characterizer;
 import com.team5104.lib.webapp.Plotter;
@@ -30,6 +31,7 @@ public class AutoManager {
       pathThread = new Thread(() -> {
         try {
           console.log("Running " + targetPath.getClass().getSimpleName());
+          DashboardTrajectory.alertStartingPath();
           targetPath.start();
           console.log(targetPath.getClass().getSimpleName() + " finished");
         } catch (Exception e) { Looper.logCrash(new Crash(e)); }

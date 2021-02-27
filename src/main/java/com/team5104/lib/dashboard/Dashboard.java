@@ -1,9 +1,9 @@
 package com.team5104.lib.dashboard;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team5104.frc2021.Constants;
+import com.team5104.frc2021.Controls;
 import com.team5104.frc2021.Superstructure;
 import com.team5104.lib.Looper;
 import com.team5104.lib.Looper.Crash;
@@ -21,6 +21,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 
 public class Dashboard extends WebSocketServer {
@@ -40,7 +41,10 @@ public class Dashboard extends WebSocketServer {
       DataConstructor data = new DataConstructor();
 
       //page data
-      data.put("pageData", getPageData());
+      DataConstructor pageData = getPageData(false);
+      if (pageData != null) {
+        data.put("pageData", pageData);
+      }
 
       //status data
       DataConstructor robotData = new DataConstructor();
@@ -51,9 +55,12 @@ public class Dashboard extends WebSocketServer {
 
       //#sendit
       sendMessage(data.toString());
+
+      //kill off
+      killOffOld();
     }, 1, 500));
   }
-  public static DataConstructor getPageData() {
+  public static DataConstructor getPageData(boolean init) {
     DataConstructor pageData = new DataConstructor();
     pageData.put("url", url);
 
@@ -64,9 +71,28 @@ public class Dashboard extends WebSocketServer {
         pageData.put(subsystem.getClass().getSimpleName(), subsystem);
       }
     }
+    if (url.equals("/controls") && init) {
+      try {
+        Field[] fields = Controls.class.getDeclaredFields();
+        for (Field field : fields) {
+          field.setAccessible(true);
+          pageData.put(field.getName(), field.get(null));
+          field.setAccessible(false);
+        }
+      } catch (IllegalAccessException e) { Looper.logCrash(new Crash(e)); }
+    }
     //TODO other urls
-
-    return pageData;
+    if (pageData.getProperties().size() > 1) {
+      return pageData;
+    }
+    return null; //dont return empty data
+  }
+  public static void killOffOld() {
+    if (lastConnection != null && lastConnection.isOpen()) {
+      DataConstructor data = new DataConstructor();
+      data.put("die", true); //get rekt m8
+      lastConnection.send(data.toString());
+    }
   }
 
   //Instance
@@ -84,10 +110,13 @@ public class Dashboard extends WebSocketServer {
       if (node.has("url")) {
         url = node.get("url").asText();
 
-        //send page data
-        DataConstructor data = new DataConstructor();
-        data.put("pageData", getPageData());
-        sendMessage(data.toString());
+        //url inits
+        DataConstructor pageData = getPageData(true);
+        if (pageData != null) {
+          DataConstructor data = new DataConstructor();
+          data.put("pageData", pageData);
+          sendMessage(data.toString());
+        }
       }
       if (node.has("robotMode")) {
         String newRobotMode = node.get("robotMode").asText();
@@ -100,17 +129,23 @@ public class Dashboard extends WebSocketServer {
         }
       }
       if (node.has("trajectories")) {
-        DashboardAuto.handleTrajectory(node);
+        DashboardTrajectory.processAndSend(node.get("trajectories"));
+      }
+      if (node.has("targetPath")) {
+        DashboardTrajectory.setTargetPath(node.get("targetPath"));
+      }
+      if (node.has("getTargetPath")) {
+        DashboardTrajectory.sendTargetPath();
       }
       //TODO other inputs
 
-    } catch (JsonProcessingException e) { Looper.logCrash(new Crash(e)); }
+    } catch (Exception e) { Looper.logCrash(new Crash(e)); }
   }
-  public void onOpen(WebSocket connection, ClientHandshake handshake) {
+  public void onOpen(WebSocket newConnection, ClientHandshake handshake) {
     lastConnection = this.connection;
-    this.connection = connection;
+    connection = newConnection;
     if (lastConnection != null && lastConnection.isOpen()) {
-      lastConnection.close();
+      killOffOld();
       console.log("new connection - replacing other");
     }
     else {
@@ -130,12 +165,15 @@ public class Dashboard extends WebSocketServer {
       return;
 
     console.log("lost connection");
+    if (RobotState.isSimulation()) {
+      DriverStationSim.setEnabled(false);
+    }
   }
   private Dashboard() {
     super(new InetSocketAddress(PORT));
   }
   public void onStart() {
-    console.log("running on " + getOrigin() + ":" + getPort());
+    console.log("initialized");
     setConnectionLostTimeout(1000);
   }
   public void onError(WebSocket conn, Exception e) {

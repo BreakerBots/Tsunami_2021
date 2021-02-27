@@ -6,7 +6,7 @@ import com.team5104.frc2021.subsystems.*;
 import com.team5104.frc2021.teleop.DriveController;
 import com.team5104.frc2021.teleop.SuperstructureController;
 import com.team5104.lib.Compressor;
-import com.team5104.lib.XboxController;
+import com.team5104.lib.controller.XboxController;
 import com.team5104.lib.auto.AutoManager;
 import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.console;
