@@ -15,16 +15,20 @@ public class SubsystemManager {
     attachedSubsystems = subsystems;
 
     //Initialize Subsystem's Interface & Print out target subsystems
-    String message = "Running Subsystems: ";
+    StringBuilder message = new StringBuilder();
+    message.append("running subsystems: ");
+    String prefix = "";
     for (Subsystem subsystem : attachedSubsystems) {
       try {
         subsystem.mode = SubsystemMode.OPERATING;
         subsystem.identifyDevices();
         subsystem.reset();
-        message += subsystem.getClass().getSimpleName() + ", ";
+        message.append(prefix);
+        prefix = ", ";
+        message.append(subsystem.getClass().getSimpleName());
       } catch (Exception e) { Looper.logCrash(new Crash(e)); }
     }
-    console.log(message.substring(0, message.length()-2));
+    console.log(message);
 
     //Fast Update
     Looper.attach(() -> {

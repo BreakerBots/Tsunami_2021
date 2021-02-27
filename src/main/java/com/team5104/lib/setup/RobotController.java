@@ -9,13 +9,14 @@ import com.team5104.lib.Looper.Crash;
 import com.team5104.lib.Looper.Loop;
 import com.team5104.lib.Looper.TimedLoop;
 import com.team5104.lib.console;
+import com.team5104.lib.console.Set;
+import com.team5104.lib.dashboard.Dashboard;
+import com.team5104.lib.setup.RobotState.RobotMode;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.hal.NotifierJNI;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import com.team5104.lib.setup.RobotState.RobotMode;
 
 public class RobotController extends RobotBase {
   private final int notifier = NotifierJNI.initializeNotifier();
@@ -24,14 +25,15 @@ public class RobotController extends RobotBase {
 
   //Init Robot
   public void startCompetition() {
+    //Dashboard
+    System.out.println("ALERT Logs will appear inside the dashboard once connected.");
+    Dashboard.init();
+
     //Logging
-    console.init();
-    if (!RobotState.isSimulation())
-      console.logFile.start();
-    console.sets.create("RobotInit");
+    Set.create("RobotInit");
     if (Constants.robot.name.length() < 4)
-      console.error("Please deploy robot.txt with the correct robot name!");
-    console.log("Initializing " + Constants.robot.name + " Code...");
+      console.error("please deploy robot.txt with the correct robot name!");
+    console.log("initializing " + Constants.robot.name + " Code...");
 
     //Set Child Class
     if (RobotState.isSimulation())
@@ -43,7 +45,7 @@ public class RobotController extends RobotBase {
     HAL.observeUserProgramStarting();
 
     //Logging
-    console.sets.log("RobotInit", "Initialization took ");
+    Set.log("RobotInit", "initialization took ");
 
     //Fast Loop
     Looper.registerLoop(new TimedLoop("Fast", 9, 5));
@@ -78,37 +80,31 @@ public class RobotController extends RobotBase {
     else if (isEnabled()) {
       //Test
       if (isTest()) RobotState.setMode(RobotMode.TEST);
-      
+
       //Auto
       else if (isAutonomous()) RobotState.setMode(RobotMode.AUTONOMOUS);
-      
+
       //Default to Teleop
       else RobotState.setMode(RobotMode.TELEOP);
     }
-    
+
     //Handle Main Disabling
     try {
       if (RobotState.getLastMode() != RobotState.getMode()) {
         if (RobotState.getMode() == RobotMode.DISABLED) {
-          if (!RobotState.isSimulation())
-            console.logFile.end();
           robot.mainStop();
         }
         else if (RobotState.getLastMode() == RobotMode.DISABLED) {
-          if (!RobotState.isSimulation()) {
-            console.logFile.end();
-            console.logFile.start();
-          }
           robot.mainStart();
         }
       }
     } catch (Exception e) { Looper.logCrash(new Crash(e)); }
-    
+
     //Update Main Robot Loop
     try {
       robot.mainLoop();
     } catch (Exception e) { Looper.logCrash(new Crash(e)); }
-    
+
     //Handle Modes
     switch(RobotState.getMode()) {
       case TELEOP: {
@@ -152,18 +148,18 @@ public class RobotController extends RobotBase {
           //Disabled
           if (RobotState.getLastMode() != RobotState.getMode()) {
             switch (RobotState.getLastMode()) {
-              case TELEOP: { 
-                robot.teleopStop(); 
+              case TELEOP: {
+                robot.teleopStop();
                 console.log("Teleop Disabled");
                 break;
               }
               case AUTONOMOUS: {
-                robot.autoStop(); 
+                robot.autoStop();
                 console.log("Autonomous Disabled");
                 break;
               }
-              case TEST: { 
-                robot.testStop(); 
+              case TEST: {
+                robot.testStop();
                 console.log("Test Disabled");
                 break;
               }
@@ -177,8 +173,8 @@ public class RobotController extends RobotBase {
       default: break;
     }
 
-    LiveWindow.setEnabled(RobotState.isEnabled());
-    LiveWindow.updateValues();
+    //LiveWindow.setEnabled(RobotState.isEnabled());
+    //LiveWindow.updateValues();
     if (RobotState.isSimulation()) {
       HAL.simPeriodicBefore();
       HAL.simPeriodicAfter();

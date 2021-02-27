@@ -145,9 +145,6 @@ public class Hood extends ServoSubsystem {
     controller.setP(getKP());
     visionFilter = new MovingAverage(3, 0);
 
-    console.log("ready to home!");
-    setMode(SubsystemMode.HOMING);
-
     configCharacterization(
       () -> encoder.getComponentRevs() * 360d,
       () -> encoder.getComponentRPS() * 360d,

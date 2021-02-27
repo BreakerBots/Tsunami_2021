@@ -10,10 +10,10 @@ import com.team5104.lib.console;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class DataConstructor {
+public class JSONConstructor {
   private LinkedHashMap<String, Object> properties;
 
-  public DataConstructor() {
+  public JSONConstructor() {
     properties = new LinkedHashMap<String, Object>();
   }
 

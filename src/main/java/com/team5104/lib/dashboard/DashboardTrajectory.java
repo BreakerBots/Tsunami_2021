@@ -3,6 +3,7 @@ package com.team5104.lib.dashboard;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.team5104.frc2021.auto.actions.DriveTrajectory;
+import com.team5104.frc2021.auto.paths.ExamplePath;
 import com.team5104.lib.auto.AutoManager;
 import com.team5104.lib.auto.AutoPath;
 import com.team5104.lib.auto.Odometry;
@@ -19,7 +20,7 @@ public class DashboardTrajectory {
   public static void processAndSend(JsonNode trajectoryNodes) throws Exception {
     //process trajectories
     int trajectoriesSize = trajectoryNodes.size();
-    DataConstructor trajectoryData = new DataConstructor();
+    JSONConstructor trajectoryData = new JSONConstructor();
     for (int t = 0; t < trajectoriesSize; t++) {
       JsonNode positionNodes = trajectoryNodes.get(t).get("positions");
       int positionsSize = positionNodes.size();
@@ -36,7 +37,7 @@ public class DashboardTrajectory {
     }
 
     //send trajectories
-    DataConstructor data = new DataConstructor();
+    JSONConstructor data = new JSONConstructor();
     data.put("trajectory", trajectoryData);
     Dashboard.sendMessage(data.toString());
   }
@@ -45,27 +46,32 @@ public class DashboardTrajectory {
   public static void setTargetPath(JsonNode targetPathNode) throws Exception {
     //set target path
     AutoManager.setTargetPath(
-        (AutoPath) Class.forName(targetPathNode.asText()).getConstructor().newInstance()
+        (AutoPath) Class.forName(
+            ExamplePath.class.getPackageName() + "." + targetPathNode.asText()
+        ).getConstructor().newInstance(),
+        true
     );
   }
 
   /** Sends the AutoManager's target path */
   public static void sendTargetPath() {
-    DataConstructor data = new DataConstructor();
-    data.put("targetPath", AutoManager.getTargetPath().getClass().getSimpleName());
-    Dashboard.sendMessage(data.toString());
+    if (AutoManager.getTargetPath() != null) {
+      JSONConstructor data = new JSONConstructor();
+      data.put("targetPath", AutoManager.getTargetPath().getClass().getSimpleName());
+      Dashboard.sendMessage(data.toString());
+    }
   }
 
   /** Sends out Odometry data */
   private static boolean firstOdometryPoint = true;
   public static void sendOdometry() {
-    DataConstructor odometryData = new DataConstructor();
+    JSONConstructor odometryData = new JSONConstructor();
     Position pos = Odometry.getPositionFeet();
     odometryData.put("xfeet", pos.getXFeet());
     odometryData.put("yfeet", pos.getYFeet());
     odometryData.put("deg", pos.getDegrees());
     odometryData.put("first", firstOdometryPoint);
-    DataConstructor data = new DataConstructor();
+    JSONConstructor data = new JSONConstructor();
     data.put("odometry", odometryData);
     Dashboard.sendMessage(data.toString());
     firstOdometryPoint = false;

@@ -1,9 +1,7 @@
 package com.team5104.frc2021;
 
-import com.team5104.frc2021.auto.paths.AutoNavSlalom;
 import com.team5104.frc2021.subsystems.*;
 import com.team5104.lib.auto.AutoManager;
-import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.dashboard.Dashboard;
 import com.team5104.lib.setup.RobotController;
 import com.team5104.lib.subsystem.SubsystemManager;
@@ -13,7 +11,7 @@ public class RobotSim extends RobotController.BreakerRobot {
         //Win
         win();
 
-        //Managers
+        //Subsystems
         SubsystemManager.attach(
             new Drive(),
             new Intake(),
@@ -23,11 +21,6 @@ public class RobotSim extends RobotController.BreakerRobot {
             new Paneler(),
             new Turret()
         );
-
-        //Other Initialization
-        Dashboard.init();
-        Odometry.init();
-        AutoManager.setTargetPath(new AutoNavSlalom());
     }
 
     //Autonomous

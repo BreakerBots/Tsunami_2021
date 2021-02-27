@@ -1,125 +1,65 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package com.team5104.lib;
 
-import com.team5104.lib.Looper.TimedLoop;
-import edu.wpi.first.wpilibj.DriverStation;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.wpi.first.wpilibj.Timer;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-/**
- * <h1>Console</h1>
- * A class for handling logging/printing
- */
+/** Handles all robot logging
+ * Outputs to the Dashboard (pref) or Driver Station console (System.out) */
 public class console {
 
-    public static final boolean OVERWRITE_NON_MATCH_LOGS = true;
-    public static final boolean OVERWRITE_MATCH_LOGS = false;
-
-    /** Types of Logging */
+    // Types
     private enum Type {
-        ERROR("ERROR "), INFO(""), WARNING("WARNING ");
-        String message;
-
-        Type(String message) { this.message = message; }
+        ERROR, INFO, WARN;
     }
 
-    // -- Logging Methods
-
+    // Logging Methods
     /** Prints out text in a separate thread (lowest priority) and adds prints to a text file (if Console.logFile.isLogging)
      * Examples:
      * 2.12 [Robot]: Message
      * 90.12 ERROR [subsystems.Turret]: Message */
     private static void logBase(int stackCount, Type type, Object... data) {
-        String location = new Throwable().getStackTrace()[stackCount].getClassName();
-        if (location.indexOf("com.team5104.") != -1)
-            location = location.substring("com.team5104.".length());
-        String f = round(Timer.getFPGATimestamp(), 2) + ": " + type.message + "[" + location + "]: " + parseAndRound(2, data);
-        addToPrintBuffer(f);
-        if (logFile.isLogging)
-            logFile.log += f + "\n";
+        StackTraceElement trace = new Throwable().getStackTrace()[stackCount];
+        addToBuffer(new Log(
+            Timer.getFPGATimestamp(),
+            type,
+            trace.getClassName(),
+            trace.getLineNumber(),
+            data
+        ));
     }
     /** Prints out text to the console under the type "INFO" and category "OTHER" */
     public static void log(Object... data) { logBase(2, Type.INFO, data); }
     /** Prints out text to the console under the type "ERROR" and category "OTHER" */
     public static void error(Object... data) { logBase(2, Type.ERROR, data); }
     /** Prints out text to the console under the type "WARN" and category "OTHER" */
-    public static void warn(Object... data) { logBase(2, Type.WARNING, data); }
+    public static void warn(Object... data) { logBase(2, Type.WARN, data); }
 
-
-    // -- Parse
-
-    /** Parses multiple objects into one string (no rounding). The same function as used when normally calling console.log() */
-    public static String parse(Object... data) {
-        String returnString = "";
-        for (int dataIndex = 0; dataIndex < data.length; dataIndex++) {
-            returnString += data[dataIndex] + (dataIndex != (data.length - 1) ? ", " : "");
-        }
-        return returnString;
+    // System Logging/Thread/Loop
+    private static volatile List<Log> buffer = Collections.synchronizedList(new ArrayList<Log>());
+    public static List<Log> readBuffer() {
+        return buffer;
     }
-
-    /** Rounds all doubles, then parses multiple objects into one string. The same function as used when normally calling console.log(). */
-    public static String parseAndRound(int decimalPlaces, Object... data) {
-        String returnString = "";
-        for (int dataIndex = 0; dataIndex < data.length; dataIndex++) {
-            if (data[dataIndex] instanceof Double)
-                returnString += round(((Double) data[dataIndex]).doubleValue(), decimalPlaces);
-            else returnString += data[dataIndex];
-            returnString += (dataIndex != (data.length - 1) ? ", " : "");
-        }
-        return returnString;
+    public static void clearBuffer() {
+        buffer.clear();
     }
-
-    /** Parts a list of objects into a CC (colon-comma) pattern. Output will be "v1: v2, v3: v4..." Rounds all doubles to 2 decimal places */
-    public static String parseCCPattern(Object... data) {
-        String returnString = "";
-        for (int dataIndex = 0; dataIndex < data.length; dataIndex++) {
-            if (data[dataIndex] instanceof Double)
-                returnString += round(((Double) data[dataIndex]).doubleValue(), 2);
-            else returnString += data[dataIndex];
-            returnString += (dataIndex % 2 == 0) ? (": ") : (dataIndex != (data.length - 1) ? ", " : "");
-        }
-        return returnString;
+    public static boolean hasBuffer() {
+        return buffer.size() > 0;
     }
-
-    // -- Rounding
-
-    /** Rounds a number to 2 decimal places */
-    public static String round(double number) { return round(number, 2); }
-
-    /** Rounds a number to N decimal places */
-    public static String round(double number, int decimalPlaces) {
-        return String.format("%." + ((int) Util.limit(decimalPlaces, 0, 10)) + "f", number);
-    }
-
-    // -- System Logging/Thread/Loop
-    private static volatile List<String> buffer = Collections.synchronizedList(new ArrayList<String>());
-    public static void init() {
-        Looper.registerLoop(new TimedLoop("Console", () -> {
-            try {
-                StringBuilder build = new StringBuilder();
-                for (Iterator<String> iterator = buffer.iterator(); iterator.hasNext();) {
-                    build.append(iterator.next() + "\n");
-                }
-                buffer.clear();
-                System.out.print(build.toString());
-            } catch (Exception e) {}
-        }, 1, 100));
-    }
-    public static void addToPrintBuffer(String line) {
+    public static void addToBuffer(Log line) {
         buffer.add(line);
     }
 
-    // -- Timing Groups/Sets
-    public static class sets {
+    // Timing Groups/Sets
+    public static class Set {
+        // TODO: Plz rewrite
         public static final int MaxSets = 10;
         public static String[] sn = new String[MaxSets];
         public static long[] sv = new long[MaxSets];
@@ -184,108 +124,45 @@ public class console {
         /** Similar to normal "console.log" with the time of a timing group/set appended
          * @param a               The text to print out
          * @param timingGroupName The name of the timing group/set */
-        public static void log(String timingGroupName, Object... a) {
-            console.logBase(2, Type.INFO, parse(a) + " " + String.format("%.2f", getTime(timingGroupName)) + "s");
+        public static void log(String timingGroupName, String a) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(a);
+            builder.append(getTime(timingGroupName));
+            builder.append("s");
+            console.logBase(2, Type.INFO, builder.toString());
         }
     }
 
-    //  --  File Logging
-    public static class logFile {
-        private static String log = "";
-        public static boolean isLogging = false;
+    //Log Object
+    @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
+    public static class Log {
+        @JsonProperty("timestamp")
+        private double timestamp;
+        @JsonProperty("type")
+        private Type type;
+        @JsonProperty("location")
+        private String location;
+        @JsonProperty("lineNumber")
+        private int lineNumber;
+        @JsonProperty("data")
+        private Object[] data;
 
-        /**
-         * Starts Recording the "console.logs" into a string that can be saved with "console.logFile.end()"
-         * If the logger is already logging it will not clear the log, but just do nothing
-         */
-        public static void start() {
-            if (!isLogging) {
-                isLogging = true;
-                log = "";
-            }
+        public Log(double timestamp, Type type, String location, int lineNumber, Object[] data) {
+            this.timestamp = timestamp;
+            this.type = type;
+            this.location = location;
+            this.lineNumber = lineNumber;
+            this.data = data;
         }
 
-        /**
-         * Saves the log string that is logged onto after calling "console.logFile.start()"
-         * Match => "MatchLog" if Constants.SaveMatchLogs
-         * Other => "GeneralLog" if Constants.SaveNonMatchLogs
-         */
-        public static void end() {
-            try {
-                if (isLogging) {
-                    isLogging = false;
-                    boolean hasFMS = DriverStation.getInstance().isFMSAttached();
-
-                    //File Path
-                    String filePath = "/home/lvuser/" + (hasFMS ? "MatchLog/" : "GeneralLog/");
-                    String fileName;
-
-                    //File Name
-                    if (hasFMS ? OVERWRITE_MATCH_LOGS : OVERWRITE_NON_MATCH_LOGS)
-                        fileName = "log.txt";
-                    else
-                        fileName = DateTimeFormatter.ofPattern("MM-dd-yyyy_HH-mm").format(LocalDateTime.now()) + ".txt";
-
-                    File directory = new File(filePath);
-                    if (!directory.exists())
-                        directory.mkdir();
-
-                    //Save File
-                    PrintWriter writer = new PrintWriter(filePath + fileName, StandardCharsets.UTF_8);
-                    writer.print(log);
-                    writer.close();
-                }
-            } catch (Exception e) { console.error(e); }
-        }
-    }
-
-    // -- Timed Printing
-    public static class timedPrinter {
-
-        private static final ArrayList<TimedPrinter> printers = new ArrayList<TimedPrinter>();
-
-        private static void create(String printerId, int deltaLoops) {
-            printers.add(new TimedPrinter(printerId, deltaLoops));
-        }
-
-        private static TimedPrinter get(String printerId, int deltaLoops) {
-            printerId = printerId.toLowerCase();
-            for (TimedPrinter printer : printers) {
-                if (printer.id.equals(printerId))
-                    return printer;
-            }
-            create(printerId, deltaLoops);
-            return get(printerId, deltaLoops);
-        }
-
-        /**
-         * Returns if you should print that loop
-         *
-         * @param printerId  A string identifier for the printer. If it doesnt exist it will make it.
-         * @param deltaLoops
-         */
-        public static boolean shouldPrint(String printerId, int deltaLoops) {
-            return get(printerId, deltaLoops).get();
-        }
-
-        private static class TimedPrinter {
-            String id;
-            int deltaLoops;
-            int i = 1;
-
-            public TimedPrinter(String id, int deltaLoops) {
-                this.id = id;
-                this.deltaLoops = deltaLoops;
-            }
-
-            public boolean get() {
-                i++;
-                if (i > deltaLoops) {
-                    i = 1;
-                    return true;
-                }
-                return false;
-            }
+        public String getLogString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append(type.name());
+            builder.append(" [");
+            builder.append(location);
+            builder.append("]: ");
+            builder.append(Arrays.toString(data));
+            return builder.toString();
         }
     }
 }

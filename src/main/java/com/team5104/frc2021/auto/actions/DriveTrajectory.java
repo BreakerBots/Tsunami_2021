@@ -9,6 +9,7 @@ import com.team5104.lib.auto.AutoAction;
 import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.auto.Position;
 import com.team5104.lib.console;
+import com.team5104.lib.console.Set;
 import com.team5104.lib.dashboard.DashboardTrajectory;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -89,7 +90,7 @@ public class DriveTrajectory extends AutoAction {
   }
 
   public void init() {
-    console.sets.create("RunTrajectoryTime");
+    Set.create("RunTrajectoryTime");
     console.log("Running Trajectory");
     lastTime = 0;
     Trajectory.State initialState = trajectory.sample(0);
@@ -158,7 +159,7 @@ public class DriveTrajectory extends AutoAction {
     Drive.set(new DriveSignal()); //stop
     console.log(
         "Trajectory Finished in " +
-        console.sets.getTime("RunTrajectoryTime") + "s" +
+        Set.getTime("RunTrajectoryTime") + "s" +
         ", at: " + Odometry.getPositionFeet()
     );
   }

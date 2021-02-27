@@ -10,13 +10,7 @@ import edu.wpi.first.wpilibj.util.Units;
 
 /** keeps of the position of the robot relative to the field (in x, y, angle) */
 public class Odometry {
-  private static DifferentialDriveOdometry odometry;
-
-  public static void init() {
-    Drive.zero();
-    odometry = new DifferentialDriveOdometry(new Rotation2d());
-    console.log("initialized");
-  }
+  private static DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d());
 
   public static void update() {
     if (odometry != null) {

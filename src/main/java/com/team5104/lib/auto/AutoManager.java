@@ -46,8 +46,14 @@ public class AutoManager {
 
   //Init
   public static void setTargetPath(AutoPath path) {
+    setTargetPath(path, false);
+  }
+  public static void setTargetPath(AutoPath path, boolean dontSend) {
     console.log("target path is now " + path.getClass().getSimpleName());
     targetPath = path;
+    if (!dontSend) {
+      DashboardTrajectory.sendTargetPath();
+    }
   }
   public static AutoPath getTargetPath() {
     return targetPath;

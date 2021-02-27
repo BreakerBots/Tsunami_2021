@@ -1,15 +1,12 @@
 /*BreakerBots Robotics Team 2020*/
 package com.team5104.frc2021;
 
-import com.team5104.frc2021.auto.paths.ExamplePath;
 import com.team5104.frc2021.subsystems.*;
 import com.team5104.frc2021.teleop.DriveController;
 import com.team5104.frc2021.teleop.SuperstructureController;
 import com.team5104.lib.Compressor;
-import com.team5104.lib.controller.XboxController;
 import com.team5104.lib.auto.AutoManager;
-import com.team5104.lib.auto.Odometry;
-import com.team5104.lib.console;
+import com.team5104.lib.controller.XboxController;
 import com.team5104.lib.devices.Limelight;
 import com.team5104.lib.setup.RobotController;
 import com.team5104.lib.subsystem.SubsystemManager;
@@ -18,9 +15,9 @@ import com.team5104.lib.teleop.TeleopControllerManager;
 public class Robot extends RobotController.BreakerRobot {
   public Robot() {
     //Win
-    this.win();
+    win();
 
-    //Managers
+    //Subsystems
     SubsystemManager.attach(
       new Drive(),
       new Intake(),
@@ -31,16 +28,16 @@ public class Robot extends RobotController.BreakerRobot {
       new Climber(),
       new Paneler()
     );
+
+    //Teleop Controllers
     TeleopControllerManager.useTeleopControllers(
       new DriveController(),
       new SuperstructureController()
     );
 
-    //Other Initialization
-    Odometry.init();
+    //Other
     Limelight.init(true);
     Compressor.stop();
-    AutoManager.setTargetPath(new ExamplePath());
     Superstructure.init();
   }
 
@@ -82,7 +79,6 @@ public class Robot extends RobotController.BreakerRobot {
     Superstructure.reset();
     SubsystemManager.reset();
     Compressor.stop();
-    console.logFile.end();
   }
   public void mainLoop() {
     Superstructure.update();

@@ -10,6 +10,7 @@ import com.team5104.lib.Looper.Crash;
 import com.team5104.lib.Looper.Loop;
 import com.team5104.lib.Looper.TimedLoop;
 import com.team5104.lib.console;
+import com.team5104.lib.console.Log;
 import com.team5104.lib.setup.RobotState;
 import com.team5104.lib.setup.RobotState.RobotMode;
 import com.team5104.lib.subsystem.Subsystem;
@@ -23,6 +24,9 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class Dashboard extends WebSocketServer {
   private static WebSocket connection, lastConnection;
@@ -38,30 +42,53 @@ public class Dashboard extends WebSocketServer {
     }, 2));
 
     Looper.registerLoop(new TimedLoop("Dashboard-Send", () -> {
-      DataConstructor data = new DataConstructor();
+      if (!isConnected()) {
+        //print to System.out if not connected
+        if (console.hasBuffer()) {
+          List<Log> buffer = console.readBuffer();
+          StringBuilder builder = new StringBuilder();
+          for (Iterator<Log> iterator = buffer.iterator(); iterator.hasNext();) {
+            builder.append(iterator.next().getLogString() + "\n");
+          }
+          System.out.print(builder.toString());
+          console.clearBuffer();
+        }
+
+        //dont send anything if not connected
+        return;
+      }
+
+      //data constructor
+      JSONConstructor data = new JSONConstructor();
 
       //page data
-      DataConstructor pageData = getPageData(false);
+      JSONConstructor pageData = getPageData(false);
       if (pageData != null) {
         data.put("pageData", pageData);
       }
 
       //status data
-      DataConstructor robotData = new DataConstructor();
+      JSONConstructor robotData = new JSONConstructor();
       robotData.put("fpgaTimestamp", (int) Timer.getFPGATimestamp());
       robotData.put("batteryVoltage", RobotController.getBatteryVoltage());
       robotData.put("mode", RobotState.getMode().toString());
       data.put("robotData", robotData);
 
+      //logs
+      if (console.hasBuffer()) {
+        data.put("logs", new ArrayList(console.readBuffer()));
+        console.clearBuffer();
+      }
+
       //#sendit
       sendMessage(data.toString());
 
-      //kill off
-      killOffOld();
+      //kill extra connections
+      killExtraConnections();
     }, 1, 500));
   }
-  public static DataConstructor getPageData(boolean init) {
-    DataConstructor pageData = new DataConstructor();
+  public static JSONConstructor getPageData(boolean init) {
+    JSONConstructor pageData = new JSONConstructor();
     pageData.put("url", url);
 
     //home
@@ -87,9 +114,9 @@ public class Dashboard extends WebSocketServer {
     }
     return null; //dont return empty data
   }
-  public static void killOffOld() {
+  public static void killExtraConnections() {
     if (lastConnection != null && lastConnection.isOpen()) {
-      DataConstructor data = new DataConstructor();
+      JSONConstructor data = new JSONConstructor();
       data.put("die", true); //get rekt m8
       lastConnection.send(data.toString());
     }
@@ -111,9 +138,9 @@ public class Dashboard extends WebSocketServer {
         url = node.get("url").asText();
 
         //url inits
-        DataConstructor pageData = getPageData(true);
+        JSONConstructor pageData = getPageData(true);
         if (pageData != null) {
-          DataConstructor data = new DataConstructor();
+          JSONConstructor data = new JSONConstructor();
           data.put("pageData", pageData);
           sendMessage(data.toString());
         }
@@ -145,7 +172,7 @@ public class Dashboard extends WebSocketServer {
     lastConnection = this.connection;
     connection = newConnection;
     if (lastConnection != null && lastConnection.isOpen()) {
-      killOffOld();
+      killExtraConnections();
       console.log("new connection - replacing other");
     }
     else {
@@ -153,8 +180,8 @@ public class Dashboard extends WebSocketServer {
     }
 
     //welcome package
-    DataConstructor data = new DataConstructor();
-    DataConstructor robotData = new DataConstructor();
+    JSONConstructor data = new JSONConstructor();
+    JSONConstructor robotData = new JSONConstructor();
     robotData.put("name", Constants.robot.name);
     robotData.put("inSim", RobotState.isSimulation());
     data.put("robotData", robotData);
