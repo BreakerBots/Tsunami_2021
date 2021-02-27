@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.Constraints;
 
 public class PositionController {
-    private final Timer timer = new Timer();
     private final ProfiledPIDController pid;
     private final SimpleMotorFeedforward ff;
     private double lastVelocity, lastPIDOutput, lastFFOutput, lastOutput,
@@ -25,7 +24,7 @@ public class PositionController {
     }
 
     public double calculate(double currentPosition, double targetPosition) {
-        double curTime = timer.get();
+        double curTime = Timer.getFPGATimestamp();
         double dt = curTime - lastTime;
 
         lastPIDOutput = pid.calculate(currentPosition, targetPosition);
