@@ -10,6 +10,8 @@ import com.team5104.lib.MovingAverage;
 import com.team5104.lib.console;
 import com.team5104.lib.devices.Limelight;
 import com.team5104.lib.devices.Limelight.LEDMode;
+import com.team5104.lib.setup.RobotState;
+import com.team5104.lib.setup.RobotState.RobotMode;
 
 /** The Superstructure is a massive state machine for all subsystems, except drive. */
 @JsonPropertyOrder({ "mode", "panelState", "target" })
@@ -29,16 +31,15 @@ public class Superstructure {
   private static PanelState panelState = PanelState.ROTATION;
   private static FlywheelState flywheelState = FlywheelState.STOPPED;
   private static Target target = Target.HIGH;
-  private static boolean isEnabled;
   private static LatchedBoolean flywheelOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING), hoodOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING),
                   turretOnTarget = new LatchedBoolean(LatchedBooleanMode.RISING), limelightOn = new LatchedBoolean();
   private static MovingAverage readyToFire = new MovingAverage(15, false);
 
   //External Functions
-  public static boolean isEnabled() { return isEnabled; }
-  public static boolean isDisabled() { return !isEnabled; }
-  public static void enable() { isEnabled = true; }
-  public static void disable() { isEnabled = false; }
+  public static boolean isEnabled() {
+    return RobotState.isEnabled() && RobotState.getMode() != RobotMode.TEST;
+  }
+  public static boolean isDisabled() { return !isEnabled(); }
 
   public static boolean is(Mode mode) { return mode == Superstructure.mode; }
   @JsonGetter("mode")
