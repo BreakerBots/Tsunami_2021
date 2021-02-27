@@ -26,12 +26,8 @@ public class RobotSim extends RobotController.BreakerRobot {
 
         //Other Initialization
         Dashboard.init();
-//        Webapp.run();
-//        Plotter.reset();
         Odometry.init();
         AutoManager.setTargetPath(new AutoNavSlalom());
-//        AutoManager.runTrajectoryTester();
-//        AutoManager.enabledPlotting();
     }
 
     //Autonomous

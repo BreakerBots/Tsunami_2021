@@ -1,7 +1,6 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package com.team5104.lib.auto;
 
-import com.team5104.frc2021.auto.actions.DriveTrajectory;
 import com.team5104.lib.Compressor;
 import com.team5104.lib.Looper;
 import com.team5104.lib.Looper.Crash;
@@ -10,13 +9,9 @@ import com.team5104.lib.console;
 import com.team5104.lib.dashboard.DashboardTrajectory;
 import com.team5104.lib.setup.RobotState;
 import com.team5104.lib.subsystem.Characterizer;
-import com.team5104.lib.webapp.Plotter;
-import com.team5104.lib.webapp.Plotter.InputMode;
-import com.team5104.lib.webapp.Webapp;
 
 /** manages the running of an autonomous path and characterizing */
 public class AutoManager {
-  private static boolean plottingEnabled;
   private static AutoPath targetPath;
   private static Thread pathThread;
 
@@ -74,38 +69,5 @@ public class AutoManager {
 
     //update odometry
     Odometry.update();
-  }
-
-  //Plotting
-  public static void enabledPlotting() {
-    plottingEnabled = true;
-  }
-  public static boolean plottingEnabled() {
-    return plottingEnabled;
-  }
-
-  //Trajectory Tester
-  public static void runTrajectoryTester() {
-    Plotter.setInputMode(InputMode.TRAJECTORY);
-    Plotter.setInputListener((data) -> {
-      boolean reversed = Webapp.getJSONValue(data, "reversed") == "\"true\"";
-      String[] pointStrings = data
-          .substring(data.indexOf("points\":")+9, data.indexOf("}")-1)
-          .replaceAll("\"", "")
-          .split("]");
-
-      Position[] positions = new Position[pointStrings.length];
-      for (int i = 0; i < positions.length; i++) {
-        String str = pointStrings[i].substring(pointStrings[i].charAt(0)==','?2:1);
-        double x = Double.valueOf(str.substring(0, str.indexOf(",")));
-        double y = Double.valueOf(str.substring(str.indexOf(",")+1, str.lastIndexOf(",")));
-        double angle = Double.valueOf(str.substring(str.lastIndexOf(",")+1));
-        positions[i] = new Position(x, y, angle);
-      }
-
-      try {
-        new DriveTrajectory(reversed, positions);
-      } catch (Exception e) { }
-    });
   }
 }

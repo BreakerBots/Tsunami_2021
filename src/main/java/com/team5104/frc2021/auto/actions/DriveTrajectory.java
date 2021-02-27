@@ -6,12 +6,10 @@ import com.team5104.frc2021.subsystems.Drive;
 import com.team5104.frc2021.teleop.DriveController.DriveSignal;
 import com.team5104.frc2021.teleop.DriveController.DriveSignal.DriveUnit;
 import com.team5104.lib.auto.AutoAction;
-import com.team5104.lib.auto.AutoManager;
 import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.auto.Position;
 import com.team5104.lib.console;
 import com.team5104.lib.dashboard.DashboardTrajectory;
-import com.team5104.lib.webapp.Plotter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -84,18 +82,10 @@ public class DriveTrajectory extends AutoAction {
       );
     leftController = new PIDController(Constants.drive.KP, 0, Constants.drive.KD);
     rightController = new PIDController(Constants.drive.KP, 0, Constants.drive.KD);
-
-    if (AutoManager.plottingEnabled())
-      Plotter.plotAll(Position.fromStates(trajectory.getStates()), Plotter.Color.RED);
   }
 
   public List<State> getPoints() {
     return trajectory.getStates();
-  }
-
-  @Deprecated
-  public void plot() {
-    Plotter.plotAll(Position.fromStates(trajectory.getStates()), Plotter.Color.RED);
   }
 
   public void init() {
@@ -156,11 +146,6 @@ public class DriveTrajectory extends AutoAction {
         DriveUnit.VOLTAGE
     ));
 
-    if (AutoManager.plottingEnabled()) {
-      Plotter.plot(Odometry.getPositionFeet().getXFeet(),
-                   Odometry.getPositionFeet().getYFeet(),
-                   Plotter.Color.ORANGE);
-    }
     DashboardTrajectory.sendOdometry();
   }
 

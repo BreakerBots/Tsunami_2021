@@ -14,8 +14,6 @@ import com.team5104.lib.devices.Limelight;
 import com.team5104.lib.setup.RobotController;
 import com.team5104.lib.subsystem.SubsystemManager;
 import com.team5104.lib.teleop.TeleopControllerManager;
-import com.team5104.lib.webapp.Plotter;
-import com.team5104.lib.webapp.Webapp;
 
 public class Robot extends RobotController.BreakerRobot {
   public Robot() {
@@ -39,13 +37,10 @@ public class Robot extends RobotController.BreakerRobot {
     );
 
     //Other Initialization
-    Webapp.run();
-    Plotter.reset();
     Odometry.init();
     Limelight.init(true);
     Compressor.stop();
     AutoManager.setTargetPath(new ExamplePath());
-    AutoManager.enabledPlotting();
     Superstructure.init();
   }
 
