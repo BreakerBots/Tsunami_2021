@@ -16,7 +16,7 @@ public class Constants {
         public double KD = 0;
         public double KLS = 0.162;
         public double KLV = 1.98;
-        public double KLA = 0.2;
+        public double KLA = 0.0991;
         public double KAS = 0.66;
         public double KAV = 1.5;
         public double KAA = 0.3;
