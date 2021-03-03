@@ -1,7 +1,7 @@
 /*BreakerBots Robotics Team 2020*/
 package com.team5104.frc2021;
 
-import com.team5104.frc2021.auto.paths.GalacticDefault;
+import com.team5104.frc2021.auto.paths.ExamplePath;
 import com.team5104.frc2021.subsystems.*;
 import com.team5104.frc2021.teleop.DriveController;
 import com.team5104.frc2021.teleop.SuperstructureController;
@@ -40,7 +40,7 @@ public class Robot extends RobotController.BreakerRobot {
     Limelight.init(true);
     Compressor.stop();
     Superstructure.init();
-    AutoManager.setTargetPath(new GalacticDefault());
+    AutoManager.setTargetPath(new ExamplePath());
     Drive.zero();
   }
 
