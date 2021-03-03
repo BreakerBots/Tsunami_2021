@@ -2,12 +2,13 @@
 package com.team5104.frc2021.teleop;
 
 import com.team5104.frc2021.Controls;
-import com.team5104.lib.teleop.TeleopController;
 import com.team5104.frc2021.subsystems.Drive;
+import com.team5104.frc2021.teleop.DriveController.DriveSignal.DriveUnit;
+import com.team5104.lib.teleop.TeleopController;
 
 public class DriveController extends TeleopController {
-  private static final double MIN_SPEED_FORWARD = 0.66; //volts
-  private static final double MIN_SPEED_TURN = 0.66; //volts
+  private static final double MIN_SPEED_FORWARD = 0.055; //volts
+  private static final double MIN_SPEED_TURN = 0.055; //volts
   private static final double KICKSTAND_SCALAR = 0.2; //percent
   private static final double TURN_SPEED_ADJ = 0.2; //percent - reduces turning bases on forward velocity
   private boolean kickstand = false;
@@ -33,7 +34,7 @@ public class DriveController extends TeleopController {
     DriveSignal signal = new DriveSignal(
         (forward + turn) * 12,
         (forward - turn) * 12,
-        DriveSignal.DriveUnit.VOLTAGE
+        DriveUnit.VOLTAGE
     );
     if (kickstand) {
       signal.leftSpeed *= KICKSTAND_SCALAR;
@@ -43,20 +44,21 @@ public class DriveController extends TeleopController {
     return signal;
   }
   private static DriveSignal applyMinSpeed(DriveSignal signal) {
-    //reverse kinematics
-    double turn = Math.abs(signal.leftSpeed - signal.rightSpeed) / 2;
-    double biggerMax = (Math.abs(signal.leftSpeed) > Math.abs(signal.rightSpeed) ? Math.abs(signal.leftSpeed) : Math.abs(signal.rightSpeed));
+    double leftPercent = signal.leftSpeed / 12.0d;
+    double rightPercent = signal.rightSpeed / 12.0d;
+    double turn = Math.abs(leftPercent - rightPercent) / 2.0d;
+    double biggerMax = (Math.abs(leftPercent) > Math.abs(rightPercent) ? Math.abs(leftPercent) : Math.abs(rightPercent));
     if (biggerMax != 0)
       turn = Math.abs(turn / biggerMax);
     double forward = 1 - turn;
 
     double minSpeed;
-    minSpeed = (forward * (MIN_SPEED_FORWARD)) + (turn * (MIN_SPEED_TURN));
+    minSpeed = (forward * (MIN_SPEED_FORWARD / 12.0d)) + (turn * (MIN_SPEED_TURN / 12.0d));
 
-    if (signal.leftSpeed != 0)
-      signal.leftSpeed = signal.leftSpeed * (1 - minSpeed) + (signal.leftSpeed > 0 ? minSpeed : -minSpeed);
-    if (signal.rightSpeed != 0)
-      signal.rightSpeed = signal.rightSpeed * (1 - minSpeed) + (signal.rightSpeed > 0 ? minSpeed : -minSpeed);
+    if (leftPercent != 0)
+      signal.leftSpeed = signal.leftSpeed * (1 - minSpeed) + (leftPercent > 0 ? minSpeed : -minSpeed);
+    if (rightPercent != 0)
+      signal.rightSpeed = signal.rightSpeed * (1 - minSpeed) + (rightPercent > 0 ? minSpeed : -minSpeed);
 
     return signal;
   }

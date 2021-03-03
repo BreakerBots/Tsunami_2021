@@ -94,8 +94,10 @@ public class Dashboard extends WebSocketServer {
     //home
     if (url.equals("/")) {
       pageData.put("Superstructure", new Superstructure());
-      for (Subsystem subsystem : SubsystemManager.getSubsystems()) {
-        pageData.put(subsystem.getClass().getSimpleName(), subsystem);
+      if (SubsystemManager.getSubsystems() != null) {
+        for (Subsystem subsystem : SubsystemManager.getSubsystems()) {
+          pageData.put(subsystem.getClass().getSimpleName(), subsystem);
+        }
       }
     }
     if (url.equals("/controls") && init) {
