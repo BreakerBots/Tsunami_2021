@@ -12,6 +12,11 @@ import edu.wpi.first.wpilibj.util.Units;
 public class Odometry {
   private static DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d());
 
+  public static void init() {
+    odometry = new DifferentialDriveOdometry(new Rotation2d());
+    console.log("initialized");
+  }
+
   public static void update() {
     if (odometry != null) {
       odometry.update(

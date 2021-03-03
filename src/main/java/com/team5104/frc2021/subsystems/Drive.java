@@ -69,7 +69,7 @@ public class Drive extends ServoSubsystem {
   }
 
   //External Functions
-  public static void set(DriveSignal signal) { com.team5104.frc2021.subsystems.Drive.signal = signal; }
+  public static void set(DriveSignal signal) { Drive.signal = signal; }
   public static double getHeading() {
     return (gyro == null) ? 0 : gyro.get();
   }

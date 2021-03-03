@@ -7,6 +7,7 @@ import com.team5104.frc2021.teleop.DriveController;
 import com.team5104.frc2021.teleop.SuperstructureController;
 import com.team5104.lib.Compressor;
 import com.team5104.lib.auto.AutoManager;
+import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.controller.XboxController;
 import com.team5104.lib.devices.Limelight;
 import com.team5104.lib.setup.RobotController;
@@ -38,9 +39,10 @@ public class Robot extends RobotController.BreakerRobot {
 
     //Other
     Limelight.init(true);
-    Compressor.stop();
+    Odometry.init();
     Superstructure.init();
     AutoManager.setTargetPath(new ExamplePath());
+    Compressor.stop();
     Drive.zero();
   }
 
