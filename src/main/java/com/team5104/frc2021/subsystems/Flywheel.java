@@ -48,6 +48,7 @@ public class Flywheel extends ServoSubsystem {
   }
   private void setVoltage(double volts) {
     motor1.set(ControlMode.PercentOutput, volts / motor1.getBusVoltage());
+    motor2.follow(motor1);
   }
   private void setPercentOutput(double percent) {
     motor1.set(ControlMode.PercentOutput, percent);

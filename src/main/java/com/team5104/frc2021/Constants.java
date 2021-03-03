@@ -40,7 +40,7 @@ public class Constants {
         public double MAX_ACC = 0;
         public double GEARING = 24.0 * 44.0;
 
-        public boolean OPEN_LOOP = false;
+        public boolean OPEN_LOOP = true;
         public double RAMP_RATE_UP = 0.7;
         public double RAMP_RATE_DOWN = 3;
         public double RPM_TOL = 500;
@@ -77,7 +77,7 @@ public class Constants {
         public double MAX_ACC = 0;
         public double GEARING = 70.0 * 12.0;
 
-        public double BALL_SIZE = 2;
+        public double BALL_SIZE = 3;
         public double TOLERANCE = 0.05;
         public double START_SPEED_INTAKING = 7;
         public double START_SPEED_INDEXING = 0.5;
