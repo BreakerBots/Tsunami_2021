@@ -3,7 +3,6 @@ package com.team5104.frc2021.teleop;
 
 import com.team5104.frc2021.Controls;
 import com.team5104.frc2021.subsystems.Drive;
-import com.team5104.frc2021.teleop.DriveController.DriveSignal.DriveUnit;
 import com.team5104.lib.teleop.TeleopController;
 
 public class DriveController extends TeleopController {
@@ -33,56 +32,56 @@ public class DriveController extends TeleopController {
   public static DriveSignal get(double turn, double forward, boolean kickstand) {
     DriveSignal signal = new DriveSignal(
         (forward + turn) * 12,
-        (forward - turn) * 12,
-        DriveUnit.VOLTAGE
+        (forward - turn) * 12
     );
     if (kickstand) {
-      signal.leftSpeed *= KICKSTAND_SCALAR;
-      signal.rightSpeed *= KICKSTAND_SCALAR;
+      signal.leftVolts *= KICKSTAND_SCALAR;
+      signal.rightVolts *= KICKSTAND_SCALAR;
     }
-    signal = applyMinSpeed(signal);
+    applyMinSpeed(signal);
     return signal;
   }
-  private static DriveSignal applyMinSpeed(DriveSignal signal) {
-    double leftPercent = signal.leftSpeed / 12.0d;
-    double rightPercent = signal.rightSpeed / 12.0d;
-    double turn = Math.abs(leftPercent - rightPercent) / 2.0d;
-    double biggerMax = (Math.abs(leftPercent) > Math.abs(rightPercent) ? Math.abs(leftPercent) : Math.abs(rightPercent));
-    if (biggerMax != 0)
-      turn = Math.abs(turn / biggerMax);
-    double forward = 1 - turn;
+  private static void applyMinSpeed(DriveSignal signal) {
+    double forward = (signal.leftVolts + signal.rightVolts) / 2.0d; //volts -12 to 12
+    double turn = signal.leftVolts - forward; //volts -12 to 12
 
-    double minSpeed;
-    minSpeed = (forward * (MIN_SPEED_FORWARD / 12.0d)) + (turn * (MIN_SPEED_TURN / 12.0d));
+    //min speed volts 0-12
+    double combined = Math.abs(forward) + Math.abs(turn);
+    double minSpeed = Math.abs(forward) / combined * MIN_SPEED_FORWARD +
+                      Math.abs(turn) / combined * MIN_SPEED_TURN;
 
-    if (leftPercent != 0)
-      signal.leftSpeed = signal.leftSpeed * (1 - minSpeed) + (leftPercent > 0 ? minSpeed : -minSpeed);
-    if (rightPercent != 0)
-      signal.rightSpeed = signal.rightSpeed * (1 - minSpeed) + (rightPercent > 0 ? minSpeed : -minSpeed);
+    //slope 0-12
+    double slope = (12.0d - minSpeed) / 12.0d;
 
-    return signal;
+    //add in min speed, but also angle the voltage slope down to account for min speed
+    if (signal.leftVolts != 0) {
+      signal.leftVolts = (signal.leftVolts * slope) + (minSpeed * Math.signum(signal.leftVolts));
+    }
+    if (signal.rightVolts != 0) {
+      signal.rightVolts = (signal.rightVolts * slope) + (minSpeed * Math.signum(signal.rightVolts));
+    }
   }
 
   //Drive Signal
   /** A simple class for sending/saving drive-train movement signals. */
   public static class DriveSignal {
-      public enum DriveUnit {VOLTAGE, STOP}
+      public enum DriveMode {DRIVING, STOPPED}
 
-      public double leftSpeed, rightSpeed;
-      public DriveUnit unit;
+      public double leftVolts, rightVolts;
+      public DriveMode mode;
 
       public DriveSignal() {
-          this(0, 0, DriveUnit.STOP);
+          this.mode = DriveMode.STOPPED;
       }
 
-      public DriveSignal(double leftSpeed, double rightSpeed, DriveUnit unit) {
-          this.leftSpeed = leftSpeed;
-          this.rightSpeed = rightSpeed;
-          this.unit = unit;
+      public DriveSignal(double leftVolts, double rightVolts) {
+          this.leftVolts = leftVolts;
+          this.rightVolts = rightVolts;
+          this.mode = DriveMode.DRIVING;
       }
 
       public String toString() {
-          return "l: " + leftSpeed + ", r: " + rightSpeed + ", unit: " + unit;
+          return "lv: " + leftVolts + ", rv: " + rightVolts + ", unit: " + mode;
       }
   }
 }

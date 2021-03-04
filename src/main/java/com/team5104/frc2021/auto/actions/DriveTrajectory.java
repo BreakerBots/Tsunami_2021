@@ -4,7 +4,6 @@ package com.team5104.frc2021.auto.actions;
 import com.team5104.frc2021.Constants;
 import com.team5104.frc2021.subsystems.Drive;
 import com.team5104.frc2021.teleop.DriveController.DriveSignal;
-import com.team5104.frc2021.teleop.DriveController.DriveSignal.DriveUnit;
 import com.team5104.lib.auto.AutoAction;
 import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.auto.Position;
@@ -143,8 +142,7 @@ public class DriveTrajectory extends AutoAction {
 
     Drive.set(new DriveSignal(
         leftFeedforward + leftFeedback,
-        rightFeedforward + rightFeedback,
-        DriveUnit.VOLTAGE
+        rightFeedforward + rightFeedback
     ));
 
     DashboardTrajectory.sendOdometry();
