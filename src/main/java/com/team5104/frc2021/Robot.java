@@ -59,7 +59,7 @@ public class Robot extends RobotController.BreakerRobot {
 
     //TODO REMOVE THIS
     Odometry.update();
-    console.log(Odometry.getPositionFeet());
+    System.out.println(Odometry.getPositionFeet());
   }
 
   //Autonomous
