@@ -22,7 +22,7 @@ public class Constants {
         public double KAA = 0.3;
         public double MAX_VEL = 6;
         public double MAX_ACC = 4;
-        public double GEARING = (8.0 / 50.0) * (24.0 / 46.0);
+        public double GEARING = (50.0 / 8.0) * (46.0 / 24.0);
         public double TRACK_WIDTH = 2.0589795990198065;
         public double WHEEL_DIAMETER = 0.5;
     }
@@ -38,7 +38,7 @@ public class Constants {
         public double KA = 0;
         public double MAX_VEL = 0;
         public double MAX_ACC = 0;
-        public double GEARING = (44.0 / 24.0);
+        public double GEARING = 24.0 / 44.0;
 
         public boolean OPEN_LOOP = true;
         public double RAMP_RATE_UP = 0.7;
@@ -57,7 +57,7 @@ public class Constants {
         public double KA = switchOnBot(.00195, .00218);
         public double MAX_VEL = 200;
         public double MAX_ACC = 2000;
-        public double GEARING = (18.0 / 20.0) * (18.0 / 360.0);
+        public double GEARING = (20.0 / 18.0) * (360.0 / 18.0);
 
         public double TOL = 3;
         public double EQ_CONST = 0;
@@ -75,7 +75,7 @@ public class Constants {
         public double KA = 0;
         public double MAX_VEL = 0;
         public double MAX_ACC = 0;
-        public double GEARING = 12.0 / 70.0;
+        public double GEARING = 70.0 / 12.0;
 
         public double BALL_SIZE = 3;
         public double TOLERANCE = 0.05;
@@ -95,7 +95,7 @@ public class Constants {
         public double KA = switchOnBot(0.000121, 0.000384);
         public double MAX_VEL = 200;
         public double MAX_ACC = 2000;
-        public double GEARING = (8.0 / 60.0 /*gear*/) * (22.0 / 150.0 /*sprocket*/);
+        public double GEARING = (60.0 / 8.0 /*gear*/) * (150.0 / 22.0 /*sprocket*/);
 
         public double HOMING_SPEED = 1.8;
         public double VOLT_LIMIT = 6;
@@ -118,7 +118,7 @@ public class Constants {
     public static class PanelerConstants extends SubsystemConstants {
         public double ROT_SPEED = 0.15;
         public double POS_SPEED = 0.0;
-        public double GEARING = 2.0 / 16.0; //to control panel
+        public double GEARING = 16.0 / 2.0; //to control panel
         public double ROTATIONS = 3;
         public int BRAKE_INT = 25;
     }
