@@ -37,5 +37,5 @@ public class Controls {
 
   //Climb
   public static Button CLIMBER_DEPLOY = all.button(Slot.RIGHT_JOYSTICK_PRESS);
-  public static Axis CLIMBER_WINCH = operator.axis(Axis.Slot.RIGHT_JOYSTICK_Y, new Deadband(0.08));
+  public static Axis CLIMBER_WINCH = all.axis(Axis.Slot.RIGHT_JOYSTICK_Y, new Deadband(0.08));
 }
