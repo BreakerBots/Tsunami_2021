@@ -6,11 +6,11 @@ import com.team5104.lib.Looper.Crash;
 import com.team5104.lib.console;
 
 /** Manages all the calls for all Teleop Controllers given */
-public class TeleopControllerManager {
+public class TeleopManager {
   private static TeleopController[] targetTeleopControllers;
 
   /** Tell the State Machine Manager what State Machines to use */
-  public static void useTeleopControllers(TeleopController... teleopControllers) {
+  public static void use(TeleopController... teleopControllers) {
     targetTeleopControllers = teleopControllers;
 
     //Print out

@@ -7,7 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.team5104.frc2021.Constants;
 import com.team5104.frc2021.Ports;
 import com.team5104.frc2021.teleop.DriveController.DriveSignal;
-import com.team5104.frc2021.teleop.DriveController.DriveSignal.DriveUnit;
+import com.team5104.frc2021.teleop.DriveController.DriveSignal.DriveMode;
 import com.team5104.lib.devices.Encoder;
 import com.team5104.lib.devices.Encoder.EncoderSim;
 import com.team5104.lib.devices.Encoder.FalconEncoder;
@@ -30,13 +30,12 @@ public class Drive extends ServoSubsystem {
   //Update
   private static DriveSignal signal = new DriveSignal();
   public void update() {
-    if (RobotState.isEnabled() && signal.unit == DriveSignal.DriveUnit.VOLTAGE) {
-      setFiniteState("Driving");
-      falconL1.set(ControlMode.PercentOutput, signal.leftSpeed / falconL1.getBusVoltage());
-      falconR1.set(ControlMode.PercentOutput, signal.rightSpeed / falconR1.getBusVoltage());
+    setFiniteState(signal.mode.toString());
+    if (RobotState.isEnabled() && signal.mode == DriveMode.DRIVING) {
+      falconL1.set(ControlMode.PercentOutput, signal.leftVolts / falconL1.getBusVoltage());
+      falconR1.set(ControlMode.PercentOutput, signal.rightVolts / falconR1.getBusVoltage());
     }
     else {
-      setFiniteState("Stopped");
       stop();
     }
 
@@ -126,7 +125,7 @@ public class Drive extends ServoSubsystem {
         () -> rightEncoder.getComponentRevs(),
         () -> rightEncoder.getComponentRPS(),
         () -> gyro.getRadians(),
-        (Double left, Double right) -> set(new DriveSignal(left, right, DriveUnit.VOLTAGE))
+        (Double left, Double right) -> set(new DriveSignal(left, right))
     );
   }
   public void initSim() {
@@ -158,7 +157,7 @@ public class Drive extends ServoSubsystem {
         () -> rightEncoder.getComponentRevs(),
         () -> rightEncoder.getComponentRPS(),
         () -> gyro.getRadians(),
-        (Double left, Double right) -> set(new DriveSignal(left, right, DriveUnit.VOLTAGE))
+        (Double left, Double right) -> set(new DriveSignal(left, right))
     );
   }
 }

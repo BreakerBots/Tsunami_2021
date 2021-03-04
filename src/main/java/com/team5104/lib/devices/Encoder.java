@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.util.Units;
 public abstract class Encoder extends Device {
     public double gearing, ticksPerRev;
 
+    /** @param gearing gearing constant in the form `(driving / driven) * (driving / driven)...` (so 5:1 and 3:2 is (5/1)*(3/2))
+     * @param ticksPerRev ticksPerRev constant of the encoder. Subclasses will fill this automatically */
     public Encoder(double gearing, double ticksPerRev) {
         this.gearing = gearing;
         this.ticksPerRev = ticksPerRev;
@@ -21,19 +23,23 @@ public abstract class Encoder extends Device {
     public abstract double getTicksPer100Ms();
 
     public double getComponentRevs() {
-        return getTicks() * (gearing / ticksPerRev); //ticks to revs
+        return ticksToComponentRevs(getTicks()); //ticks to revs
     }
 
     public double getComponentRPS() {
-        return getTicksPer100Ms() * (gearing / ticksPerRev) * 10.0; //ticks to rev vel
+        return ticksToComponentRevs(getTicksPer100Ms()) * 10.0; //ticks to rev vel
     }
 
     public double getComponentRPM() {
         return getComponentRPS() * 60.0;
     }
 
+    public double ticksToComponentRevs(double ticks) {
+        return ticks / (gearing * ticksPerRev); //ticks to comp revs
+    }
+
     public double componentRevsToTicks(double componentRevs) {
-        return componentRevs * (ticksPerRev / gearing); //revs to ticks
+        return componentRevs * (gearing * ticksPerRev); //revs to ticks
     }
 
     //Set
