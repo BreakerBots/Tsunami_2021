@@ -8,12 +8,11 @@ import com.team5104.frc2021.teleop.SuperstructureController;
 import com.team5104.lib.Compressor;
 import com.team5104.lib.auto.AutoManager;
 import com.team5104.lib.auto.Odometry;
-import com.team5104.lib.console;
 import com.team5104.lib.controller.XboxController;
 import com.team5104.lib.devices.Limelight;
 import com.team5104.lib.setup.RobotController;
 import com.team5104.lib.subsystem.SubsystemManager;
-import com.team5104.lib.teleop.TeleopControllerManager;
+import com.team5104.lib.teleop.TeleopManager;
 
 public class Robot extends RobotController.BreakerRobot {
   public Robot() {
@@ -33,7 +32,7 @@ public class Robot extends RobotController.BreakerRobot {
     );
 
     //Teleop Controllers
-    TeleopControllerManager.useTeleopControllers(
+    TeleopManager.use(
       new DriveController(),
       new SuperstructureController()
     );
@@ -49,17 +48,13 @@ public class Robot extends RobotController.BreakerRobot {
 
   //Teleop
   public void teleopStart() {
-    TeleopControllerManager.enabled();
+    TeleopManager.enabled();
   }
   public void teleopStop() {
-    TeleopControllerManager.disabled();
+    TeleopManager.disabled();
   }
   public void teleopLoop() {
-    TeleopControllerManager.update();
-
-    //TODO REMOVE THIS
-    Odometry.update();
-    System.out.println(Odometry.getPositionFeet());
+    TeleopManager.update();
   }
 
   //Autonomous

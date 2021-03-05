@@ -40,14 +40,4 @@ public class RobotNameManager {
   public int switchOnBot(int... out) {
     return out[id];
   }
-
-  /** Returns a value that corresponds to the robotName index */
-  public double switchOnBotArray(double[] out) {
-    return out[id];
-  }
-
-  /** Returns a value that corresponds to the robotName index */
-  public int switchOnBotArray(int[] out) {
-    return out[id];
-  }
 }

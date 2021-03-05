@@ -9,17 +9,17 @@ public class Ports {
   public static final int DRIVE_MOTOR_R1 = 13;
   public static final int DRIVE_MOTOR_R2 = 14;
   public static final int DRIVE_GYRO = 27;
-  
+
   //Hood
   public static final int HOOD_MOTOR = 15;
-  
+
   //Flywheel
   public static final int FLYWHEEL_MOTOR_1 = 16;
   public static final int FLYWHEEL_MOTOR_2 = 17;
-  
+
   //Turret
   public static final int TURRET_MOTOR = 18;
-  
+
   //Intake
   public static final int INTAKE_MOTOR = 19;
   public static final int[] INTAKE_DEPLOYER = {switchOnBot(2, 7), switchOnBot(3, 6)};
@@ -30,7 +30,7 @@ public class Ports {
   public static final int HOPPER_FEEDER_MOTOR = 22;
   public static final int HOPPER_SENSOR_START = switchOnBot(0, 1);
   public static final int HOPPER_SENSOR_END = switchOnBot(1, 0);
-          
+
   //Climber
   public static final int CLIMBER_MOTOR = 23;
   public static final int[] CLIMBER_DEPLOYER = {0, 1};
@@ -43,6 +43,6 @@ public class Ports {
   //Other
   /** Returns "c" if this is the competition robot otherwise returns "a" */
   public static int switchOnBot(int... out) {
-    return Constants.robot.switchOnBotArray(out);
+    return Constants.robot.switchOnBot(out);
   }
 }

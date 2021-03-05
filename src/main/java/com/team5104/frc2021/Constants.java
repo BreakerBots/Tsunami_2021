@@ -126,6 +126,6 @@ public class Constants {
     //Other
     /** See RobotNameManager.switchOnBot() */
     public static double switchOnBot(double... out) {
-        return robot.switchOnBotArray(out);
+        return robot.switchOnBot(out);
     }
 }
