@@ -12,11 +12,12 @@ public class AutoNavSlalom extends AutoPath {
     
     // Start
     run(new DriveTrajectory(false,
-      new Position(5, 2.5, 0),
-      new Position(7.8, 6.5, 60),
-      new Position(11.5, 7.5, 0),
-      new Position(18, 7, -10),
-      new Position(23.4, 3.5, -70),
+      new Position(5, 2.5, 0),  //5, 2.5, 0
+      new Position(9, 5, 90),
+      new Position(10, 8, 0), //7.8, 6.5, 60
+      new Position(11.5, 8.5, 0),  //11.5, 7.5 , 0
+      new Position(22, 8.5, -10),   //18, 7,-10   TRY 21!!!
+      new Position(25, 3.5, -90), // 23.4, 3.5, -70
       new Position(26.5, 2.5, 30),
       new Position(28.2, 5.5, 90),
       new Position(24.3, 8.8, -160),
