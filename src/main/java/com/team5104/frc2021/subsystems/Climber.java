@@ -31,7 +31,7 @@ public class Climber extends Subsystem {
 
   //Config
   public Climber() {
-    super(new SubsystemConstants());
+    super(null);
 
     deployerPiston = new Solenoid(Ports.CLIMBER_DEPLOYER);
     brakePiston = new Solenoid(Ports.CLIMBER_BRAKE, true);

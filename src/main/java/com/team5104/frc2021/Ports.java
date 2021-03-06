@@ -22,14 +22,14 @@ public class Ports {
 
   //Intake
   public static final int INTAKE_MOTOR = 19;
-  public static final int[] INTAKE_DEPLOYER = {switchOnBot(2, 7), switchOnBot(3, 6)};
+  public static final int[] INTAKE_DEPLOYER = {sob(2, 7), sob(3, 6)};
 
   //Hopper
   public static final int HOPPER_START_MOTOR = 20;
   public static final int HOPPER_INDEX_MOTOR = 21;
   public static final int HOPPER_FEEDER_MOTOR = 22;
-  public static final int HOPPER_SENSOR_START = switchOnBot(0, 1);
-  public static final int HOPPER_SENSOR_END = switchOnBot(1, 0);
+  public static final int HOPPER_SENSOR_START = sob(0, 1);
+  public static final int HOPPER_SENSOR_END = sob(1, 0);
 
   //Climber
   public static final int CLIMBER_MOTOR = 23;
@@ -38,11 +38,11 @@ public class Ports {
 
   //Paneler
   public static final int PANELER_MOTOR = 26;
-  public static final int[] PANELER_DEPLOYER = {switchOnBot(4, 3), switchOnBot(5, 2)};
+  public static final int[] PANELER_DEPLOYER = {sob(4, 3), sob(5, 2)};
 
   //Other
-  /** Returns "c" if this is the competition robot otherwise returns "a" */
-  public static int switchOnBot(int... out) {
+  /** See RobotNameManager.switchOnBot() */
+  public static int sob(int... out) {
     return Constants.robot.switchOnBot(out);
   }
 }

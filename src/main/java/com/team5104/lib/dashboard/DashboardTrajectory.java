@@ -31,6 +31,7 @@ public class DashboardTrajectory {
       }
       DriveTrajectory traj = new DriveTrajectory(
           trajectoryNodes.get(t).get("reversed").asBoolean(),
+          6, 4,
           positions
       );
       trajectoryData.put("traj"+t, new PlottableTrajectory(traj.getPoints()));

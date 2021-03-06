@@ -27,11 +27,11 @@ public abstract class Subsystem {
   SubsystemMode mode = SubsystemMode.DETACHED;
   private List<Device> devices = new ArrayList<>();
   private String finiteState = "Not Set";
-  private SubsystemConstants constants;
+  private Object constants;
 
   /** Base Constructor
    * @param constants Link SubsystemConstants class from Constants.java */
-  public Subsystem(SubsystemConstants constants) {
+  public Subsystem(Object constants) {
     this.constants = constants;
   }
 
@@ -43,9 +43,6 @@ public abstract class Subsystem {
 
   /** Reset Values Here (called when enabled and disabled) */
   public void reset() { }
-
-  /** Subsystem Constants (Extendable Class) */
-  public static class SubsystemConstants { }
 
   //Built-In
   /** Identifies all devices in the subsystem */

@@ -12,15 +12,9 @@ public abstract class ServoSubsystem extends Subsystem {
 
   /** Base Constructor
    * @param constants Link ServoConstants class from Constants.java */
-  public ServoSubsystem(ServoConstants constants) {
+  public ServoSubsystem(Object constants) {
     super(constants);
   }
-  /** Alt Constructor
-   * @param constants Link SubsystemConstants class from Constants.java */
-  public ServoSubsystem(SubsystemConstants constants) {
-    super(constants);
-  }
-
 
   //Characterization
   private DoubleSupplier getLeftEncoderPos, getLeftEncoderVel, getRightEncoderPos, getRightEncoderVel, getGyroAngleRadians;
@@ -66,10 +60,5 @@ public abstract class ServoSubsystem extends Subsystem {
     lastOutputVoltage = percentOutput * batteryVoltage;
 
     return returnArray;
-  }
-
-  //Servo Constants
-  public static class ServoConstants extends SubsystemConstants {
-    public double KP, KI, KD, KS, KV, KA, MAX_VEL, MAX_ACC, GEARING;
   }
 }
