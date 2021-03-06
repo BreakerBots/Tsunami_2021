@@ -43,7 +43,7 @@ public class DriveTrajectory extends AutoAction {
   private DifferentialDriveWheelSpeeds lastSpeeds;
   private double lastTime;
 
-  public DriveTrajectory(boolean isReversed, Position... waypoints) {
+  public DriveTrajectory(boolean isReversed, double maxVel, double maxAcc, Position... waypoints) {
     feedforward = new SimpleMotorFeedforward(
         Constants.drive.KLS,
         Constants.drive.KLV,
@@ -64,8 +64,8 @@ public class DriveTrajectory extends AutoAction {
 
     // Create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(
-        Units.feetToMeters(Constants.drive.MAX_VEL),
-        Units.feetToMeters(Constants.drive.MAX_ACC)
+        Units.feetToMeters(maxVel),
+        Units.feetToMeters(maxAcc)
       ).setKinematics(kinematics)
        .addConstraint(autoVoltageConstraint)
        .setReversed(isReversed);

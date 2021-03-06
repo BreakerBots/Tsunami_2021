@@ -6,29 +6,32 @@ import com.team5104.lib.auto.Position;
 import com.team5104.frc2021.auto.actions.DriveTrajectory;
 
 public class AutoNavBarrel extends AutoPath {
+  final double MAX_VEL = 6;
+  final double MAX_ACC = 4;
+
   public void start() {
     //Set position relative to field
     Odometry.reset(new Position(5, 7.5));
 
     // Evading Marker D5
-    run(new DriveTrajectory(false,
-            new Position(5, 7.5, 0), // Start
-            new Position(9.1, 7.5, 0),
-            new Position(17, 5, -90),
-            new Position(10.9, 2.9, 90),
-        // Evading Marker B8
-            new Position(10.9, 5, 90),
-            new Position(21.9, 7.6, 0),
-            new Position(23.6, 11.0, 110),
-            new Position(18.4, 13.2, 180),
-        // Evading Marker D10
-            new Position(17, 8.5, 290),
-            new Position(20.3, 3.9, 325),
-            new Position(26.5, 2.6, 0),
-            new Position(29, 5.7, 120),
-            new Position(22, 7.35, 195),
-            new Position(15.4, 7, 165),
-            new Position(2.5, 7, 180) // Finish
+    run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
+        new Position(5, 7.5, 0), // Start
+        new Position(9.1, 7.5, 0),
+        new Position(17, 5, -90),
+        new Position(10.9, 2.9, 90),
+    // Evading Marker B8
+        new Position(10.9, 5, 90),
+        new Position(21.9, 7.6, 0),
+        new Position(23.6, 11.0, 110),
+        new Position(18.4, 13.2, 180),
+    // Evading Marker D10
+        new Position(17, 8.5, 290),
+        new Position(20.3, 3.9, 325),
+        new Position(26.5, 2.6, 0),
+        new Position(29, 5.7, 120),
+        new Position(22, 7.35, 195),
+        new Position(15.4, 7, 165),
+        new Position(2.5, 7, 180) // Finish
     ));
   }
 }

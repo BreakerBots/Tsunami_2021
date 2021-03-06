@@ -6,12 +6,15 @@ import com.team5104.lib.auto.Position;
 import com.team5104.frc2021.auto.actions.DriveTrajectory;
 
 public class AutoNavSlalom extends AutoPath {
+  final double MAX_VEL = 6;
+  final double MAX_ACC = 4;
+
   public void start() {
     //Set position relative to field
     Odometry.reset(new Position(5, 2.5));
-    
+
     // Start
-    run(new DriveTrajectory(false,
+    run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
       new Position(5, 2.5, 0),  //5, 2.5, 0
       new Position(9, 5, 90),
       new Position(10, 8.5, 0), //7.8, 6.5, 60

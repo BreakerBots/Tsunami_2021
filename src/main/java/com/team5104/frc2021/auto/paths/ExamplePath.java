@@ -7,13 +7,16 @@ import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.auto.Position;
 
 public class ExamplePath extends AutoPath {
+  final double MAX_VEL = 6;
+  final double MAX_ACC = 4;
+
   public void start() {
     //Set position relative to field
     Odometry.reset(new Position(0, 0));
 
-    run(new DriveTrajectory(false,
-                            new Position(0, 0, 0),
-                            new Position(10, 10, 90)
+    run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
+        new Position(0, 0, 0),
+        new Position(10, 10, 90)
     ));
   }
 }

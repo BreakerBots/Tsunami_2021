@@ -20,8 +20,6 @@ public class Constants {
         public double KAS = 0.66;
         public double KAV = 1.5;
         public double KAA = 0.3;
-        public double MAX_VEL = 6;
-        public double MAX_ACC = 4;
         public double GEARING = (50.0 / 8.0) * (46.0 / 24.0);
         public double TRACK_WIDTH = 2.0589795990198065;
         public double WHEEL_DIAMETER = 0.5;
