@@ -6,7 +6,6 @@ import com.team5104.frc2021.Superstructure.FlywheelState;
 import com.team5104.frc2021.Superstructure.Mode;
 import com.team5104.frc2021.Superstructure.PanelState;
 import com.team5104.frc2021.Superstructure.Target;
-import com.team5104.frc2021.subsystems.Climber;
 import com.team5104.lib.Compressor;
 import com.team5104.lib.console;
 import com.team5104.lib.setup.RobotState;
@@ -109,7 +108,6 @@ public class SuperstructureController extends TeleopController {
         console.log("deploying climber!!!!");
       }
     }
-    Climber.climberManual = Controls.CLIMBER_WINCH.get();
 
     // Compressor
     if (RobotState.getMode() == RobotMode.TELEOP) {

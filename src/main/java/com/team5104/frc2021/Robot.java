@@ -9,6 +9,7 @@ import com.team5104.lib.Compressor;
 import com.team5104.lib.auto.AutoManager;
 import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.controller.XboxController;
+import com.team5104.lib.dashboard.Dashboard;
 import com.team5104.lib.devices.Limelight;
 import com.team5104.lib.setup.RobotController;
 import com.team5104.lib.subsystem.SubsystemManager;
@@ -88,5 +89,8 @@ public class Robot extends RobotController.Robot {
     Superstructure.update();
     SubsystemManager.update();
     XboxController.update();
+  }
+  public void mainShutdown() {
+    Dashboard.close();
   }
 }

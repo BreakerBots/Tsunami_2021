@@ -2,6 +2,7 @@ package com.team5104.frc2021.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.team5104.frc2021.Controls;
 import com.team5104.frc2021.Ports;
 import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.Mode;
@@ -9,7 +10,6 @@ import com.team5104.lib.devices.Solenoid;
 import com.team5104.lib.subsystem.Subsystem;
 
 public class Climber extends Subsystem {
-  public static double climberManual = 0.0; //passed through from SuperstructureController
   private Solenoid deployerPiston, brakePiston;
   private TalonFX motor;
 
@@ -19,7 +19,7 @@ public class Climber extends Subsystem {
       setFiniteState("Climbing");
       brakePiston.set(false);
       deployerPiston.set(Superstructure.is(Mode.CLIMBER_DEPLOYING));
-      motor.set(ControlMode.PercentOutput, climberManual);
+      motor.set(ControlMode.PercentOutput, Controls.CLIMBER_WINCH.get());
     }
     else {
       setFiniteState("Stopped");
