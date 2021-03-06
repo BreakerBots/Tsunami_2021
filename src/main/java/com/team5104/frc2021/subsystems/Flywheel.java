@@ -8,7 +8,7 @@ import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.FlywheelState;
 import com.team5104.lib.MovingAverage;
 import com.team5104.lib.Util;
-import com.team5104.lib.control.VelocityController;
+import com.team5104.lib.motion.VelocityController;
 import com.team5104.lib.devices.Encoder.FalconEncoder;
 import com.team5104.lib.subsystem.ServoSubsystem;
 

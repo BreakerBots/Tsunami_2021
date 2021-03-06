@@ -12,7 +12,7 @@ import com.team5104.lib.devices.Encoder;
 import com.team5104.lib.devices.Encoder.EncoderSim;
 import com.team5104.lib.devices.Encoder.FalconEncoder;
 import com.team5104.lib.devices.Gyro;
-import com.team5104.lib.motion.TalonSim;
+import com.team5104.lib.devices.TalonSim;
 import com.team5104.lib.setup.RobotState;
 import com.team5104.lib.subsystem.ServoSubsystem;
 import edu.wpi.first.wpilibj.geometry.Pose2d;

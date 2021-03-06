@@ -1,4 +1,4 @@
-package com.team5104.lib.control;
+package com.team5104.lib.motion;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;

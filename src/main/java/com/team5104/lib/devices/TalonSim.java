@@ -1,8 +1,10 @@
-package com.team5104.lib.motion;
+package com.team5104.lib.devices;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.RobotController;
 
+/** A simple class that simulated a TalonSRX (or TalonFX)
+ * Note: doesnt need to extend Device because it extends BaseMotorController */
 public class TalonSim extends WPI_TalonSRX {
     public TalonSim(int deviceNumber) {
         super(deviceNumber);

@@ -12,7 +12,7 @@ import com.team5104.frc2021.Superstructure.Target;
 import com.team5104.lib.MovingAverage;
 import com.team5104.lib.Util;
 import com.team5104.lib.console;
-import com.team5104.lib.control.PositionController;
+import com.team5104.lib.motion.PositionController;
 import com.team5104.lib.devices.Encoder.MagEncoder;
 import com.team5104.lib.devices.Limelight;
 import com.team5104.lib.subsystem.ServoSubsystem;

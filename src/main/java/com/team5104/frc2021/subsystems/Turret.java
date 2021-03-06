@@ -10,7 +10,7 @@ import com.team5104.frc2021.Ports;
 import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.Mode;
 import com.team5104.lib.*;
-import com.team5104.lib.control.PositionController;
+import com.team5104.lib.motion.PositionController;
 import com.team5104.lib.devices.Encoder.FalconEncoder;
 import com.team5104.lib.devices.Limelight;
 import com.team5104.lib.setup.RobotState;

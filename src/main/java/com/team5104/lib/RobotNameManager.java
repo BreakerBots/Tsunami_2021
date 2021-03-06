@@ -9,7 +9,7 @@ public class RobotNameManager {
   public RobotNameManager(String... robotNames) {
     this.id = 0;
     this.name = robotNames[id];
-//
+//  TODO: FIX THIS IN THE DASH
 //
 //    if (RobotState.isSimulation()) {
 //      name = robotNames[0];

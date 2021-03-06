@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.team5104.lib.motion.TalonSim;
 import edu.wpi.first.wpilibj.util.Units;
 
 public abstract class Encoder extends Device {
