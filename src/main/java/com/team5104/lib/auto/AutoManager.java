@@ -7,7 +7,6 @@ import com.team5104.lib.Looper.Crash;
 import com.team5104.lib.Looper.Loop;
 import com.team5104.lib.console;
 import com.team5104.lib.dashboard.DashboardTrajectory;
-import com.team5104.lib.setup.RobotState;
 import com.team5104.lib.subsystem.Characterizer;
 
 /** manages the running of an autonomous path and characterizing */
@@ -27,7 +26,9 @@ public class AutoManager {
         try {
           console.log("Running " + targetPath.getClass().getSimpleName());
           DashboardTrajectory.alertStartingPath();
+          targetPath.setRunning(true);
           targetPath.start();
+          targetPath.setRunning(false);
           console.log(targetPath.getClass().getSimpleName() + " finished");
         } catch (Exception e) { Looper.logCrash(new Crash(e)); }
       });
@@ -61,19 +62,23 @@ public class AutoManager {
 
   //Update
   public static void update() {
-    //update the path
-    if (targetPath != null)
-      targetPath.update();
-
     //update characterization
-    if (Characterizer.isRunning())
+    if (Characterizer.isRunning()) {
       Characterizer.update();
+    }
+
+    //update auto
+    else {
+      if (targetPath != null) {
+        //update path
+        targetPath.update();
+      }
+
+      //update odometry
+      Odometry.update();
+    }
 
     //stop compressor
-    if (!RobotState.isSimulation())
-      Compressor.stop();
-
-    //update odometry
-    Odometry.update();
+    Compressor.stop();
   }
 }

@@ -2,11 +2,12 @@ package com.team5104.frc2021;
 
 import com.team5104.frc2021.subsystems.*;
 import com.team5104.lib.auto.AutoManager;
+import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.dashboard.Dashboard;
 import com.team5104.lib.setup.RobotController;
 import com.team5104.lib.subsystem.SubsystemManager;
 
-public class RobotSim extends RobotController.BreakerRobot {
+public class RobotSim extends RobotController.Robot {
     public RobotSim() {
         //Win
         win();
@@ -21,13 +22,17 @@ public class RobotSim extends RobotController.BreakerRobot {
             new Paneler(),
             new Turret()
         );
+
+        //Other
+        Odometry.init();
+        Superstructure.init();
     }
 
     //Autonomous
-    public void autoStart() {
+    public void autoEnabled() {
         AutoManager.enabled();
     }
-    public void autoStop() {
+    public void autoDisabled() {
         AutoManager.disabled();
     }
     public void autoLoop() {
@@ -35,10 +40,10 @@ public class RobotSim extends RobotController.BreakerRobot {
     }
 
     //Main
-    public void mainStart() {
+    public void mainEnabled() {
         SubsystemManager.reset();
     }
-    public void mainStop() {
+    public void mainDisabled() {
         SubsystemManager.reset();
     }
     public void mainLoop() {

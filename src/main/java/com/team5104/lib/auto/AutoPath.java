@@ -6,15 +6,21 @@ import com.team5104.lib.setup.RobotState;
 /** a framework for all paths inside frc.team5104.auto.paths */
 public abstract class AutoPath {
   private AutoAction currentAction;
+  private boolean isRunning;
 
   /** Run the path, holding the thread until it is finished.
    * @warning DO NOT CALL IN MAIN THREAD */
   public abstract void start();
 
+  /** Set whether this path is running */
+  public final void setRunning(boolean isRunning) {
+    this.isRunning = isRunning;
+  }
+
   /** Runs an action, holding the thread until it is finished.
    * @warning DO NOT CALL IN MAIN THREAD
    * @return passthroughs value from action */
-  public boolean run(AutoAction action) {
+  public final boolean run(AutoAction action) {
     if (action == null)
       return false;
 
@@ -35,8 +41,9 @@ public abstract class AutoPath {
   }
 
   /** Updates the current action */
-  public void update() {
-    if (currentAction != null)
+  public final void update() {
+    if (currentAction != null && isRunning) {
       currentAction.update();
+    }
   }
 }

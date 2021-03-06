@@ -70,7 +70,7 @@ public class DriveTrajectory extends AutoAction {
        .addConstraint(autoVoltageConstraint)
        .setReversed(isReversed);
 
-    // An example trajectory to follow. All Util in meters.
+    // Generate the trajectory
     trajectory = TrajectoryGenerator.generateTrajectory(
         Position.toPose2dMeters(waypoints),
         config

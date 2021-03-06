@@ -81,14 +81,16 @@ public class Drive extends ServoSubsystem {
     };
   }
   public static void zero() {
-    if (gyro != null)
+    if (gyro != null) {
       gyro.reset();
+    }
     if (leftEncoder != null) {
       leftEncoder.reset();
       rightEncoder.reset();
     }
-    if (RobotState.isSimulation())
+    if (RobotState.isSimulation()) {
       drivetrainSim.setPose(new Pose2d());
+    }
   }
 
   //Config

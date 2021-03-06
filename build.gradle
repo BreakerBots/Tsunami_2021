@@ -39,9 +39,9 @@ dependencies {
     //dashboard
     compile "org.java-websocket:Java-WebSocket:1.5.1"
     compile "org.slf4j:slf4j-simple:1.7.9"
-    compile 'com.fasterxml.jackson.core:jackson-core:2.12.1'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.12.1'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.12.1'
+    implementation "com.fasterxml.jackson.core:jackson-annotations:2.10.0"
+    implementation "com.fasterxml.jackson.core:jackson-core:2.10.0"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.10.0"
 
     //wpilib
     implementation wpi.deps.wpilib()
@@ -59,6 +59,7 @@ dependencies {
 
     //testing
     testImplementation 'junit:junit:4.12'
+
 }
 
 jar {

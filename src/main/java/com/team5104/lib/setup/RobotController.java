@@ -2,7 +2,6 @@
 package com.team5104.lib.setup;
 
 import com.team5104.frc2021.Constants;
-import com.team5104.frc2021.Robot;
 import com.team5104.frc2021.RobotSim;
 import com.team5104.lib.Looper;
 import com.team5104.lib.Looper.Crash;
@@ -21,7 +20,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 public class RobotController extends RobotBase {
   private final int notifier = NotifierJNI.initializeNotifier();
   private double expirationTime; //ms
-  private BreakerRobot robot;
+  private Robot robot;
 
   //Init Robot
   public void startCompetition() {
@@ -38,7 +37,7 @@ public class RobotController extends RobotBase {
     //Set Child Class
     if (RobotState.isSimulation())
       robot = new RobotSim();
-    else robot = new Robot();
+    else robot = new com.team5104.frc2021.Robot();
 
     //HAL
     HAL.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Timed);
@@ -92,10 +91,10 @@ public class RobotController extends RobotBase {
     try {
       if (RobotState.getLastMode() != RobotState.getMode()) {
         if (RobotState.getMode() == RobotMode.DISABLED) {
-          robot.mainStop();
+          robot.mainDisabled();
         }
         else if (RobotState.getLastMode() == RobotMode.DISABLED) {
-          robot.mainStart();
+          robot.mainEnabled();
         }
       }
     } catch (Exception e) { Looper.logCrash(new Crash(e)); }
@@ -112,7 +111,7 @@ public class RobotController extends RobotBase {
           //Teleop
           if (RobotState.getLastMode() != RobotState.getMode()) {
             console.log("Teleop Enabled");
-            robot.teleopStart();
+            robot.teleopEnabled();
           }
           robot.teleopLoop();
           HAL.observeUserProgramTeleop();
@@ -124,7 +123,7 @@ public class RobotController extends RobotBase {
           //Auto
           if (RobotState.getLastMode() != RobotState.getMode()) {
             console.log("Auto Enabled");
-            robot.autoStart();
+            robot.autoEnabled();
           }
           robot.autoLoop();
           HAL.observeUserProgramTeleop();
@@ -136,7 +135,7 @@ public class RobotController extends RobotBase {
           //Test
           if (RobotState.getLastMode() != RobotState.getMode()) {
             console.log("Test Enabled");
-            robot.testStart();
+            robot.testEnabled();
           }
           robot.testLoop();
           HAL.observeUserProgramTest();
@@ -149,17 +148,17 @@ public class RobotController extends RobotBase {
           if (RobotState.getLastMode() != RobotState.getMode()) {
             switch (RobotState.getLastMode()) {
               case TELEOP: {
-                robot.teleopStop();
+                robot.teleopDisabled();
                 console.log("Teleop Disabled");
                 break;
               }
               case AUTONOMOUS: {
-                robot.autoStop();
+                robot.autoDisabled();
                 console.log("Autonomous Disabled");
                 break;
               }
               case TEST: {
-                robot.testStop();
+                robot.testDisabled();
                 console.log("Test Disabled");
                 break;
               }
@@ -183,29 +182,47 @@ public class RobotController extends RobotBase {
   }
 
   //Child Class
-  /**
-   * The Main Robot Interface. Called by this, Breaker Robot Controller
-   * <br>Override these methods to run code
-   * <br>Functions Call Order:
-   * <br> - All Enable/Disable Functions are called before the corresponding loop function
-   * <br> - Main Functions are called last (teleop, test, auto are before)
+  /** The main robot class
+   * Override these methods to receive calls from the RobotController
+   * Method Call Order:
+   *  - Enabled:
+   *   - mainEnabled() / mainDisabled()
+   *   - mainLoop()
+   *   - {mode}Enabled() / {mode}Disabled()
+   *   - {mode}Loop()
    */
-  public static abstract class BreakerRobot {
+  public static abstract class Robot {
+    /** Called at 50hz while the robot is enabled */
     public void mainLoop() { }
-    public void mainStart() { }
-    public void mainStop() { }
+    /** Called once when the robot is enabled */
+    public void mainEnabled() { }
+    /** Called once when the robot is disabled */
+    public void mainDisabled() { }
+    /** Called when the robot code shuts down */
     public void mainShutdown() { }
+
+    /** Called at 50hz while the robot is enabled in autonomous mode */
     public void autoLoop() { }
-    public void autoStart() { }
-    public void autoStop() { }
+    /** Called once when the robot is enabled in autonomous mode */
+    public void autoEnabled() { }
+    /** Called once when the robot is disabled and was in autonomous mode */
+    public void autoDisabled() { }
+
+    /** Called at 50hz while the robot is enabled in teleop mode */
     public void teleopLoop() { }
-    public void teleopStart() { }
-    public void teleopStop() { }
+    /** Called once when the robot is enabled in teleop mode */
+    public void teleopEnabled() { }
+    /** Called once when the robot is disabled and was in teleop mode */
+    public void teleopDisabled() { }
+
+    /** Called at 50hz while the robot is enabled in test mode */
     public void testLoop() { }
-    public void testStart() { }
-    public void testStop() { }
-    public void win() {
-      /* TODO: Implement this plz */
-    }
+    /** Called once when the robot is enabled in test mode */
+    public void testEnabled() { }
+    /** Called once when the robot is disabled and was in test mode */
+    public void testDisabled() { }
+
+    /** TODO: Implement this plz */
+    public void win() { }
   }
 }

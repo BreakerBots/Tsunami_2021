@@ -1,9 +1,6 @@
 /*BreakerBots Robotics Team 2020*/
 package com.team5104.frc2021;
 
-import com.team5104.frc2021.auto.paths.AutoNavBarrel;
-import com.team5104.frc2021.auto.paths.ExamplePath;
-import com.team5104.frc2021.auto.paths.AutoNavSlalom;
 import com.team5104.frc2021.auto.paths.AutoNavBounce;
 import com.team5104.frc2021.subsystems.*;
 import com.team5104.frc2021.teleop.DriveController;
@@ -17,7 +14,7 @@ import com.team5104.lib.setup.RobotController;
 import com.team5104.lib.subsystem.SubsystemManager;
 import com.team5104.lib.teleop.TeleopManager;
 
-public class Robot extends RobotController.BreakerRobot {
+public class Robot extends RobotController.Robot {
   public Robot() {
     //Win
     win();
@@ -46,14 +43,13 @@ public class Robot extends RobotController.BreakerRobot {
     Superstructure.init();
     AutoManager.setTargetPath(new AutoNavBounce());
     Compressor.stop();
-    Drive.zero();
   }
 
   //Teleop
-  public void teleopStart() {
+  public void teleopEnabled() {
     TeleopManager.enabled();
   }
-  public void teleopStop() {
+  public void teleopDisabled() {
     TeleopManager.disabled();
   }
   public void teleopLoop() {
@@ -61,10 +57,10 @@ public class Robot extends RobotController.BreakerRobot {
   }
 
   //Autonomous
-  public void autoStart() {
+  public void autoEnabled() {
     AutoManager.enabled();
   }
-  public void autoStop() {
+  public void autoDisabled() {
     AutoManager.disabled();
   }
   public void autoLoop() {
@@ -78,12 +74,12 @@ public class Robot extends RobotController.BreakerRobot {
   }
 
   //Main
-  public void mainStart() {
+  public void mainEnabled() {
     Superstructure.reset();
     SubsystemManager.reset();
     Compressor.stop();
   }
-  public void mainStop() {
+  public void mainDisabled() {
     Superstructure.reset();
     SubsystemManager.reset();
     Compressor.stop();

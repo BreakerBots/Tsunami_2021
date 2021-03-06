@@ -66,11 +66,18 @@ public class Position {
   }
 
   public String toString() {
-    return "position: {" +
-        "xft: " + Util.round(xFeet, 2) + ", " +
-        "yft: " + Util.round(yFeet, 2) + ", " +
-        "deg: " + Util.round(degrees, 2) +
-      "}";
+    StringBuilder builder = new StringBuilder();
+    builder.append("{");
+    builder.append("xft:");
+    builder.append(Util.round(xFeet, 2));
+    builder.append(",");
+    builder.append("yft:");
+    builder.append(Util.round(yFeet, 2));
+    builder.append(",");
+    builder.append("deg:");
+    builder.append(Util.round(degrees, 2));
+    builder.append("}");
+    return builder.toString();
   }
 
   public static List<Position> fromStates(List<State> states) {
