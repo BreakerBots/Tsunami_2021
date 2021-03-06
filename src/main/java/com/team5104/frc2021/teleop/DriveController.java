@@ -10,16 +10,39 @@ public class DriveController extends TeleopController {
   private static final double MIN_SPEED_TURN = 0.055; //volts
   private static final double KICKSTAND_SCALAR = 0.4; //percent
   private static final double TURN_SPEED_ADJ = 0.2; //percent - reduces turning bases on forward velocity
-  private boolean kickstand = false;
+  private boolean kickstand = false, reversed = false;
 
   //Loop
   protected void update() {
-    if (Controls.DRIVE_KICKSTAND.get())
+    //toggle the kickstand
+    if (Controls.DRIVE_KICKSTAND.get()) {
       kickstand = !kickstand;
+    }
 
+    //get forward input
     double forward = Controls.DRIVE_FORWARD.get() - Controls.DRIVE_REVERSE.get();
+
+    //reduce the turning speed based on forward speed
     Controls.DRIVE_TURN.changeCurveX1((1 - Math.abs(forward)) * (1 - TURN_SPEED_ADJ) + TURN_SPEED_ADJ);
+
+    //get turn input
     double turn = Controls.DRIVE_TURN.get();
+
+    //swap the turn if driving in reverse
+    if (forward < 0) {
+      turn *= -1;
+    }
+
+    //toggle reversed
+//    if (Controls.PANEL_SPIN.get()) {
+//      reversed = !reversed;
+//    }
+//    if (reversed) {
+//      turn *= -1;
+//      forward *= -1;
+//    }
+
+    //send drivetrain command
     Drive.set(get(turn, forward, kickstand));
   }
 
