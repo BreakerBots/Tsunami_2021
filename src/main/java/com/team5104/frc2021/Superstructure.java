@@ -92,10 +92,11 @@ public class Superstructure {
     if (turretOnTarget.get(Turret.onTarget()) && is(Mode.AIMING))
       console.log("on target");
     readyToFire.update(is(Mode.AIMING) && Flywheel.isSpedUp() && Turret.onTarget() && Hood.onTarget() && Limelight.hasTarget());
-    if (is(Mode.AIMING) && readyToFire.getBooleanOutput()) {
-      set(Mode.SHOOTING);
-      console.log("finished aiming... shooting");
-    }
+//    TODO: remove waiting for readyToFire
+//    if (is(Mode.AIMING) && readyToFire.getBooleanOutput()) {
+//      set(Mode.SHOOTING);
+//      console.log("finished aiming... shooting");
+//    }
 
     //Spin Flywheel while Shooting
     if (is(Mode.SHOOTING) || is(Mode.AIMING)) {

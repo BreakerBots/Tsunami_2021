@@ -64,11 +64,20 @@ public class SuperstructureController extends TeleopController {
 
     // Shooter
     if (Controls.SHOOT.get()) {
-      if (Superstructure.is(Mode.SHOOTING) || Superstructure.is(Mode.AIMING)) {
+      if (Superstructure.is(Mode.AIMING)) {
+        Superstructure.set(Mode.SHOOTING);
+        console.log("finished aiming... shooting");
+      }
+      else if (Superstructure.is(Mode.SHOOTING)) {
         Superstructure.set(Mode.IDLE);
         Superstructure.set(FlywheelState.STOPPED);
         console.log("exiting shooting... idling");
       }
+//      if (Superstructure.is(Mode.SHOOTING) || Superstructure.is(Mode.AIMING)) {
+//        Superstructure.set(Mode.IDLE);
+//        Superstructure.set(FlywheelState.STOPPED);
+//        console.log("exiting shooting... idling");
+//      }
       else {
         Superstructure.set(Mode.AIMING);
         console.log("aiming");
