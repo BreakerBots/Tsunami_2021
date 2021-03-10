@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.I2C;
 
 public class Paneler extends ServoSubsystem {
   public enum PanelerTarget { ROTATION, POSITION }
-  public static PanelerTarget panelerTarget = PanelerTarget.ROTATION;
+  public static PanelerTarget target = PanelerTarget.ROTATION;
 
   private ColorSensor sensor;
   private TalonSRX motor;
@@ -39,7 +39,7 @@ public class Paneler extends ServoSubsystem {
       }
 
       else if (Superstructure.is(Mode.PANELING)) {
-        if (panelerTarget == PanelerTarget.ROTATION) {
+        if (target == PanelerTarget.ROTATION) {
           setFiniteState("Paneling - Rotation");
           console.log(getPanelRotations());
           if (getPanelRotations() >= Constants.paneler.ROTATIONS && end < Constants.paneler.BRAKE_INT) {
