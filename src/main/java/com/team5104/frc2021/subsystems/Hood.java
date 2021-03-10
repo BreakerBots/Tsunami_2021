@@ -8,21 +8,25 @@ import com.team5104.frc2021.Constants;
 import com.team5104.frc2021.Ports;
 import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.Mode;
-import com.team5104.frc2021.Superstructure.Target;
+import com.team5104.lib.LatchedBoolean;
 import com.team5104.lib.MovingAverage;
 import com.team5104.lib.Util;
 import com.team5104.lib.console;
-import com.team5104.lib.motion.PositionController;
 import com.team5104.lib.devices.Encoder.MagEncoder;
 import com.team5104.lib.devices.Limelight;
+import com.team5104.lib.motion.PositionController;
 import com.team5104.lib.subsystem.ServoSubsystem;
 
 public class Hood extends ServoSubsystem {
+  public enum ShooterTarget { LOW, HIGH }
+  public static ShooterTarget shooterTarget = ShooterTarget.HIGH;
+
   private static TalonSRX motor;
   private static MagEncoder encoder;
   private static MovingAverage visionFilter;
   private PositionController controller;
   private static double targetAngle = 0;
+  private static LatchedBoolean onTargetTrigger = new LatchedBoolean();
 
   //Loop
   public void update() {
@@ -39,7 +43,7 @@ public class Hood extends ServoSubsystem {
       }
 
       //Low
-      else if (Superstructure.is(Target.LOW)) {
+      else if (shooterTarget == ShooterTarget.LOW) {
         setFiniteState("Low");
         setAngle(40);
       }
@@ -66,6 +70,10 @@ public class Hood extends ServoSubsystem {
       setFiniteState("Stopped");
       stop();
     }
+
+    //Logging
+    if (onTargetTrigger.get(onTarget()) && Superstructure.is(Mode.AIMING))
+      console.log("on target");
   }
 
   //Fast Loop

@@ -48,6 +48,10 @@ public class Limelight {
         LEDMode(int value) { this.value = value; }
     }
 
+    public static void setLEDMode(boolean on) {
+        setLEDMode(on ? LEDMode.ON : LEDMode.OFF);
+    }
+
     public static void setLEDMode(LEDMode ledMode) {
         if (isConnected())
             setEntry("ledMode", ledMode.value);

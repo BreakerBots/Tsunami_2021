@@ -10,9 +10,9 @@ import com.team5104.frc2021.Ports;
 import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.Mode;
 import com.team5104.lib.*;
-import com.team5104.lib.motion.PositionController;
 import com.team5104.lib.devices.Encoder.FalconEncoder;
 import com.team5104.lib.devices.Limelight;
+import com.team5104.lib.motion.PositionController;
 import com.team5104.lib.setup.RobotState;
 import com.team5104.lib.subsystem.ServoSubsystem;
 
@@ -22,7 +22,9 @@ public class Turret extends ServoSubsystem {
   private PositionController controller;
   private LatencyCompensator latencyCompensator;
   private MovingAverage outputAverage;
-  private static double targetAngle = 0, fieldOrientedOffset = -135;
+  private static double targetAngle = 0,
+                        fieldOrientedOffset = -135;
+  private static LatchedBoolean onTargetTrigger = new LatchedBoolean();
 
   //Loop
   public void update() {
@@ -67,6 +69,10 @@ public class Turret extends ServoSubsystem {
       targetAngle = Util.wrap180(Drive.getHeading() + fieldOrientedOffset);
       controller.calculate(getAngle(), targetAngle);
     }
+
+    //Logging
+    if (onTargetTrigger.get(Turret.onTarget()) && Superstructure.is(Mode.AIMING))
+      console.log("on target");
   }
 
   //Fast Loop
