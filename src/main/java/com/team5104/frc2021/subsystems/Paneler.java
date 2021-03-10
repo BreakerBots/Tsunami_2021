@@ -120,5 +120,7 @@ public class Paneler extends ServoSubsystem {
   //Reset
   public void reset() {
     resetEncoder();
+
+    target = PanelerTarget.ROTATION;
   }
 }

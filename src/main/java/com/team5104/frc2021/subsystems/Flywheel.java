@@ -115,4 +115,9 @@ public class Flywheel extends ServoSubsystem {
 
     configCharacterization(encoder, (double voltage) -> setVoltage(voltage));
   }
+
+  //Reset
+  public void reset() {
+    state = FlywheelState.STOPPED;
+  }
 }

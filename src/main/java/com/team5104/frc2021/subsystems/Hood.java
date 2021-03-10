@@ -173,6 +173,8 @@ public class Hood extends ServoSubsystem {
   public void reset() {
     stop();
 
+    shooterTarget = ShooterTarget.HIGH;
+
     if (!is(SubsystemMode.HOMING)) {
       console.log("ready to home");
       setMode(SubsystemMode.HOMING);
