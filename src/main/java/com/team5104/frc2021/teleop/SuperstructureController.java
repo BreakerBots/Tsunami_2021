@@ -53,11 +53,11 @@ public class SuperstructureController extends TeleopController {
 
     // Intake
     if (Controls.INTAKE.get()) {
-      if (Superstructure.is(Mode.INTAKE)) {
+      if (Superstructure.is(Mode.INTAKING)) {
         Superstructure.set(Mode.IDLE);
         console.log("exiting intake... idling");
       } else {
-        Superstructure.set(Mode.INTAKE);
+        Superstructure.set(Mode.INTAKING);
         console.log("intaking");
       }
     }

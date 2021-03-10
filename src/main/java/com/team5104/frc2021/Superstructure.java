@@ -16,7 +16,7 @@ import com.team5104.lib.setup.RobotState.RobotMode;
 public class Superstructure {
   public enum Mode {
     IDLE,
-    INTAKE, AIMING, SHOOTING,
+    INTAKING, AIMING, SHOOTING,
     CLIMBER_DEPLOYING, CLIMBING,
     PANEL_DEPLOYING, PANELING
   }
@@ -32,7 +32,7 @@ public class Superstructure {
     }
 
     //Exit Intake
-    if (is(Mode.INTAKE) && Hopper.isFull()) {
+    if (is(Mode.INTAKING) && Hopper.isFull()) {
       set(Mode.IDLE);
       console.log("hopper full... idling");
     }

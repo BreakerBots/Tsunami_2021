@@ -22,7 +22,7 @@ public class GalacticOptimal extends AutoPath {
     //?
     if (pathChoice == 0) {
       //intake
-      Superstructure.set(Mode.INTAKE);
+      Superstructure.set(Mode.INTAKING);
 
       //?
       run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,

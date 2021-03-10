@@ -17,7 +17,7 @@ public class Intake extends Subsystem {
   public void update() {
     setPiston(true);
     if (Superstructure.isEnabled()) {
-      if (Superstructure.is(Mode.INTAKE)) {
+      if (Superstructure.is(Mode.INTAKING)) {
         setFiniteState("Intaking");
         setPercentOutput(Constants.intake.INTAKING_SPEED);
       }
