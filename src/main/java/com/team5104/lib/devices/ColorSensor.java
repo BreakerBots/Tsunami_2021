@@ -76,7 +76,14 @@ public class ColorSensor extends Device {
         }
 
         public String toString() {
-            return "color: (r: " + r + ", g: " + g + ", b: " + b + ")";
+            StringBuilder builder = new StringBuilder();
+            builder.append("r: ");
+            builder.append(r);
+            builder.append(", g: ");
+            builder.append(g);
+            builder.append(", b: ");
+            builder.append(b);
+            return builder.toString();
         }
     }
 }

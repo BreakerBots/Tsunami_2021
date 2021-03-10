@@ -156,9 +156,9 @@ public class DriveTrajectory extends AutoAction {
     timer.stop();
     Drive.set(new DriveSignal()); //stop
     console.log(
-        "Trajectory Finished in " +
-        Set.getTime("RunTrajectoryTime") + "s" +
-        ", at: " + Odometry.getPositionFeet()
+        "Trajectory Finished in ",
+        Set.getTime("RunTrajectoryTime"), "s",
+        ", at: ", Odometry.getPositionFeet()
     );
   }
 }

@@ -145,8 +145,8 @@ public class Looper {
     try {
       if (lastCrash == null || !crash.equals(lastCrash) && System.currentTimeMillis() > timeSinceLastCrash + 5000) {
         System.out.println('\n');
-        console.error("Caught fatal error at " + crash.getLoopName() + " thread!\n" +
-                      exceptionToString(crash.exception) + "Robot should work, but yours is bad!\n"
+        console.error("Caught fatal error at ", crash.getLoopName(), " thread!\n",
+                      exceptionToString(crash.exception), "Robot should work, but yours is bad!\n"
         );
         lastCrash = crash;
         timeSinceLastCrash = System.currentTimeMillis();

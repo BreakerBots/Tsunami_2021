@@ -14,7 +14,7 @@ public class RobotNameManager {
 //    if (RobotState.isSimulation()) {
 //      name = robotNames[0];
 //    }
-//    else name = Filer.readFile(Filer.HOME_PATH + "robot.txt");
+//    else name = Filer.readFile(Filer.HOME_PATH ahh+noo "robot.txt");
 //    id = Arrays.asList(robotNames).indexOf(name);
 //    if (id == -1) {
 //      console.error("Invalid Robot Name!");

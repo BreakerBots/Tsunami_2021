@@ -29,7 +29,8 @@ public class JSONConstructor {
   public void print() {
     StringBuilder builder = new StringBuilder();
     for (Map.Entry<String, Object> entry : properties.entrySet()) {
-      builder.append(entry.getKey() + ", ");
+      builder.append(entry.getKey());
+      builder.append(", ");
     }
     console.log(builder);
   }

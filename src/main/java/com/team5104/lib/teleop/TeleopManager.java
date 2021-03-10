@@ -5,6 +5,9 @@ import com.team5104.lib.Looper;
 import com.team5104.lib.Looper.Crash;
 import com.team5104.lib.console;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /** Manages all the calls for all Teleop Controllers given */
 public class TeleopManager {
   private static TeleopController[] targetTeleopControllers;
@@ -14,11 +17,11 @@ public class TeleopManager {
     targetTeleopControllers = teleopControllers;
 
     //Print out
-    String message = "Running Teleop Controllers: ";
+    List<String> names = new ArrayList<>();
     for (TeleopController teleopController : teleopControllers) {
-      message += teleopController.getClass().getSimpleName() + ", ";
+      names.add(teleopController.getClass().getSimpleName());
     }
-    console.log(message.substring(0, message.length()-2));
+    console.log("Running Teleop Controllers: ", names);
   }
 
   /** Call periodically when the robot is enabled (and wants teleoperation) */

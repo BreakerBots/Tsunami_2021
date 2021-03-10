@@ -14,11 +14,6 @@ public class DriveController extends TeleopController {
 
   //Loop
   protected void update() {
-    //toggle the kickstand
-    if (Controls.DRIVE_KICKSTAND.get()) {
-      kickstand = !kickstand;
-    }
-
     //get forward input
     double forward = Controls.DRIVE_FORWARD.get() - Controls.DRIVE_REVERSE.get();
 
@@ -33,28 +28,29 @@ public class DriveController extends TeleopController {
       turn *= -1;
     }
 
-    //send drivetrain command
-    Drive.set(get(turn, forward, kickstand));
-  }
-
-  //Methods
-  /** Forward Kinematics with added control features
-   * @param turn percent
-   * @param forward percent
-   * @param kickstand
-   * @return DriveSignal in volts */
-  public static DriveSignal get(double turn, double forward, boolean kickstand) {
+    //make drive signal
     DriveSignal signal = new DriveSignal(
         (forward + turn) * 12,
         (forward - turn) * 12
     );
+
+    //kickstand
+    if (Controls.DRIVE_KICKSTAND.get()) {
+      kickstand = !kickstand;
+    }
     if (kickstand) {
       signal.leftVolts *= KICKSTAND_SCALAR;
       signal.rightVolts *= KICKSTAND_SCALAR;
     }
+
+    //min-speed
     applyMinSpeed(signal);
-    return signal;
+
+    //send drivetrain command
+    Drive.set(signal);
   }
+
+  //Methods
   private static void applyMinSpeed(DriveSignal signal) {
     double forward = (signal.leftVolts + signal.rightVolts) / 2.0d; //volts -12 to 12
     double turn = signal.leftVolts - forward; //volts -12 to 12
@@ -79,7 +75,9 @@ public class DriveController extends TeleopController {
   //Drive Signal
   /** A simple class for sending/saving drive-train movement signals. */
   public static class DriveSignal {
-      public enum DriveMode {DRIVING, STOPPED}
+      public enum DriveMode {
+        DRIVING, STOPPED
+      }
 
       public double leftVolts, rightVolts;
       public DriveMode mode;
@@ -95,7 +93,14 @@ public class DriveController extends TeleopController {
       }
 
       public String toString() {
-          return "lv: " + leftVolts + ", rv: " + rightVolts + ", unit: " + mode;
+        StringBuilder builder = new StringBuilder();
+        builder.append("lv: ");
+        builder.append(leftVolts);
+        builder.append(", rv: ");
+        builder.append(rightVolts);
+        builder.append(", unit: ");
+        builder.append(mode);
+        return builder.toString();
       }
   }
 }

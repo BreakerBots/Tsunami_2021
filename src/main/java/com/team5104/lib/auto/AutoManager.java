@@ -24,12 +24,12 @@ public class AutoManager {
          Calls action init(), isFinished(), end(), and getValue() but not update() <-- called below */
       pathThread = new Thread(() -> {
         try {
-          console.log("Running " + targetPath.getClass().getSimpleName());
+          console.log("Running ", targetPath.getClass().getSimpleName());
           DashboardTrajectory.alertStartingPath();
           targetPath.setRunning(true);
           targetPath.start();
           targetPath.setRunning(false);
-          console.log(targetPath.getClass().getSimpleName() + " finished");
+          console.log(targetPath.getClass().getSimpleName(), " finished");
         } catch (Exception e) { Looper.logCrash(new Crash(e)); }
       });
       pathThread.start();
@@ -50,7 +50,7 @@ public class AutoManager {
     setTargetPath(path, false);
   }
   public static void setTargetPath(AutoPath path, boolean dontSend) {
-    console.log("target path is now " + path.getClass().getSimpleName());
+    console.log("target path is now ", path.getClass().getSimpleName());
     targetPath = path;
     if (!dontSend) {
       DashboardTrajectory.sendTargetPath();
