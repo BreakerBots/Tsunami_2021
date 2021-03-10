@@ -25,14 +25,13 @@ public class RobotController extends RobotBase {
   //Init Robot
   public void startCompetition() {
     //Dashboard
-    System.out.println("ALERT Logs will appear inside the dashboard once connected.");
     Dashboard.init();
 
     //Logging
     Set.create("RobotInit");
     if (Constants.robot.name.length() < 4)
-      console.error("please deploy robot.txt with the correct robot name!");
-    console.log("initializing " + Constants.robot.name + " Code...");
+      console.error("no robot.txt found! Use Filer.saveRobotFile() to specify the robot");
+    console.log("initializing ", Constants.robot.name, " code...");
 
     //Set Child Class
     if (RobotState.isSimulation())
@@ -44,7 +43,7 @@ public class RobotController extends RobotBase {
     HAL.observeUserProgramStarting();
 
     //Logging
-    Set.log("RobotInit", "initialization took ");
+    console.log("initialization took ", Set.getTime("RobotInit"), "seconds");
 
     //Fast Loop
     Looper.registerLoop(new TimedLoop("Fast", 9, 5));

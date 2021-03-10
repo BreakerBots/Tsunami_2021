@@ -72,7 +72,7 @@ public class Hood extends ServoSubsystem {
   public void fastUpdate() {
     //Exit Homing
     if (is(SubsystemMode.HOMING) && backLimitHit()) {
-      console.log("finished homing!");
+      console.log("finished homing");
       setMode(SubsystemMode.OPERATING, true);
     }
 
@@ -166,7 +166,7 @@ public class Hood extends ServoSubsystem {
     stop();
 
     if (!is(SubsystemMode.HOMING)) {
-      console.log("ready to home!");
+      console.log("ready to home");
       setMode(SubsystemMode.HOMING);
     }
   }

@@ -114,17 +114,11 @@ public class Superstructure {
 
   //Reset
   protected static void reset() {
-    console.log("resetting!");
+    console.log("resetting");
     set(Mode.IDLE);
     set(PanelState.ROTATION);
     set(FlywheelState.STOPPED);
     set(Target.HIGH);
     readyToFire.reset();
-  }
-
-  //Init
-  protected static void init() {
-    console.log("initializing!");
-    reset();
   }
 }

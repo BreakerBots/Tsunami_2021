@@ -10,7 +10,6 @@ import com.team5104.lib.Looper.Crash;
 import com.team5104.lib.Looper.Loop;
 import com.team5104.lib.Looper.TimedLoop;
 import com.team5104.lib.console;
-import com.team5104.lib.console.Log;
 import com.team5104.lib.setup.RobotState;
 import com.team5104.lib.setup.RobotState.RobotMode;
 import com.team5104.lib.subsystem.Subsystem;
@@ -25,8 +24,6 @@ import org.java_websocket.server.WebSocketServer;
 import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class Dashboard extends WebSocketServer {
   private static WebSocket connection, lastConnection;
@@ -43,17 +40,6 @@ public class Dashboard extends WebSocketServer {
 
     Looper.registerLoop(new TimedLoop("Dashboard-Send", () -> {
       if (!isConnected()) {
-        //print to System.out if not connected
-        if (console.hasBuffer()) {
-          List<Log> buffer = console.readBuffer();
-          StringBuilder builder = new StringBuilder();
-          for (Iterator<Log> iterator = buffer.iterator(); iterator.hasNext();) {
-            builder.append(iterator.next().getLogString() + "\n");
-          }
-          System.out.print(builder.toString());
-          console.clearBuffer();
-        }
-
         //dont send anything if not connected
         return;
       }
@@ -75,10 +61,7 @@ public class Dashboard extends WebSocketServer {
       data.put("robotData", robotData);
 
       //logs
-      if (console.hasBuffer()) {
-        data.put("logs", new ArrayList(console.readBuffer()));
-        console.clearBuffer();
-      }
+      data.put("logs", new ArrayList(console.readBuffer()));
 
       //#sendit
       sendMessage(data.toString());
@@ -175,11 +158,13 @@ public class Dashboard extends WebSocketServer {
     connection = newConnection;
     if (lastConnection != null && lastConnection.isOpen()) {
       killExtraConnections();
-      console.log("new connection - replacing other");
+      //console.log("new connection - replacing other");
     }
     else {
-      console.log("new connection");
+      //console.log("new connection");
     }
+
+    console.resetBuffer();
 
     //welcome package
     JSONConstructor data = new JSONConstructor();
@@ -193,7 +178,7 @@ public class Dashboard extends WebSocketServer {
     if (conn == lastConnection)
       return;
 
-    console.log("lost connection");
+    //console.log("lost connection");
     if (RobotState.isSimulation()) {
       DriverStationSim.setEnabled(false);
     }

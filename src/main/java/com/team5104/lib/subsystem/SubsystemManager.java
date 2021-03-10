@@ -6,6 +6,9 @@ import com.team5104.lib.Looper.Crash;
 import com.team5104.lib.console;
 import com.team5104.lib.subsystem.Subsystem.SubsystemMode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SubsystemManager {
   private static Subsystem[] attachedSubsystems;
 
@@ -15,20 +18,16 @@ public class SubsystemManager {
     attachedSubsystems = subsystems;
 
     //Initialize Subsystem's Interface & Print out target subsystems
-    StringBuilder message = new StringBuilder();
-    message.append("running subsystems: ");
-    String prefix = "";
+    List<String> subsystemNames = new ArrayList<>();
     for (Subsystem subsystem : attachedSubsystems) {
       try {
         subsystem.mode = SubsystemMode.OPERATING;
         subsystem.identifyDevices();
         subsystem.reset();
-        message.append(prefix);
-        prefix = ", ";
-        message.append(subsystem.getClass().getSimpleName());
+        subsystemNames.add(subsystem.getClass().getSimpleName());
       } catch (Exception e) { Looper.logCrash(new Crash(e)); }
     }
-    console.log(message);
+    console.log("running subsystems: ", subsystemNames);
 
     //Fast Update
     Looper.attach(() -> {

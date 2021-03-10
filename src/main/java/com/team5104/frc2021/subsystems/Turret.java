@@ -161,7 +161,7 @@ public class Turret extends ServoSubsystem {
 
     //Only home once per roborio boot while not.
     if (!Filer.fileExists("/tmp/turret_homed.txt")) {
-      console.log("ready to home!");
+      console.log("ready to home");
       setMode(SubsystemMode.HOMING);
     }
     else enableSoftLimits(true);

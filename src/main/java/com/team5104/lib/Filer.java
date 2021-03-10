@@ -30,4 +30,8 @@ public class Filer {
             file.createNewFile();
         } catch (IOException e) { }
     }
+
+    public static void saveRobotFile(int robotID, RobotNameManager robotNameManager) {
+        //TODO
+    }
 }

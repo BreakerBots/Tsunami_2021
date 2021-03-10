@@ -25,7 +25,6 @@ public class RobotSim extends RobotController.Robot {
 
         //Other
         Odometry.init();
-        Superstructure.init();
     }
 
     //Autonomous
