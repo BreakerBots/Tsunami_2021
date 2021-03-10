@@ -22,7 +22,7 @@ public class Turret extends ServoSubsystem {
   private PositionController controller;
   private LatencyCompensator latencyCompensator;
   private MovingAverage outputAverage;
-  private static double targetAngle = 0, fieldOrientedOffset = 0;
+  private static double targetAngle = 0, fieldOrientedOffset = -135;
 
   //Loop
   public void update() {
@@ -73,7 +73,7 @@ public class Turret extends ServoSubsystem {
   public void fastUpdate() {
     //Exit Homing
     if (is(SubsystemMode.HOMING) && leftLimitHit()) {
-      console.log("finished homing!");
+      console.log("finished homing");
       Filer.createFile("/tmp/turret_homed.txt");
       setMode(SubsystemMode.OPERATING, true);
     }
