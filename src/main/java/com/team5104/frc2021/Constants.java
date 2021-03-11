@@ -85,10 +85,10 @@ public class Constants {
     public static class TurretConstants {
         public double KP = 0.2;
         public double KI = 0;
-        public double KD = sob(0.01, 0.0);
-        public double KS = sob(.2/*0.258*/, 0.35);
-        public double KV = 0.015;
-        public double KA = sob(0.000121, 0.000384);
+        public double KD = sob(0.02, 0.0);
+        public double KS = sob(0/*0.258*/, 0.35);
+        public double KV = 0;
+        public double KA = sob(0, 0.000384);
         public double MAX_VEL = 200;
         public double MAX_ACC = 2000;
         public double GEARING = (60.0 / 8.0 /*gear*/) * (150.0 / 22.0 /*sprocket*/);

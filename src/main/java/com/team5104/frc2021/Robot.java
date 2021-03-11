@@ -24,7 +24,7 @@ public class Robot extends RobotController.Robot {
     SubsystemManager.attach(
       new Drive(),
       new Intake(),
-     // new Turret(),
+      new Turret(),
       new Flywheel(),
       new Hopper(),
       new Hood(),
