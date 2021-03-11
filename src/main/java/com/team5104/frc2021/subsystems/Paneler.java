@@ -100,6 +100,7 @@ public class Paneler extends ServoSubsystem {
   public static double getPanelRotations() {
     return encoder.getComponentRevs();
   }
+  public PanelerTarget getTarget() { return target; }
 
   //Config
   public Paneler() {

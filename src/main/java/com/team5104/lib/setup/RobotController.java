@@ -3,8 +3,8 @@ package com.team5104.lib.setup;
 
 import com.team5104.frc2021.Constants;
 import com.team5104.frc2021.RobotSim;
+import com.team5104.lib.CrashHandler;
 import com.team5104.lib.Looper;
-import com.team5104.lib.Looper.Crash;
 import com.team5104.lib.Looper.Loop;
 import com.team5104.lib.Looper.TimedLoop;
 import com.team5104.lib.console;
@@ -24,32 +24,36 @@ public class RobotController extends RobotBase {
 
   //Init Robot
   public void startCompetition() {
-    //Dashboard
-    Dashboard.init();
+    //HAL
+    HAL.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Timed);
+    HAL.observeUserProgramStarting();
 
-    //Logging
+    //Register Loops
+    Looper.registerLoop(new Loop("Main", Thread.currentThread(), 5));
+    Looper.registerLoop(new TimedLoop("Fast", 9, 5));
+
+    //Dashboard
+    try {
+      Dashboard.init();
+    } catch (Exception e) { CrashHandler.log(e); }
+
+    //Robot Metadata
     Set.create("RobotInit");
     if (Constants.robot.name.length() < 4)
       console.error("no robot.txt found! Use Filer.saveRobotFile() to specify the robot");
     console.log("initializing ", Constants.robot.name, " code...");
 
-    //Set Child Class
-    if (RobotState.isSimulation())
-      robot = new RobotSim();
-    else robot = new com.team5104.frc2021.Robot();
+    //Set Robot Class
+    try {
+      if (RobotState.isSimulation())
+        robot = new RobotSim();
+      else robot = new com.team5104.frc2021.Robot();
+    } catch (Exception e) { CrashHandler.log(e); }
 
-    //HAL
-    HAL.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Timed);
-    HAL.observeUserProgramStarting();
-
-    //Logging
+    //Init Time
     console.log("initialization took ", Set.getTime("RobotInit"), "seconds");
 
-    //Fast Loop
-    Looper.registerLoop(new TimedLoop("Fast", 9, 5));
-
-    //Main Loop
-    Looper.registerLoop(new Loop("Main", Thread.currentThread(), 5));
+    //Loop
     expirationTime = RobotState.getFPGATimestamp() + RobotState.getLoopPeriod();
     NotifierJNI.setNotifierName(notifier, "Main");
     while (true) {
@@ -57,7 +61,11 @@ public class RobotController extends RobotBase {
       if (NotifierJNI.waitForNotifierAlarm(notifier) == 0)
         break;
 
-      loop();
+      try {
+        if (robot != null) {
+          loop();
+        }
+      } catch (Exception e) { CrashHandler.log(e); }
 
       expirationTime += RobotState.getLoopPeriod();
     }
@@ -96,12 +104,12 @@ public class RobotController extends RobotBase {
           robot.mainEnabled();
         }
       }
-    } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+    } catch (Exception e) { CrashHandler.log(e); }
 
     //Update Main Robot Loop
     try {
       robot.mainLoop();
-    } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+    } catch (Exception e) { CrashHandler.log(e); }
 
     //Handle Modes
     switch(RobotState.getMode()) {
@@ -114,7 +122,7 @@ public class RobotController extends RobotBase {
           }
           robot.teleopLoop();
           HAL.observeUserProgramTeleop();
-        } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+        } catch (Exception e) { CrashHandler.log(e); }
         break;
       }
       case AUTONOMOUS: {
@@ -126,7 +134,7 @@ public class RobotController extends RobotBase {
           }
           robot.autoLoop();
           HAL.observeUserProgramTeleop();
-        } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+        } catch (Exception e) { CrashHandler.log(e); }
         break;
       }
       case TEST: {
@@ -138,7 +146,7 @@ public class RobotController extends RobotBase {
           }
           robot.testLoop();
           HAL.observeUserProgramTest();
-        } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+        } catch (Exception e) { CrashHandler.log(e); }
         break;
       }
       case DISABLED: {
@@ -153,7 +161,7 @@ public class RobotController extends RobotBase {
               }
               case AUTONOMOUS: {
                 robot.autoDisabled();
-                console.log("Autonomous Disabled");
+                console.log("Auto Disabled");
                 break;
               }
               case TEST: {
@@ -165,7 +173,7 @@ public class RobotController extends RobotBase {
             }
           }
           HAL.observeUserProgramDisabled();
-        } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+        } catch (Exception e) { CrashHandler.log(e); }
         break;
       }
       default: break;

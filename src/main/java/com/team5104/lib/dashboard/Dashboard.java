@@ -5,8 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team5104.frc2021.Constants;
 import com.team5104.frc2021.Controls;
 import com.team5104.frc2021.Superstructure;
+import com.team5104.frc2021.subsystems.Hood;
+import com.team5104.lib.CrashHandler;
 import com.team5104.lib.Looper;
-import com.team5104.lib.Looper.Crash;
 import com.team5104.lib.Looper.Loop;
 import com.team5104.lib.Looper.TimedLoop;
 import com.team5104.lib.console;
@@ -79,6 +80,10 @@ public class Dashboard extends WebSocketServer {
       pageData.put("Superstructure", new Superstructure());
       if (SubsystemManager.getSubsystems() != null) {
         for (Subsystem subsystem : SubsystemManager.getSubsystems()) {
+          if (subsystem.getClass() == Hood.class) {
+            pageData.put(subsystem.getClass().getSimpleName(), (Hood) subsystem);
+          }
+          else
           pageData.put(subsystem.getClass().getSimpleName(), subsystem);
         }
       }
@@ -91,7 +96,7 @@ public class Dashboard extends WebSocketServer {
           pageData.put(field.getName(), field.get(null));
           field.setAccessible(false);
         }
-      } catch (IllegalAccessException e) { Looper.logCrash(new Crash(e)); }
+      } catch (IllegalAccessException e) { CrashHandler.log(e); }
     }
     //TODO other urls
     if (pageData.getProperties().size() > 1) {
@@ -151,7 +156,7 @@ public class Dashboard extends WebSocketServer {
       }
       //TODO other inputs
 
-    } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+    } catch (Exception e) { CrashHandler.log(e); }
   }
   public void onOpen(WebSocket newConnection, ClientHandshake handshake) {
     lastConnection = this.connection;
@@ -191,14 +196,14 @@ public class Dashboard extends WebSocketServer {
     setConnectionLostTimeout(1000);
   }
   public void onError(WebSocket conn, Exception e) {
-    Looper.logCrash(new Crash(e));
+    CrashHandler.log(e);
   }
 
   //Other (non-instance)
   public static void close() {
     try {
       instance.stop();
-    } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+    } catch (Exception e) { CrashHandler.log(e); }
   }
   public static boolean isConnected() {
     return connection != null && connection.isOpen();

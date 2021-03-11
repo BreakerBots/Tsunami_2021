@@ -18,8 +18,8 @@ import com.team5104.lib.motion.PositionController;
 import com.team5104.lib.subsystem.ServoSubsystem;
 
 public class Hood extends ServoSubsystem {
-  public enum ShooterTarget { LOW, HIGH }
-  public static ShooterTarget shooterTarget = ShooterTarget.HIGH;
+  public enum HoodTarget { LOW, HIGH }
+  public static HoodTarget target = HoodTarget.HIGH;
 
   private static TalonSRX motor;
   private static MagEncoder encoder;
@@ -43,7 +43,7 @@ public class Hood extends ServoSubsystem {
       }
 
       //Low
-      else if (shooterTarget == ShooterTarget.LOW) {
+      else if (target == HoodTarget.LOW) {
         setFiniteState("Low");
         setAngle(40);
       }
@@ -133,6 +133,9 @@ public class Hood extends ServoSubsystem {
     double x = visionFilter.getDoubleOutput();
     return -0.00638178 * x * x * x - 0.297426 * x * x - 3.24309 * x + Constants.hood.EQ_CONST;
   }
+  public HoodTarget getTarget() {
+    return target;
+  }
 
   //Config
   public Hood() {
@@ -173,7 +176,7 @@ public class Hood extends ServoSubsystem {
   public void reset() {
     stop();
 
-    shooterTarget = ShooterTarget.HIGH;
+    target = HoodTarget.HIGH;
 
     if (!is(SubsystemMode.HOMING)) {
       console.log("ready to home");

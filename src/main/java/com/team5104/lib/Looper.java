@@ -1,10 +1,8 @@
 package com.team5104.lib;
 
-import edu.wpi.first.hal.NotifierJNI;
 import com.team5104.lib.setup.RobotState;
+import edu.wpi.first.hal.NotifierJNI;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 
 /** Manages all the loops/threads running on the robot and tries to figure out wtf happened when they crash */
@@ -41,9 +39,11 @@ public class Looper {
   /** Nukes the entire world lol */
   public static void killAll() {
     for (Loop loop : loops) {
-      if (loop.getClass() == TimedLoop.class)
-        ((TimedLoop) loop).kill();
-      else loop.thread.interrupt();
+      try {
+        if (loop.getClass() == TimedLoop.class)
+          ((TimedLoop) loop).kill();
+        else loop.thread.interrupt();
+      } catch (Exception e) { CrashHandler.log(e); }
     }
   }
 
@@ -79,7 +79,7 @@ public class Looper {
       this(name, new Thread(() -> {
         try {
           runnable.run();
-        } catch (Exception e) { logCrash(new Crash(e)); }
+        } catch (Exception e) { CrashHandler.log(e); }
       }), priority);
       thread.start();
     }
@@ -108,8 +108,11 @@ public class Looper {
           if (curTime == 0)
             break;
 
-          for (Runnable runnable : runnables)
-            runnable.run();
+          try {
+            for (Runnable runnable : runnables) {
+              runnable.run();
+            }
+          } catch (Exception e) { CrashHandler.log(e); }
 
           expirationTime += period;
         }
@@ -136,62 +139,6 @@ public class Looper {
 
     public void attach(Runnable runnable) {
       runnables.add(runnable);
-    }
-  }
-
-  // -- Crash Handling
-  /** Logs a crash that occurred */
-  public static void logCrash(Crash crash) {
-    try {
-      if (lastCrash == null || !crash.equals(lastCrash) && System.currentTimeMillis() > timeSinceLastCrash + 5000) {
-        System.out.println('\n');
-        console.error("Caught fatal error at ", crash.getLoopName(), " thread!\n",
-                      exceptionToString(crash.exception), "Robot should work, but yours is bad!\n"
-        );
-        lastCrash = crash;
-        timeSinceLastCrash = System.currentTimeMillis();
-      }
-    } catch (Exception e) { console.error("error in Looper.logCrash() method", exceptionToString(e)); }
-  }
-  public static class Crash {
-    Loop loop;
-    Exception exception;
-
-    /** Creates a crash object and located threadName based on the current loop */
-    public Crash(Exception exception) {
-      this.loop = getLoop(Thread.currentThread());
-      this.exception = exception;
-    }
-
-    public boolean equals(Crash otherCrash) {
-      try {
-        if (otherCrash == null)
-          return false;
-
-        return (
-            this.loop == otherCrash.loop &&
-            this.exception.toString().equals(otherCrash.exception.toString())
-        );
-      } catch (Exception e) { return false; }
-    }
-
-    public String getLoopName() {
-      if (loop == null)
-        return "Unknown";
-      else return loop.name;
-    }
-  }
-  private static Crash lastCrash;
-  private static long timeSinceLastCrash;
-  private static String exceptionToString(Exception exception) {
-    try {
-      StringWriter sw = new StringWriter();
-      PrintWriter pw = new PrintWriter(sw);
-      exception.printStackTrace(pw);
-      String st = sw.toString();
-      return st;
-    } catch (Exception e2) {
-      return null;
     }
   }
 }

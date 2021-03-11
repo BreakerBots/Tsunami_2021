@@ -1,8 +1,7 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package com.team5104.lib.teleop;
 
-import com.team5104.lib.Looper;
-import com.team5104.lib.Looper.Crash;
+import com.team5104.lib.CrashHandler;
 import com.team5104.lib.console;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class TeleopManager {
     for (TeleopController teleopController : targetTeleopControllers) {
       try {
         teleopController.update();
-      } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+      } catch (Exception e) { CrashHandler.log(e); }
     }
   }
 
@@ -38,7 +37,7 @@ public class TeleopManager {
     for (TeleopController teleopController : targetTeleopControllers) {
       try {
         teleopController.enabled();
-      } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+      } catch (Exception e) { CrashHandler.log(e); }
     }
   }
 
@@ -47,7 +46,7 @@ public class TeleopManager {
     for (TeleopController teleopController : targetTeleopControllers) {
       try {
         teleopController.disabled();
-      } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+      } catch (Exception e) { CrashHandler.log(e); }
     }
   }
 }

@@ -6,7 +6,7 @@ import com.team5104.frc2021.Superstructure.Mode;
 import com.team5104.frc2021.subsystems.Flywheel;
 import com.team5104.frc2021.subsystems.Flywheel.FlywheelState;
 import com.team5104.frc2021.subsystems.Hood;
-import com.team5104.frc2021.subsystems.Hood.ShooterTarget;
+import com.team5104.frc2021.subsystems.Hood.HoodTarget;
 import com.team5104.frc2021.subsystems.Paneler;
 import com.team5104.frc2021.subsystems.Paneler.PanelerTarget;
 import com.team5104.lib.Compressor;
@@ -98,11 +98,11 @@ public class SuperstructureController extends TeleopController {
     }
     if (Controls.SHOOT_LOW.get()) {
       console.log("setting target to low");
-      Hood.shooterTarget = ShooterTarget.LOW;
+      Hood.target = HoodTarget.LOW;
     }
     if (Controls.SHOOT_HIGH.get()) {
       console.log("setting target to high");
-      Hood.shooterTarget = ShooterTarget.HIGH;
+      Hood.target = HoodTarget.HIGH;
     }
 
     // Climb

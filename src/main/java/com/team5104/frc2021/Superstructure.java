@@ -1,7 +1,6 @@
 /*BreakerBots Robotics Team 2020*/
 package com.team5104.frc2021;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.team5104.frc2021.subsystems.*;
 import com.team5104.frc2021.subsystems.Flywheel.FlywheelState;
@@ -91,7 +90,6 @@ public class Superstructure {
   public static boolean is(Mode mode) {
     return mode == Superstructure.mode;
   }
-  @JsonGetter("mode")
   public Mode getMode() {
     return mode;
   }

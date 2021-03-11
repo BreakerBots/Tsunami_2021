@@ -25,30 +25,28 @@ public class console {
      * 2.12 [Robot]: Message
      * 90.12 ERROR [subsystems.Turret]: Message */
     private static void logBase(int stackCount, Type type, Object... data) {
-        StackTraceElement trace = new Throwable().getStackTrace()[stackCount];
 
         Log log = new Log(
             Timer.getFPGATimestamp(),
             type,
-            trace.getClassName(),
-            trace.getLineNumber(),
+            stackCount + 1,
             data,
             1
         );
 
-//        int lastLogIndex = logs.size() - 1;
-//        if (logs.size() > 0 && logs.get(lastLogIndex).equals(log)) {
-//            //group and add to counter
-//            log.count = logs.get(lastLogIndex).count + 1;
-//            logs.set(lastLogIndex, log);
-//            if (bufferIndex > lastLogIndex) {
-//                bufferIndex = lastLogIndex;
-//            }
-//        }
-//        else {
+        int lastLogIndex = logs.size() - 1;
+        if (logs.size() > 0 && logs.get(lastLogIndex).equals(log)) {
+            //group and add to counter
+            log.count = logs.get(lastLogIndex).count + 1;
+            logs.set(lastLogIndex, log);
+            if (bufferIndex > lastLogIndex) {
+                bufferIndex = lastLogIndex;
+            }
+        }
+        else {
             //add log
             addToLogs(log);
-//        }
+        }
     }
     /** Prints out text to the console under the type "INFO" and category "OTHER" */
     public static void log(Object... data) { logBase(2, Type.INFO, data); }
@@ -157,40 +155,57 @@ public class console {
         private double timestamp;
         @JsonProperty("type")
         private Type type;
-        @JsonProperty("location")
-        private String location;
-        @JsonProperty("lineNumber")
-        private int lineNumber;
+        @JsonProperty("trace")
+        private TraceElement[] trace;
         @JsonProperty("data")
         private Object[] data;
         @JsonProperty("count")
         int count;
 
-        public Log(double timestamp, Type type, String location, int lineNumber,
-                   Object[] data, int count) {
+        public Log(double timestamp, Type type, int stackCount, Object[] data, int count) {
             this.timestamp = timestamp;
             this.type = type;
-            this.location = location;
-            this.lineNumber = lineNumber;
+
+            StackTraceElement[] rawTrace = new Throwable().getStackTrace();
+            int size = Math.min(rawTrace.length - stackCount, 3);
+            this.trace = new TraceElement[size];
+            for (int i = 0; i < size; i++) {
+                this.trace[i] = new TraceElement(rawTrace[i + stackCount]);
+            }
+
             this.data = data;
             this.count = count;
         }
 
         public boolean equals(Log log) {
             return this.type == log.type &&
-                   this.location.equals(log.location) &&
-                   this.lineNumber == log.lineNumber;
-                   //this.data?
+                   this.trace[0].className.equals(log.trace[0].className) &&
+                   this.trace[0].lineNumber == log.trace[0].lineNumber;
         }
 
         public String getLogString() {
             StringBuilder builder = new StringBuilder();
             builder.append(type.name());
             builder.append(" [");
-            builder.append(location);
+            builder.append(trace[0].className);
             builder.append("]: ");
             builder.append(Arrays.toString(data));
             return builder.toString();
+        }
+    }
+    @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
+    public static class TraceElement {
+        @JsonProperty("className")
+        private String className;
+        @JsonProperty("lineNumber")
+        private int lineNumber;
+
+        public TraceElement(StackTraceElement stackTraceElement) {
+            if (stackTraceElement == null)
+                return;
+
+            this.className = stackTraceElement.getClassName();
+            this.lineNumber = stackTraceElement.getLineNumber();
         }
     }
 }

@@ -5,6 +5,7 @@ import com.team5104.frc2021.Constants;
 import com.team5104.frc2021.subsystems.Drive;
 import com.team5104.frc2021.teleop.DriveController.DriveSignal;
 import com.team5104.lib.auto.AutoAction;
+import com.team5104.lib.auto.AutoManager;
 import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.auto.Position;
 import com.team5104.lib.console;
@@ -155,10 +156,12 @@ public class DriveTrajectory extends AutoAction {
   public void end() {
     timer.stop();
     Drive.set(new DriveSignal()); //stop
-    console.log(
-        "Trajectory Finished in ",
-        Set.getTime("RunTrajectoryTime"), "s",
-        ", at: ", Odometry.getPositionFeet()
-    );
+    if (!AutoManager.pathThreadInterrupted) {
+      console.log(
+          "Trajectory Finished in ",
+          Set.getTime("RunTrajectoryTime"), "seconds",
+          "at: ", Odometry.getPositionFeet()
+      );
+    }
   }
 }
