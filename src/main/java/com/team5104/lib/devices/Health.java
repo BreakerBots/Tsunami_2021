@@ -87,7 +87,13 @@ public class Health {
   //To String
   @JsonValue
   public String toString() {
-    return status.toString() + (error != null ? (" " + error) : "");
+    StringBuilder builder = new StringBuilder();
+    builder.append(status.toString());
+    if (error != null) {
+      builder.append(" ");
+      builder.append(error);
+    }
+    return builder.toString();
   }
 }
 

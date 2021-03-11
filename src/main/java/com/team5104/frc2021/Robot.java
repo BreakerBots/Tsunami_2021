@@ -38,10 +38,12 @@ public class Robot extends RobotController.Robot {
       new SuperstructureController()
     );
 
+    //Superstructure
+    Superstructure.reset();
+
     //Other
     Limelight.init(true);
     Odometry.init();
-    Superstructure.init();
     AutoManager.setTargetPath(new AutoNavBounce());
     Compressor.stop();
   }

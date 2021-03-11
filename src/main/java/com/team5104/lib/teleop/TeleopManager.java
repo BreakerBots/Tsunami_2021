@@ -1,9 +1,11 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package com.team5104.lib.teleop;
 
-import com.team5104.lib.Looper;
-import com.team5104.lib.Looper.Crash;
+import com.team5104.lib.CrashHandler;
 import com.team5104.lib.console;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** Manages all the calls for all Teleop Controllers given */
 public class TeleopManager {
@@ -14,11 +16,11 @@ public class TeleopManager {
     targetTeleopControllers = teleopControllers;
 
     //Print out
-    String message = "Running Teleop Controllers: ";
+    List<String> names = new ArrayList<>();
     for (TeleopController teleopController : teleopControllers) {
-      message += teleopController.getClass().getSimpleName() + ", ";
+      names.add(teleopController.getClass().getSimpleName());
     }
-    console.log(message.substring(0, message.length()-2));
+    console.log("Running Teleop Controllers: ", names);
   }
 
   /** Call periodically when the robot is enabled (and wants teleoperation) */
@@ -26,7 +28,7 @@ public class TeleopManager {
     for (TeleopController teleopController : targetTeleopControllers) {
       try {
         teleopController.update();
-      } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+      } catch (Exception e) { CrashHandler.log(e); }
     }
   }
 
@@ -35,7 +37,7 @@ public class TeleopManager {
     for (TeleopController teleopController : targetTeleopControllers) {
       try {
         teleopController.enabled();
-      } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+      } catch (Exception e) { CrashHandler.log(e); }
     }
   }
 
@@ -44,7 +46,7 @@ public class TeleopManager {
     for (TeleopController teleopController : targetTeleopControllers) {
       try {
         teleopController.disabled();
-      } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+      } catch (Exception e) { CrashHandler.log(e); }
     }
   }
 }

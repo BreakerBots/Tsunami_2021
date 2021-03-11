@@ -21,7 +21,7 @@ public class XboxController {
     public static XboxController create(int port) {
         for (XboxController controller : controllers) {
             if (controller.port == port) {
-                console.error("controller on port " + port + " already declared!");
+                console.error("controller on port ", port, " already declared!");
                 return null;
             }
         }
@@ -45,12 +45,12 @@ public class XboxController {
                 HAL.setJoystickOutputs((byte) controller.port, 0, (short) 0, (short) 0);
             if (isConnected(controller.port)) {
                 if (controller.hasSentDisconnectMessage) {
-                    console.log("Controller on port " + controller.port + " reconnected!");
+                    console.log("Controller on port ", controller.port, " reconnected!");
                     controller.hasSentDisconnectMessage = false;
                 }
             }
             else if (!controller.hasSentDisconnectMessage) {
-                console.warn("Controller on port " + controller.port + " disconnected!");
+                console.warn("Controller on port ", controller.port, " disconnected!");
                 controller.hasSentDisconnectMessage = true;
             }
         }

@@ -21,6 +21,21 @@ public class  Util {
     public static double limitTop(double value, double max) {
         return value > max ? max : value;
     }
+    /** Limits the top and bottom of a number so
+     * limit(2, 0, 1) -> 1, limit(-1, 0, 1) -> 0 */
+    public static int limit(int value, int min, int max) {
+        return limitBottom(limitTop(value, max), min);
+    }
+    /** Limits the bottom of a number so
+     * limit(-1, 0) -> 0 */
+    public static int limitBottom(int value, int min) {
+        return value < min ? min : value;
+    }
+    /** Limits the top of a number so
+     * limit(2, 1) -> 1 */
+    public static int limitTop(int value, int max) {
+        return value > max ? max : value;
+    }
 
     //Roughly Equals
     /** Whether `a` roughly equals `b` within a tolerance

@@ -23,9 +23,11 @@ public class RobotSim extends RobotController.Robot {
             new Turret()
         );
 
+        //Superstructure
+        Superstructure.reset();
+
         //Other
         Odometry.init();
-        Superstructure.init();
     }
 
     //Autonomous

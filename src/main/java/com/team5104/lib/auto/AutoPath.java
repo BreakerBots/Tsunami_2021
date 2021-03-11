@@ -21,18 +21,18 @@ public abstract class AutoPath {
    * @warning DO NOT CALL IN MAIN THREAD
    * @return passthroughs value from action */
   public final boolean run(AutoAction action) {
-    if (action == null)
+    if (action == null || AutoManager.pathThreadInterrupted)
       return false;
 
     currentAction = action;
     currentAction.init();
-    while (currentAction != null && !currentAction.isFinished()) {
+    while (currentAction != null && !currentAction.isFinished() && !AutoManager.pathThreadInterrupted) {
       try { Thread.sleep(RobotState.getLoopPeriod()); }
       //no code in the loop (just waiting until currentAction is finished)
       catch (InterruptedException e) { }
     }
     boolean value = false;
-    if (currentAction != null) {
+    if (currentAction != null && !AutoManager.pathThreadInterrupted) {
       currentAction.end();
       value = currentAction.getValue();
       currentAction = null;

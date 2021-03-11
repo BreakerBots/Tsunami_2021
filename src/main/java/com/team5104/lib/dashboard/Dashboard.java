@@ -5,12 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team5104.frc2021.Constants;
 import com.team5104.frc2021.Controls;
 import com.team5104.frc2021.Superstructure;
+import com.team5104.frc2021.subsystems.Hood;
+import com.team5104.lib.CrashHandler;
 import com.team5104.lib.Looper;
-import com.team5104.lib.Looper.Crash;
 import com.team5104.lib.Looper.Loop;
 import com.team5104.lib.Looper.TimedLoop;
 import com.team5104.lib.console;
-import com.team5104.lib.console.Log;
 import com.team5104.lib.setup.RobotState;
 import com.team5104.lib.setup.RobotState.RobotMode;
 import com.team5104.lib.subsystem.Subsystem;
@@ -25,8 +25,6 @@ import org.java_websocket.server.WebSocketServer;
 import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class Dashboard extends WebSocketServer {
   private static WebSocket connection, lastConnection;
@@ -43,17 +41,6 @@ public class Dashboard extends WebSocketServer {
 
     Looper.registerLoop(new TimedLoop("Dashboard-Send", () -> {
       if (!isConnected()) {
-        //print to System.out if not connected
-        if (console.hasBuffer()) {
-          List<Log> buffer = console.readBuffer();
-          StringBuilder builder = new StringBuilder();
-          for (Iterator<Log> iterator = buffer.iterator(); iterator.hasNext();) {
-            builder.append(iterator.next().getLogString() + "\n");
-          }
-          System.out.print(builder.toString());
-          console.clearBuffer();
-        }
-
         //dont send anything if not connected
         return;
       }
@@ -75,10 +62,7 @@ public class Dashboard extends WebSocketServer {
       data.put("robotData", robotData);
 
       //logs
-      if (console.hasBuffer()) {
-        data.put("logs", new ArrayList(console.readBuffer()));
-        console.clearBuffer();
-      }
+      data.put("logs", new ArrayList(console.readBuffer()));
 
       //#sendit
       sendMessage(data.toString());
@@ -96,6 +80,10 @@ public class Dashboard extends WebSocketServer {
       pageData.put("Superstructure", new Superstructure());
       if (SubsystemManager.getSubsystems() != null) {
         for (Subsystem subsystem : SubsystemManager.getSubsystems()) {
+          if (subsystem.getClass() == Hood.class) {
+            pageData.put(subsystem.getClass().getSimpleName(), (Hood) subsystem);
+          }
+          else
           pageData.put(subsystem.getClass().getSimpleName(), subsystem);
         }
       }
@@ -108,7 +96,7 @@ public class Dashboard extends WebSocketServer {
           pageData.put(field.getName(), field.get(null));
           field.setAccessible(false);
         }
-      } catch (IllegalAccessException e) { Looper.logCrash(new Crash(e)); }
+      } catch (IllegalAccessException e) { CrashHandler.log(e); }
     }
     //TODO other urls
     if (pageData.getProperties().size() > 1) {
@@ -168,18 +156,20 @@ public class Dashboard extends WebSocketServer {
       }
       //TODO other inputs
 
-    } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+    } catch (Exception e) { CrashHandler.log(e); }
   }
   public void onOpen(WebSocket newConnection, ClientHandshake handshake) {
     lastConnection = this.connection;
     connection = newConnection;
     if (lastConnection != null && lastConnection.isOpen()) {
       killExtraConnections();
-      console.log("new connection - replacing other");
+      //console.log("new connection - replacing other");
     }
     else {
-      console.log("new connection");
+      //console.log("new connection");
     }
+
+    console.resetBuffer();
 
     //welcome package
     JSONConstructor data = new JSONConstructor();
@@ -193,7 +183,7 @@ public class Dashboard extends WebSocketServer {
     if (conn == lastConnection)
       return;
 
-    console.log("lost connection");
+    //console.log("lost connection");
     if (RobotState.isSimulation()) {
       DriverStationSim.setEnabled(false);
     }
@@ -206,14 +196,14 @@ public class Dashboard extends WebSocketServer {
     setConnectionLostTimeout(1000);
   }
   public void onError(WebSocket conn, Exception e) {
-    Looper.logCrash(new Crash(e));
+    CrashHandler.log(e);
   }
 
   //Other (non-instance)
   public static void close() {
     try {
       instance.stop();
-    } catch (Exception e) { Looper.logCrash(new Crash(e)); }
+    } catch (Exception e) { CrashHandler.log(e); }
   }
   public static boolean isConnected() {
     return connection != null && connection.isOpen();

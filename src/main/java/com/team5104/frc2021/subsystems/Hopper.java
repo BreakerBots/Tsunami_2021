@@ -72,7 +72,7 @@ public class Hopper extends ServoSubsystem {
       }
 
       //Entry
-      if (Superstructure.is(Mode.INTAKE))
+      if (Superstructure.is(Mode.INTAKING))
         setStart(Constants.hopper.START_SPEED_INTAKING);
       else if (isIndexing)
         setStart(Constants.hopper.START_SPEED_INDEXING);

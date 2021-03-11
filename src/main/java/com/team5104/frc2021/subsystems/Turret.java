@@ -10,9 +10,9 @@ import com.team5104.frc2021.Ports;
 import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.Mode;
 import com.team5104.lib.*;
-import com.team5104.lib.motion.PositionController;
 import com.team5104.lib.devices.Encoder.FalconEncoder;
 import com.team5104.lib.devices.Limelight;
+import com.team5104.lib.motion.PositionController;
 import com.team5104.lib.setup.RobotState;
 import com.team5104.lib.subsystem.ServoSubsystem;
 
@@ -22,7 +22,9 @@ public class Turret extends ServoSubsystem {
   private PositionController controller;
   private LatencyCompensator latencyCompensator;
   private MovingAverage outputAverage;
-  private static double targetAngle = 0, fieldOrientedOffset = 0;
+  private static double targetAngle = 0,
+                        fieldOrientedOffset = -135;
+  private static LatchedBoolean onTargetTrigger = new LatchedBoolean();
 
   //Loop
   public void update() {
@@ -67,13 +69,17 @@ public class Turret extends ServoSubsystem {
       targetAngle = Util.wrap180(Drive.getHeading() + fieldOrientedOffset);
       controller.calculate(getAngle(), targetAngle);
     }
+
+    //Logging
+    if (onTargetTrigger.get(Turret.onTarget()) && Superstructure.is(Mode.AIMING))
+      console.log("on target");
   }
 
   //Fast Loop
   public void fastUpdate() {
     //Exit Homing
     if (is(SubsystemMode.HOMING) && leftLimitHit()) {
-      console.log("finished homing!");
+      console.log("finished homing");
       Filer.createFile("/tmp/turret_homed.txt");
       setMode(SubsystemMode.OPERATING, true);
     }
@@ -161,7 +167,7 @@ public class Turret extends ServoSubsystem {
 
     //Only home once per roborio boot while not.
     if (!Filer.fileExists("/tmp/turret_homed.txt")) {
-      console.log("ready to home!");
+      console.log("ready to home");
       setMode(SubsystemMode.HOMING);
     }
     else enableSoftLimits(true);

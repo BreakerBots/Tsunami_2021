@@ -43,7 +43,7 @@ public class Characterizer {
 
   public static void disabled() {
 //    String str = data.toString();
-//    telemetryEntry.setString(str.substring(1, str.length() - 1) + ", ");
+//    telemetryEntry.setString(str.substring(1, str.length() - 1) +<-- ahh noo ", ");
 //    data.clear();
   }
 

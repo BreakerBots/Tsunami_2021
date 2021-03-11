@@ -34,7 +34,10 @@ public class DashboardTrajectory {
           6, 4,
           positions
       );
-      trajectoryData.put("traj"+t, new PlottableTrajectory(traj.getPoints()));
+      StringBuilder trajName = new StringBuilder();
+      trajName.append("traj");
+      trajName.append(t);
+      trajectoryData.put(trajName.toString(), new PlottableTrajectory(traj.getPoints()));
     }
 
     //send trajectories
@@ -46,10 +49,12 @@ public class DashboardTrajectory {
   /** Sets the AutoManager's target path from JSON data */
   public static void setTargetPath(JsonNode targetPathNode) throws Exception {
     //set target path
+    StringBuilder className = new StringBuilder();
+    className.append(ExamplePath.class.getPackageName());
+    className.append(".");
+    className.append(targetPathNode.asText());
     AutoManager.setTargetPath(
-        (AutoPath) Class.forName(
-            ExamplePath.class.getPackageName() + "." + targetPathNode.asText()
-        ).getConstructor().newInstance(),
+        (AutoPath) Class.forName(className.toString()).getConstructor().newInstance(),
         true
     );
   }

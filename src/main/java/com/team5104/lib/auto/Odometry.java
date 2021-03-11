@@ -55,7 +55,7 @@ public class Odometry {
           position.toPose2dMeters(),
           Rotation2d.fromDegrees(position.getDegrees())
         );
-      console.log(position.toString());
+      console.log("reset at", position);
     }
   }
 }

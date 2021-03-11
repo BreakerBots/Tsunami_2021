@@ -1,10 +1,8 @@
 package com.team5104.lib.dashboard;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.team5104.lib.Looper;
-import com.team5104.lib.Looper.Crash;
+import com.team5104.lib.CrashHandler;
 import com.team5104.lib.console;
 
 import java.util.LinkedHashMap;
@@ -29,7 +27,8 @@ public class JSONConstructor {
   public void print() {
     StringBuilder builder = new StringBuilder();
     for (Map.Entry<String, Object> entry : properties.entrySet()) {
-      builder.append(entry.getKey() + ", ");
+      builder.append(entry.getKey());
+      builder.append(", ");
     }
     console.log(builder);
   }
@@ -38,7 +37,7 @@ public class JSONConstructor {
     try {
       ObjectMapper objectMapper = new ObjectMapper();
       return objectMapper.writeValueAsString(this);
-    } catch (JsonProcessingException e) { Looper.logCrash(new Crash(e)); }
+    } catch (Exception e) { CrashHandler.log(e); }
     return "";
   }
 }

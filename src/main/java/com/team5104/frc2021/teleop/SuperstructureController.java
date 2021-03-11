@@ -2,10 +2,13 @@ package com.team5104.frc2021.teleop;
 
 import com.team5104.frc2021.Controls;
 import com.team5104.frc2021.Superstructure;
-import com.team5104.frc2021.Superstructure.FlywheelState;
 import com.team5104.frc2021.Superstructure.Mode;
-import com.team5104.frc2021.Superstructure.PanelState;
-import com.team5104.frc2021.Superstructure.Target;
+import com.team5104.frc2021.subsystems.Flywheel;
+import com.team5104.frc2021.subsystems.Flywheel.FlywheelState;
+import com.team5104.frc2021.subsystems.Hood;
+import com.team5104.frc2021.subsystems.Hood.HoodTarget;
+import com.team5104.frc2021.subsystems.Paneler;
+import com.team5104.frc2021.subsystems.Paneler.PanelerTarget;
 import com.team5104.lib.Compressor;
 import com.team5104.lib.console;
 import com.team5104.lib.setup.RobotState;
@@ -17,7 +20,7 @@ public class SuperstructureController extends TeleopController {
     // Idle
     if (Controls.IDLE.get()) {
       Superstructure.set(Mode.IDLE);
-      Superstructure.set(FlywheelState.STOPPED);
+      Flywheel.state = FlywheelState.STOPPED;
       console.log("idling");
     }
 
@@ -34,7 +37,7 @@ public class SuperstructureController extends TeleopController {
     if (Controls.PANEL_SPIN.get()) {
       if (Superstructure.is(Mode.PANEL_DEPLOYING)) {
         Superstructure.set(Mode.PANELING);
-        if (Superstructure.is(PanelState.POSITION))
+        if (Paneler.target == PanelerTarget.POSITION)
           console.log("panel running position control");
         else console.log("panel running rotation control");
       } else if (Superstructure.is(Mode.PANELING)) {
@@ -43,21 +46,21 @@ public class SuperstructureController extends TeleopController {
       }
     }
     if (Controls.PANEL_POSITION.get()) {
-      Superstructure.set(PanelState.POSITION);
+      Paneler.target = PanelerTarget.POSITION;
       console.log("setting panel mode to position");
     }
     if (Controls.PANEL_ROTATION.get()) {
-      Superstructure.set(PanelState.ROTATION);
+      Paneler.target = PanelerTarget.ROTATION;
       console.log("setting panel mode to rotation");
     }
 
     // Intake
     if (Controls.INTAKE.get()) {
-      if (Superstructure.is(Mode.INTAKE)) {
+      if (Superstructure.is(Mode.INTAKING)) {
         Superstructure.set(Mode.IDLE);
         console.log("exiting intake... idling");
       } else {
-        Superstructure.set(Mode.INTAKE);
+        Superstructure.set(Mode.INTAKING);
         console.log("intaking");
       }
     }
@@ -70,7 +73,7 @@ public class SuperstructureController extends TeleopController {
       }
       else if (Superstructure.is(Mode.SHOOTING)) {
         Superstructure.set(Mode.IDLE);
-        Superstructure.set(FlywheelState.STOPPED);
+        Flywheel.state = FlywheelState.STOPPED;
         console.log("exiting shooting... idling");
       }
 //      if (Superstructure.is(Mode.SHOOTING) || Superstructure.is(Mode.AIMING)) {
@@ -84,22 +87,22 @@ public class SuperstructureController extends TeleopController {
       }
     }
     if (Controls.CHARGE_FLYWHEEL.get()) {
-      if (Superstructure.is(FlywheelState.STOPPED)) {
+      if (Flywheel.state == FlywheelState.STOPPED) {
         console.log("charging flywheel");
-        Superstructure.set(FlywheelState.SPINNING);
+        Flywheel.state = FlywheelState.SPINNING;
       }
       else {
         console.log("stopped charging flywheel");
-        Superstructure.set(FlywheelState.STOPPED);
+        Flywheel.state = FlywheelState.STOPPED;
       }
     }
     if (Controls.SHOOT_LOW.get()) {
       console.log("setting target to low");
-      Superstructure.set(Target.LOW);
+      Hood.target = HoodTarget.LOW;
     }
     if (Controls.SHOOT_HIGH.get()) {
       console.log("setting target to high");
-      Superstructure.set(Target.HIGH);
+      Hood.target = HoodTarget.HIGH;
     }
 
     // Climb

@@ -6,7 +6,6 @@ import com.team5104.frc2021.Constants;
 import com.team5104.frc2021.Ports;
 import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.Mode;
-import com.team5104.frc2021.Superstructure.PanelState;
 import com.team5104.lib.console;
 import com.team5104.lib.devices.ColorSensor;
 import com.team5104.lib.devices.ColorSensor.PanelColor;
@@ -17,6 +16,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 
 public class Paneler extends ServoSubsystem {
+  public enum PanelerTarget { ROTATION, POSITION }
+  public static PanelerTarget target = PanelerTarget.ROTATION;
+
   private ColorSensor sensor;
   private TalonSRX motor;
   private static MagEncoder encoder;
@@ -37,7 +39,7 @@ public class Paneler extends ServoSubsystem {
       }
 
       else if (Superstructure.is(Mode.PANELING)) {
-        if (Superstructure.is(PanelState.ROTATION)) {
+        if (target == PanelerTarget.ROTATION) {
           setFiniteState("Paneling - Rotation");
           console.log(getPanelRotations());
           if (getPanelRotations() >= Constants.paneler.ROTATIONS && end < Constants.paneler.BRAKE_INT) {
@@ -98,6 +100,7 @@ public class Paneler extends ServoSubsystem {
   public static double getPanelRotations() {
     return encoder.getComponentRevs();
   }
+  public PanelerTarget getTarget() { return target; }
 
   //Config
   public Paneler() {
@@ -118,5 +121,7 @@ public class Paneler extends ServoSubsystem {
   //Reset
   public void reset() {
     resetEncoder();
+
+    target = PanelerTarget.ROTATION;
   }
 }

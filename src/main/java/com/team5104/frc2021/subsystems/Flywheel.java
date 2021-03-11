@@ -5,22 +5,28 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.team5104.frc2021.Constants;
 import com.team5104.frc2021.Ports;
 import com.team5104.frc2021.Superstructure;
-import com.team5104.frc2021.Superstructure.FlywheelState;
+import com.team5104.frc2021.Superstructure.Mode;
+import com.team5104.lib.LatchedBoolean;
 import com.team5104.lib.MovingAverage;
 import com.team5104.lib.Util;
-import com.team5104.lib.motion.VelocityController;
+import com.team5104.lib.console;
 import com.team5104.lib.devices.Encoder.FalconEncoder;
+import com.team5104.lib.motion.VelocityController;
 import com.team5104.lib.subsystem.ServoSubsystem;
 
 public class Flywheel extends ServoSubsystem {
+  public enum FlywheelState { STOPPED, SPINNING }
+  public static FlywheelState state = FlywheelState.STOPPED;
+
   private static TalonFX motor1, motor2;
   private static FalconEncoder encoder;
   private static MovingAverage avgRPM;
   private VelocityController controller;
+  private static LatchedBoolean onTargetTrigger = new LatchedBoolean();
 
   //Loop
   public void update() {
-    if (Superstructure.isEnabled() && Superstructure.is(FlywheelState.SPINNING)) {
+    if (Superstructure.isEnabled() && state == FlywheelState.SPINNING) {
       setFiniteState("Spinning");
       setRampRate(Constants.flywheel.RAMP_RATE_UP);
       if (Constants.flywheel.OPEN_LOOP)
@@ -38,6 +44,10 @@ public class Flywheel extends ServoSubsystem {
       setRampRate(Constants.flywheel.RAMP_RATE_DOWN);
       stop();
     }
+
+    //Logging
+    if (onTargetTrigger.get(isSpedUp()) && Superstructure.is(Mode.AIMING))
+      console.log("sped up");
 
     avgRPM.update(getRPM());
   }
@@ -104,5 +114,10 @@ public class Flywheel extends ServoSubsystem {
     avgRPM = new MovingAverage(50, 0);
 
     configCharacterization(encoder, (double voltage) -> setVoltage(voltage));
+  }
+
+  //Reset
+  public void reset() {
+    state = FlywheelState.STOPPED;
   }
 }

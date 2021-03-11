@@ -9,12 +9,12 @@ public class RobotNameManager {
   public RobotNameManager(String... robotNames) {
     this.id = 0;
     this.name = robotNames[id];
-//  TODO: FIX THIS IN THE DASH
+//  TODO: Finish Filer.saveRobotFile()
 //
 //    if (RobotState.isSimulation()) {
 //      name = robotNames[0];
 //    }
-//    else name = Filer.readFile(Filer.HOME_PATH + "robot.txt");
+//    else name = Filer.readFile(Filer.HOME_PATH ahh+noo "robot.txt");
 //    id = Arrays.asList(robotNames).indexOf(name);
 //    if (id == -1) {
 //      console.error("Invalid Robot Name!");
@@ -23,21 +23,33 @@ public class RobotNameManager {
 
   /** Returns a value that corresponds to the robotName index */
   public double switchOnBot(double... out) {
-    return out[id];
+    try {
+      return out[id];
+    } catch (Exception e) { CrashHandler.log(e); }
+    return -1;
   }
 
   /** Returns a value that corresponds to the robotName index */
   public boolean switchOnBot(boolean... out) {
-    return out[id];
+    try {
+      return out[id];
+    } catch (Exception e) { CrashHandler.log(e); }
+    return false;
   }
 
   /** Returns a value that corresponds to the robotName index */
   public String switchOnBot(String... out) {
-    return out[id];
+    try {
+      return out[id];
+    } catch (Exception e) { CrashHandler.log(e); }
+    return "error";
   }
 
   /** Returns a value that corresponds to the robotName index */
   public int switchOnBot(int... out) {
-    return out[id];
+    try {
+      return out[id];
+    } catch (Exception e) { CrashHandler.log(e); }
+    return -1;
   }
 }
