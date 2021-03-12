@@ -169,13 +169,6 @@ public class Turret extends ServoSubsystem {
         () -> encoder.getComponentUPS() * 360d,
         (double voltage) -> setVoltage(voltage)
     );
-
-    //Only home once per roborio boot while not.
-    if (!Filer.fileExists("/tmp/turret_homed.txt")) {
-      //console.log("ready to home");
-      setMode(SubsystemMode.HOMING, true);
-    }
-    else enableSoftLimits(true);
   }
 
   //Reset
@@ -183,5 +176,12 @@ public class Turret extends ServoSubsystem {
     motor.setNeutralMode(NeutralMode.Coast);
     latencyCompensator.reset();
     outputAverage.reset();
+
+    //Only home once per roborio boot while not.
+    if (!Filer.fileExists("/tmp/turret_homed.txt")) {
+      //console.log("ready to home");
+      setMode(SubsystemMode.HOMING, true);
+    }
+    else enableSoftLimits(true);
   }
 }
