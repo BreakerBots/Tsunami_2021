@@ -48,9 +48,9 @@ public class Constants {
         public double KP = 0;
         public double KI = 0;
         public double KD = 0;
-        public double KS = sob(.835, .49);
-        public double KV = sob(.06, .0605);
-        public double KA = sob(.00195, .00218);
+        public double KS = 0; //sob(.835, .49);
+        public double KV = 0; //sob(.06, .0605);
+        public double KA = 0; //sob(.00195, .00218);
         public double MAX_VEL = 200;
         public double MAX_ACC = 2000;
         public double GEARING = (20.0 / 18.0) * (360.0 / 18.0);
@@ -83,7 +83,7 @@ public class Constants {
     //Turret
     public static TurretConstants turret = new TurretConstants();
     public static class TurretConstants {
-        public double KP = 0.2;
+        public double KP = 0.1;
         public double KI = 0;
         public double KD = sob(0.02, 0.0);
         public double KS = sob(0/*0.258*/, 0.35);

@@ -51,6 +51,10 @@ public class Hood extends ServoSubsystem {
       //Vision
       else if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
         setFiniteState("Vision");
+
+//        setAngle(2.5);
+//        System.out.println(getAngle());
+
         if (/*Limelight.hasTarget() && */Superstructure.is(Mode.AIMING)) {
           visionFilter.update(Limelight.getTargetY());
           setAngle(getTargetVisionAngle());

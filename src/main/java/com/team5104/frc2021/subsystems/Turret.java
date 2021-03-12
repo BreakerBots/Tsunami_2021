@@ -23,15 +23,19 @@ public class Turret extends ServoSubsystem {
   private LatencyCompensator latencyCompensator;
   private MovingAverage outputAverage;
   private static double targetAngle = 0,
-                        fieldOrientedOffset = 45;
+                        fieldOrientedOffset = -10;
   private static LatchedBoolean onTargetTrigger = new LatchedBoolean();
 
   //Loop
   public void update() {
+
+
     //Automatic
     if (Superstructure.isEnabled()) {
+
       //Homing
       if (is(SubsystemMode.HOMING)) {
+        System.out.println("We are trying to home the turret");
         setFiniteState("Homing");
         enableSoftLimits(false);
         setVoltage(Constants.turret.HOMING_SPEED);
@@ -82,6 +86,7 @@ public class Turret extends ServoSubsystem {
       console.log("finished homing");
       Filer.createFile("/tmp/turret_homed.txt");
       setMode(SubsystemMode.OPERATING, true);
+      System.out.println("finished homing!");
     }
 
     //Zero Encoder
@@ -166,15 +171,16 @@ public class Turret extends ServoSubsystem {
     );
 
     //Only home once per roborio boot while not.
-    if (!Filer.fileExists("/tmp/turret_homed.txt")) {
-      console.log("ready to home");
-      setMode(SubsystemMode.HOMING);
-    }
-    else enableSoftLimits(true);
+  //  if (!Filer.fileExists("/tmp/turret_homed.txt")) {
+    //  console.log("ready to home");
+
+   // }
+   // else enableSoftLimits(true);
   }
 
   //Reset
   public void reset() {
+    setMode(SubsystemMode.HOMING);
     motor.setNeutralMode(NeutralMode.Coast);
     latencyCompensator.reset();
     outputAverage.reset();

@@ -21,7 +21,10 @@ public class SubsystemManager {
     List<String> subsystemNames = new ArrayList<>();
     for (Subsystem subsystem : attachedSubsystems) {
       try {
-        subsystem.mode = SubsystemMode.OPERATING;
+        if (subsystem.mode == SubsystemMode.DETACHED) {
+          subsystem.mode = SubsystemMode.OPERATING;
+        }
+
         subsystem.identifyDevices();
         subsystem.reset();
         subsystemNames.add(subsystem.getClass().getSimpleName());
