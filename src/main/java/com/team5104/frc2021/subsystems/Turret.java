@@ -83,7 +83,7 @@ public class Turret extends ServoSubsystem {
   public void fastUpdate() {
     //Exit Homing
     if (is(SubsystemMode.HOMING) && leftLimitHit()) {
-      console.log("finished homing");
+      //console.log("finished homing");
       Filer.createFile("/tmp/turret_homed.txt");
       setMode(SubsystemMode.OPERATING, true);
       System.out.println("finished homing!");
@@ -110,7 +110,7 @@ public class Turret extends ServoSubsystem {
     motor.set(ControlMode.PercentOutput, volts / motor.getBusVoltage());
   }
   private void resetEncoder(double angle) {
-    encoder.setComponentRevs(angle / 360d);
+    encoder.setComponentUnits(angle / 360d);
   }
   private void enableSoftLimits(boolean enabled) {
     motor.configForwardSoftLimitEnable(enabled);
@@ -120,7 +120,7 @@ public class Turret extends ServoSubsystem {
   //External Functions
   public static double getAngle() {
     if (motor == null) return 0;
-    return encoder.getComponentRevs() * 360d;
+    return encoder.getComponentUnits() * 360d;
   }
   public static boolean leftLimitHit() {
     if (motor == null || RobotState.isSimulation()) return true;
@@ -146,8 +146,8 @@ public class Turret extends ServoSubsystem {
 
     encoder = new FalconEncoder(motor, Constants.turret.GEARING);
 
-    motor.configForwardSoftLimitThreshold((int) encoder.componentRevsToTicks(Constants.turret.SOFT_LEFT / 360d));
-    motor.configReverseSoftLimitThreshold((int) encoder.componentRevsToTicks(Constants.turret.SOFT_RIGHT / 360d));
+    motor.configForwardSoftLimitThreshold((int) encoder.componentUnitsToTicks(Constants.turret.SOFT_LEFT / 360d));
+    motor.configReverseSoftLimitThreshold((int) encoder.componentUnitsToTicks(Constants.turret.SOFT_RIGHT / 360d));
     enableSoftLimits(false);
     motor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled);
 
@@ -165,22 +165,21 @@ public class Turret extends ServoSubsystem {
     outputAverage = new MovingAverage(4, 0);
 
     configCharacterization(
-        () -> encoder.getComponentRevs() * 360d,
-        () -> encoder.getComponentRPS() * 360d,
+        () -> encoder.getComponentUnits() * 360d,
+        () -> encoder.getComponentUPS() * 360d,
         (double voltage) -> setVoltage(voltage)
     );
 
     //Only home once per roborio boot while not.
-  //  if (!Filer.fileExists("/tmp/turret_homed.txt")) {
-    //  console.log("ready to home");
-
-   // }
-   // else enableSoftLimits(true);
+    if (!Filer.fileExists("/tmp/turret_homed.txt")) {
+      //console.log("ready to home");
+      setMode(SubsystemMode.HOMING, true);
+    }
+    else enableSoftLimits(true);
   }
 
   //Reset
   public void reset() {
-    setMode(SubsystemMode.HOMING);
     motor.setNeutralMode(NeutralMode.Coast);
     latencyCompensator.reset();
     outputAverage.reset();

@@ -22,9 +22,8 @@ public class SubsystemManager {
     for (Subsystem subsystem : attachedSubsystems) {
       try {
         if (subsystem.mode == SubsystemMode.DETACHED) {
-          subsystem.mode = SubsystemMode.OPERATING;
+            subsystem.mode = SubsystemMode.OPERATING;
         }
-
         subsystem.identifyDevices();
         subsystem.reset();
         subsystemNames.add(subsystem.getClass().getSimpleName());

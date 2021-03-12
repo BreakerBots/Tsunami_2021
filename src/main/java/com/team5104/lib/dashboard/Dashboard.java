@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team5104.frc2021.Constants;
 import com.team5104.frc2021.Controls;
 import com.team5104.frc2021.Superstructure;
-import com.team5104.frc2021.subsystems.Hood;
 import com.team5104.lib.CrashHandler;
 import com.team5104.lib.Looper;
 import com.team5104.lib.Looper.Loop;
@@ -80,10 +79,6 @@ public class Dashboard extends WebSocketServer {
       pageData.put("Superstructure", new Superstructure());
       if (SubsystemManager.getSubsystems() != null) {
         for (Subsystem subsystem : SubsystemManager.getSubsystems()) {
-          if (subsystem.getClass() == Hood.class) {
-            pageData.put(subsystem.getClass().getSimpleName(), (Hood) subsystem);
-          }
-          else
           pageData.put(subsystem.getClass().getSimpleName(), subsystem);
         }
       }
@@ -97,6 +92,18 @@ public class Dashboard extends WebSocketServer {
           field.setAccessible(false);
         }
       } catch (IllegalAccessException e) { CrashHandler.log(e); }
+    }
+    if (url.equals("/tuner")) {
+
+    }
+    if (url.equals("/devices")) {
+      if (SubsystemManager.getSubsystems() != null) {
+        for (Subsystem subsystem : SubsystemManager.getSubsystems()) {
+          pageData.put(subsystem.getClass().getSimpleName(),
+                       new ArrayList(subsystem.getDevices()));
+        }
+
+      }
     }
     //TODO other urls
     if (pageData.getProperties().size() > 1) {

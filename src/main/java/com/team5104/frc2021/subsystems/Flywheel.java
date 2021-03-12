@@ -54,7 +54,7 @@ public class Flywheel extends ServoSubsystem {
 
   //Internal Functions
   private void setSpeed(double rpm) {
-    setVoltage(controller.calculate(encoder.getComponentRPS(), rpm / 60d));
+    setVoltage(controller.calculate(encoder.getComponentUPS(), rpm / 60d));
   }
   private void setVoltage(double volts) {
     motor1.set(ControlMode.PercentOutput, volts / motor1.getBusVoltage());
@@ -72,7 +72,7 @@ public class Flywheel extends ServoSubsystem {
 
   //External Functions
   public static double getRPM() {
-    return (motor1 == null) ? 0 : encoder.getComponentRPM();
+    return (motor1 == null) ? 0 : encoder.getComponentUPM();
   }
   public static double getAvgRPM() {
     return (motor1 == null) ? 0 : avgRPM.getDoubleOutput();

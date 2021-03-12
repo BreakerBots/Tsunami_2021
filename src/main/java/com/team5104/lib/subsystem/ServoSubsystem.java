@@ -22,7 +22,7 @@ public abstract class ServoSubsystem extends Subsystem {
   private double lastOutputVoltage;
 
   protected void configCharacterization(Encoder encoder, DoubleConsumer outputVoltage) {
-    configCharacterization(() -> encoder.getComponentRevs(), () -> encoder.getComponentRPS(), outputVoltage);
+    configCharacterization(() -> encoder.getComponentUnits(), () -> encoder.getComponentUPS(), outputVoltage);
   }
   protected void configCharacterization(DoubleSupplier encoderPos, DoubleSupplier encoderVel,
                                         DoubleConsumer outputVoltage) {

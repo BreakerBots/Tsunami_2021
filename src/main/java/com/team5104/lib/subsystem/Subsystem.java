@@ -3,6 +3,7 @@ package com.team5104.lib.subsystem;
 
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.team5104.lib.devices.Device;
 import com.team5104.lib.devices.Health;
@@ -105,25 +106,22 @@ public abstract class Subsystem {
 
   /** Attempts to change the Subsystem Mode @param mode
    * @return whether the change was successful */
-  public boolean setMode(SubsystemMode mode) { return setMode(mode, true); }
+  public boolean setMode(SubsystemMode mode) { return setMode(mode, false); }
   /** Attempts to change the Subsystem Mode @param mode
    * @force forces the state change
    * @return whether the change was successful */
   public boolean setMode(SubsystemMode mode, boolean force) {
-    //cant switch to/from detached no matter what
-    if (mode == SubsystemMode.DETACHED || this.mode == SubsystemMode.DETACHED)
-      return false;
-
     //otherwise you can do anything if you force it
     if (force) {
       this.mode = mode;
       return true;
     }
 
-    //cant get out of disabled, homing, or characterizing wo/ forcing it
+    //cant get out of disabled, detached, homing, or characterizing wo/ forcing it
     if (this.mode == SubsystemMode.DISABLED ||
         this.mode == SubsystemMode.HOMING ||
-        this.mode == SubsystemMode.CHARACTERIZING)
+        this.mode == SubsystemMode.CHARACTERIZING ||
+        this.mode == SubsystemMode.DETACHED)
       return false;
 
     //otherwise free to do anything
@@ -134,5 +132,11 @@ public abstract class Subsystem {
    * on past values) of the subsystem to be displayed on the dashboard */
   public void setFiniteState(String finiteState) {
     this.finiteState = finiteState;
+  }
+
+  /** @return a list of devices on this subsystem */
+  @JsonIgnore
+  public List<Device> getDevices() {
+    return devices;
   }
 }

@@ -42,9 +42,9 @@ public class Hopper extends ServoSubsystem {
 
     else if (Superstructure.is(Mode.SHOOTING)) {
       setFiniteState("Shooting");
-      setIndexer(Constants.hopper.FEED_SPEED);
-      setFeeder(Constants.hopper.FEED_SPEED);
-      setStart(Constants.hopper.FEED_SPEED);
+      setStart(Constants.hopper.FEED_SPEED[0]);
+      setIndexer(Constants.hopper.FEED_SPEED[1]);
+      setFeeder(Constants.hopper.FEED_SPEED[2]);
     }
 
     else {
@@ -126,7 +126,7 @@ public class Hopper extends ServoSubsystem {
     return (indexMotor == null) ? false : hasFed.getBooleanOutput();
   }
   public static double getIndexPosition() {
-    return (indexMotor == null) ? 0 : indexEncoder.getComponentRevs();
+    return (indexMotor == null) ? 0 : indexEncoder.getComponentUnits();
   }
 
   //Config

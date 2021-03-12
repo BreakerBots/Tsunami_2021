@@ -6,50 +6,62 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.util.Units;
 
+/** Manages an encoder, including many unit conversions */
 public abstract class Encoder extends Device {
-    public double gearing, ticksPerRev;
+    public double gearing, ticksPerEncoderRev;
 
-    /** @param gearing gearing constant in the form `(driving / driven) * (driving / driven)...` (so 5:1 and 3:2 is (5/1)*(3/2))
-     * @param ticksPerRev ticksPerRev constant of the encoder. Subclasses will fill this automatically */
-    public Encoder(double gearing, double ticksPerRev) {
+    /** @param gearing gearing constant to convert from encoder revs to comp. revs
+     * use: `(driving / driven) * (driving / driven)...` (so 5:1 and 3:2 is (5/1)*(3/2))
+     * @param ticksPerEncoderRev ticksPerRev constant of the encoder. Subclasses will fill this automatically */
+    public Encoder(double gearing, double ticksPerEncoderRev) {
         this.gearing = gearing;
-        this.ticksPerRev = ticksPerRev;
+        this.ticksPerEncoderRev = ticksPerEncoderRev;
     }
 
     //Get
+    /** returns the encoder ticks */
     public abstract double getTicks();
 
-    public abstract double getTicksPer100Ms();
+    /** returns the encoder ticks per seconds */
+    public abstract double getTicksPerSecond();
 
-    public double getComponentRevs() {
-        return ticksToComponentRevs(getTicks()); //ticks to revs
+    /** returns the component units */
+    public double getComponentUnits() {
+        return ticksToComponentUnits(getTicks());
     }
 
-    public double getComponentRPS() {
-        return ticksToComponentRevs(getTicksPer100Ms()) * 10.0; //ticks to rev vel
+    /** returns the component units per second */
+    public double getComponentUPS() {
+        return ticksToComponentUnits(getTicksPerSecond()); //ticks to rev vel
     }
 
-    public double getComponentRPM() {
-        return getComponentRPS() * 60.0;
+    /** returns the component units per minute */
+    public double getComponentUPM() {
+        return getComponentUPS() * 60.0;
     }
 
-    public double ticksToComponentRevs(double ticks) {
-        return ticks / (gearing * ticksPerRev); //ticks to comp revs
+    /** converts encoder ticks to component units */
+    public double ticksToComponentUnits(double ticks) {
+        return ticks / (gearing * ticksPerEncoderRev);
     }
 
-    public double componentRevsToTicks(double componentRevs) {
-        return componentRevs * (gearing * ticksPerRev); //revs to ticks
+    /** converts component units to encoder ticks */
+    public double componentUnitsToTicks(double componentRevs) {
+        return componentRevs * (gearing * ticksPerEncoderRev);
     }
 
     //Set
+    /** sets the encoder ticks to a specified value */
     public abstract void setTicks(double ticks);
 
+    /** sets the encoder value to 0 */
     public void reset() {
         setTicks(0);
     }
 
-    public void setComponentRevs(double componentRevs) {
-        setTicks(componentRevsToTicks(componentRevs));
+    /** sets the encoder value to a specified component unit */
+    public void setComponentUnits(double componentUnits) {
+        setTicks(componentUnitsToTicks(componentUnits));
     }
 
     //Sub Classes
@@ -65,8 +77,8 @@ public abstract class Encoder extends Device {
             return motorController.getSelectedSensorPosition();
         }
 
-        public double getTicksPer100Ms() {
-            return motorController.getSelectedSensorVelocity();
+        public double getTicksPerSecond() {
+            return motorController.getSelectedSensorVelocity() * 10.0;
         }
 
         public void setTicks(double ticks) {
@@ -108,9 +120,9 @@ public abstract class Encoder extends Device {
         }
 
         public void setVelocityAccelMeters(double metersPerSecond, double metersPerSecondSquared, double wheelDiameter) {
-            setTicks(componentRevsToTicks(
+            setTicks(componentUnitsToTicks(
                     Units.metersToFeet(metersPerSecond) / (wheelDiameter * Math.PI)));
-            setTicksVel(componentRevsToTicks(
+            setTicksVel(componentUnitsToTicks(
                     Units.metersToFeet(metersPerSecondSquared) / (wheelDiameter * Math.PI)) / 10d);
         }
     }

@@ -25,7 +25,6 @@ public class console {
      * 2.12 [Robot]: Message
      * 90.12 ERROR [subsystems.Turret]: Message */
     private static void logBase(int stackCount, Type type, Object... data) {
-
         Log log = new Log(
             Timer.getFPGATimestamp(),
             type,

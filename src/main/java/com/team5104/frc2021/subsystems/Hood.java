@@ -52,7 +52,7 @@ public class Hood extends ServoSubsystem {
       else if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
         setFiniteState("Vision");
 
-//        setAngle(2.5);
+//        setAngle(Math.PI);
 //        System.out.println(getAngle());
 
         if (/*Limelight.hasTarget() && */Superstructure.is(Mode.AIMING)) {
@@ -84,7 +84,7 @@ public class Hood extends ServoSubsystem {
   public void fastUpdate() {
     //Exit Homing
     if (is(SubsystemMode.HOMING) && backLimitHit()) {
-      console.log("finished homing");
+      //console.log("finished homing");
       setMode(SubsystemMode.OPERATING, true);
     }
 
@@ -118,7 +118,7 @@ public class Hood extends ServoSubsystem {
   //External Functions
   public static double getAngle() {
     if (motor == null) return 0;
-    return encoder.getComponentRevs() * 360d;
+    return encoder.getComponentUnits() * 360d;
   }
   public static boolean backLimitHit() {
     if (motor == null) return true;
@@ -153,11 +153,11 @@ public class Hood extends ServoSubsystem {
     encoder = new MagEncoder(motor, Constants.hood.GEARING);
 
     motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
-    motor.configForwardSoftLimitThreshold((int) encoder.componentRevsToTicks(38 / 360d));
+    motor.configForwardSoftLimitThreshold((int) encoder.componentUnitsToTicks(38 / 360d));
     motor.configForwardSoftLimitEnable(false);
 
     controller = new PositionController(
-        Constants.hood.KP,
+        0,
         Constants.hood.KI,
         Constants.hood.KD,
         Constants.hood.MAX_VEL,
@@ -170,8 +170,8 @@ public class Hood extends ServoSubsystem {
     visionFilter = new MovingAverage(3, 0);
 
     configCharacterization(
-      () -> encoder.getComponentRevs() * 360d,
-      () -> encoder.getComponentRPS() * 360d,
+      () -> encoder.getComponentUnits() * 360d,
+      () -> encoder.getComponentUPS() * 360d,
       (double voltage) -> setVoltage(voltage)
     );
   }
@@ -183,7 +183,7 @@ public class Hood extends ServoSubsystem {
     target = HoodTarget.HIGH;
 
     if (!is(SubsystemMode.HOMING)) {
-      console.log("ready to home");
+      //console.log("ready to home");
       setMode(SubsystemMode.HOMING);
     }
   }

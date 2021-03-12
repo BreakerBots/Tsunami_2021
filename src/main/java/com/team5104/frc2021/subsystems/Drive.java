@@ -74,10 +74,10 @@ public class Drive extends ServoSubsystem {
   }
   public static double[] getDriveStateMeters() {
     return new double[] {
-      leftEncoder.getComponentRevs() * Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) * Math.PI,
-      rightEncoder.getComponentRevs() * Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) * Math.PI,
-      leftEncoder.getComponentRPS() * Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) * Math.PI,
-      rightEncoder.getComponentRPS() * Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) * Math.PI
+      leftEncoder.getComponentUnits() * Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) * Math.PI,
+      rightEncoder.getComponentUnits() * Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) * Math.PI,
+      leftEncoder.getComponentUPS() * Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) * Math.PI,
+      rightEncoder.getComponentUPS() * Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) * Math.PI
     };
   }
   public static void zero() {
@@ -122,10 +122,10 @@ public class Drive extends ServoSubsystem {
     falconR2.setInverted(true);
 
     configCharacterization(
-        () -> leftEncoder.getComponentRevs(),
-        () -> leftEncoder.getComponentRPS(),
-        () -> rightEncoder.getComponentRevs(),
-        () -> rightEncoder.getComponentRPS(),
+        () -> leftEncoder.getComponentUnits(),
+        () -> leftEncoder.getComponentUPS(),
+        () -> rightEncoder.getComponentUnits(),
+        () -> rightEncoder.getComponentUPS(),
         () -> gyro.getRadians(),
         (Double left, Double right) -> set(new DriveSignal(left, right))
     );
@@ -154,10 +154,10 @@ public class Drive extends ServoSubsystem {
     );
 
     configCharacterization(
-        () -> leftEncoder.getComponentRevs(),
-        () -> leftEncoder.getComponentRPS(),
-        () -> rightEncoder.getComponentRevs(),
-        () -> rightEncoder.getComponentRPS(),
+        () -> leftEncoder.getComponentUnits(),
+        () -> leftEncoder.getComponentUPS(),
+        () -> rightEncoder.getComponentUnits(),
+        () -> rightEncoder.getComponentUPS(),
         () -> gyro.getRadians(),
         (Double left, Double right) -> set(new DriveSignal(left, right))
     );

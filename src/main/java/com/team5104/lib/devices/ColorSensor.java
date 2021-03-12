@@ -1,5 +1,7 @@
 package com.team5104.lib.devices;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.revrobotics.ColorSensorV3;
 import com.team5104.lib.devices.Health.Status;
 import edu.wpi.first.wpilibj.I2C.Port;
@@ -36,6 +38,8 @@ public class ColorSensor extends Device {
 
     //Variables
     private final ColorSensorV3 colorSensor;
+    @JsonProperty("nearestColor")
+    private PanelColor lastNearestColor;
 
     //Constructors
     public ColorSensor(Port port) {
@@ -43,6 +47,7 @@ public class ColorSensor extends Device {
     }
 
     //Getters
+    @JsonIgnore
     public PanelColor getNearestColor() {
         PercentColor color = getRawColor();
         int closestIndex = 0;
@@ -50,9 +55,11 @@ public class ColorSensor extends Device {
             if (colors[i].distance(color) < colors[closestIndex].distance(color))
                 closestIndex = i;
         }
-        return PanelColor.values()[closestIndex];
+        lastNearestColor = PanelColor.values()[closestIndex];
+        return lastNearestColor;
     }
 
+    @JsonIgnore
     public PercentColor getRawColor() {
         return new PercentColor(
                 colorSensor.getColor().red,
