@@ -30,6 +30,8 @@ public class Hood extends ServoSubsystem {
 
   //Loop
   public void update() {
+
+    System.out.println(getAngle() + ", " + targetAngle);
     //Automatic
     if (Superstructure.isEnabled()) {
       if (is(SubsystemMode.HOMING)) {

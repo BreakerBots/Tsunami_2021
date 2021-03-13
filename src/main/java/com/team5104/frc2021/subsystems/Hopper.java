@@ -153,7 +153,7 @@ public class Hopper extends ServoSubsystem {
 
     entrySensorLatch = new LatchedBoolean(LatchedBooleanMode.RISING);
     isFullAverage = new MovingAverage(200, 0);
-    hasFed = new MovingAverage(100, 0);
+    hasFed = new MovingAverage(400, 0);
     entrySensorAverage = new MovingAverage(4, false);
 
     controller = new PIDController(

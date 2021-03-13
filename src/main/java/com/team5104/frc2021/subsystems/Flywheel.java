@@ -26,6 +26,7 @@ public class Flywheel extends ServoSubsystem {
 
   //Loop
   public void update() {
+
     if (Superstructure.isEnabled() && state == FlywheelState.SPINNING) {
       setFiniteState("Spinning");
       setRampRate(Constants.flywheel.RAMP_RATE_UP);
@@ -111,7 +112,7 @@ public class Flywheel extends ServoSubsystem {
         Constants.flywheel.KV,
         Constants.flywheel.KA
     );
-    avgRPM = new MovingAverage(50, 0);
+    avgRPM = new MovingAverage(100, 0);
 
     configCharacterization(encoder, (double voltage) -> setVoltage(voltage));
   }

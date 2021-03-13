@@ -23,7 +23,7 @@ public class Turret extends ServoSubsystem {
   private LatencyCompensator latencyCompensator;
   private MovingAverage outputAverage;
   private static double targetAngle = 0,
-                        fieldOrientedOffset = -10;
+                        fieldOrientedOffset = 0;
   private static LatchedBoolean onTargetTrigger = new LatchedBoolean();
 
   //Loop
@@ -178,10 +178,10 @@ public class Turret extends ServoSubsystem {
     outputAverage.reset();
 
     //Only home once per roborio boot while not.
-    if (!Filer.fileExists("/tmp/turret_homed.txt")) {
+    //if (!Filer.fileExists("/tmp/turret_homed.txt")) {
       //console.log("ready to home");
       setMode(SubsystemMode.HOMING, true);
-    }
-    else enableSoftLimits(true);
+    //}
+    //else enableSoftLimits(true);
   }
 }
