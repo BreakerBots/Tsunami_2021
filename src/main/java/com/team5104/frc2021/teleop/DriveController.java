@@ -24,9 +24,9 @@ public class DriveController extends TeleopController {
     double turn = Controls.DRIVE_TURN.get();
 
     //swap the turn if driving in reverse
-    if (forward < 0) {
-      turn *= -1;
-    }
+//    if (forward < 0) {
+//      turn *= -1;
+//    }
 
     //make drive signal
     DriveSignal signal = new DriveSignal(

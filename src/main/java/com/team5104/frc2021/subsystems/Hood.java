@@ -31,7 +31,10 @@ public class Hood extends ServoSubsystem {
   //Loop
   public void update() {
 
-    System.out.println(getAngle() + ", " + targetAngle);
+//    System.out.println(getAngle() + ", " + targetAngle);
+//    System.out.println(visionFilter.getDoubleOutput());
+      System.out.println(visionFilter.getDoubleOutput() + ", " + getAngle() + ", " + getTargetVisionAngle());
+
     //Automatic
     if (Superstructure.isEnabled()) {
       if (is(SubsystemMode.HOMING)) {
@@ -122,6 +125,9 @@ public class Hood extends ServoSubsystem {
     if (motor == null) return 0;
     return encoder.getComponentUnits() * 360d;
   }
+  public static double getTargetAngle() {
+    return targetAngle;
+  }
   public static boolean backLimitHit() {
     if (motor == null) return true;
     return motor.isRevLimitSwitchClosed() == 0;
@@ -137,7 +143,12 @@ public class Hood extends ServoSubsystem {
     if (isTrenchMode())
       return 7;
     double x = visionFilter.getDoubleOutput();
-    return -0.00638178 * x * x * x - 0.297426 * x * x - 3.24309 * x + Constants.hood.EQ_CONST;
+    if (x <= -10.3) {
+      return 0;
+    }
+    else {
+      return -0.00638178 * x * x * x - 0.297426 * x * x - 3.24309 * x + Constants.hood.EQ_CONST;
+    }
   }
   public HoodTarget getTarget() {
     return target;

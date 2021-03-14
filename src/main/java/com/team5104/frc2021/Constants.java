@@ -36,7 +36,7 @@ public class Constants {
         public double MAX_ACC = 0;
         public double GEARING = 24.0 / 44.0;
 
-        public boolean OPEN_LOOP = false;
+        public boolean OPEN_LOOP = true;
         public double RAMP_RATE_UP = 0.7;
         public double RAMP_RATE_DOWN = 3;
         public double RPM_TOL = 500;
@@ -55,7 +55,8 @@ public class Constants {
         public double GEARING = (20.0 / 18.0) * (360.0 / 18.0);
 
         public double TOL = 3;
-        public double EQ_CONST = 0;
+        public double EQ_CONST = 1;
+        public double EQ_CONST_FAR = 0;
         public double HOMING_SPEED = 0.4;
     }
 
@@ -82,7 +83,7 @@ public class Constants {
     //Turret
     public static TurretConstants turret = new TurretConstants();
     public static class TurretConstants {
-        public double KP = 0.18;
+        public double KP = 0.19;
         public double KI = 0;
         public double KD = sob(0.02, 0.0);
         public double KS = sob(0/*0.258*/, 0.35);

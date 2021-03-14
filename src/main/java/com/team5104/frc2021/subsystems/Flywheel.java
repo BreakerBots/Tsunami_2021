@@ -14,6 +14,8 @@ import com.team5104.lib.devices.Encoder.FalconEncoder;
 import com.team5104.lib.motion.VelocityController;
 import com.team5104.lib.subsystem.ServoSubsystem;
 
+import java.lang.annotation.Target;
+
 public class Flywheel extends ServoSubsystem {
   public enum FlywheelState { STOPPED, SPINNING }
   public static FlywheelState state = FlywheelState.STOPPED;
@@ -27,11 +29,19 @@ public class Flywheel extends ServoSubsystem {
   //Loop
   public void update() {
 
+//    System.out.println(getRPM() + ", " + getTargetRPM());
+
     if (Superstructure.isEnabled() && state == FlywheelState.SPINNING) {
       setFiniteState("Spinning");
       setRampRate(Constants.flywheel.RAMP_RATE_UP);
       if (Constants.flywheel.OPEN_LOOP)
-        setPercentOutput(1.0);
+        if (Hood.getTargetAngle() >= 39) {
+//          setFiniteState("Low");
+          setPercentOutput(0.42);
+        }
+        else {
+          setPercentOutput(1.0);
+        }
       else setSpeed(getTargetRPM());
     }
 
