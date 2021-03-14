@@ -34,14 +34,14 @@ public class Flywheel extends ServoSubsystem {
     if (Superstructure.isEnabled() && state == FlywheelState.SPINNING) {
       setFiniteState("Spinning");
       setRampRate(Constants.flywheel.RAMP_RATE_UP);
-      if (Constants.flywheel.OPEN_LOOP)
+      if (Constants.flywheel.OPEN_LOOP) {
         if (Hood.getTargetAngle() >= 39) {
 //          setFiniteState("Low");
           setPercentOutput(0.42);
-        }
-        else {
+        } else {
           setPercentOutput(1.0);
         }
+      }
       else setSpeed(getTargetRPM());
     }
 

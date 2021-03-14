@@ -141,7 +141,7 @@ public class Hood extends ServoSubsystem {
   }
   public static double getTargetVisionAngle() {
     if (isTrenchMode())
-      return 7;
+      return 0;
     double x = visionFilter.getDoubleOutput();
     if (x <= -10.3) {
       return 0;

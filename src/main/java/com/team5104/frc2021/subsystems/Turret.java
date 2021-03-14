@@ -51,7 +51,7 @@ public class Turret extends ServoSubsystem {
         setFiniteState("Vision");
         if (/*Limelight.hasTarget() &&*/ Superstructure.is(Mode.AIMING)) {
           setAngle(
-              latencyCompensator.getValueInHistory(Limelight.getLatency()) - Limelight.getTargetX()
+              latencyCompensator.getValueInHistory(Limelight.getLatency()) - Limelight.getTargetX() -2.5
           );
         }
         else setAngle(targetAngle);
