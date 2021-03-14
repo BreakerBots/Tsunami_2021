@@ -139,4 +139,10 @@ public abstract class Subsystem {
   public List<Device> getDevices() {
     return devices;
   }
+
+  /** @return the corresponding object from Constants.java for this subsystem */
+  @JsonIgnore
+  public Object getConstants() {
+    return constants;
+  }
 }

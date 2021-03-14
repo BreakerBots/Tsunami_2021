@@ -83,7 +83,7 @@ public class Dashboard extends WebSocketServer {
         }
       }
     }
-    if (url.equals("/controls") && init) {
+    else if (url.equals("/controls") && init) {
       try {
         Field[] fields = Controls.class.getDeclaredFields();
         for (Field field : fields) {
@@ -93,19 +93,29 @@ public class Dashboard extends WebSocketServer {
         }
       } catch (IllegalAccessException e) { CrashHandler.log(e); }
     }
-    if (url.equals("/tuner")) {
-
+    else if (url.indexOf("/tuner") != -1) {
+      String query = url.substring("/tuner?target=".length());
+      if (SubsystemManager.getSubsystems() != null) {
+        for (Subsystem subsystem : SubsystemManager.getSubsystems()) {
+          if (subsystem.getClass().getSimpleName().equals(query)) {
+            pageData.put("name", query);
+            pageData.put("meta", subsystem);
+            pageData.put("constants", subsystem.getConstants());
+          }
+        }
+      }
     }
-    if (url.equals("/devices")) {
+    else if (url.indexOf("/devices") != -1) {
       if (SubsystemManager.getSubsystems() != null) {
         for (Subsystem subsystem : SubsystemManager.getSubsystems()) {
           pageData.put(subsystem.getClass().getSimpleName(),
                        new ArrayList(subsystem.getDevices()));
         }
-
+        //TODO
       }
     }
-    //TODO other urls
+
+    //return page data
     if (pageData.getProperties().size() > 1) {
       return pageData;
     }
