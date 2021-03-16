@@ -56,7 +56,6 @@ public class Constants {
 
         public double TOL = 3;
         public double EQ_CONST = 1;
-        public double EQ_CONST_FAR = 0;
         public double HOMING_SPEED = 0.4;
     }
 
@@ -77,7 +76,7 @@ public class Constants {
         public double TOLERANCE = 0.05;
         public double START_SPEED_INTAKING = 7;
         public double START_SPEED_INDEXING = 0.5;
-        public double[] FEED_SPEED = { 4, 4, 6 }; //start, indexer, feeder
+        public double[] FEED_SPEED = { 4, 4, 3.5 }; //start, indexer, feeder (OG: 4,4,6)
     }
 
     //Turret
