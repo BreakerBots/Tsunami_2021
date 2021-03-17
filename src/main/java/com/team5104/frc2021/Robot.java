@@ -78,14 +78,14 @@ public class Robot extends RobotController.Robot {
 
   //Main
   public void mainEnabled() {
+    Compressor.stop();
     Superstructure.reset();
     SubsystemManager.reset();
-    Compressor.stop();
   }
   public void mainDisabled() {
+    Compressor.stop();
     Superstructure.reset();
     SubsystemManager.reset();
-    Compressor.stop();
   }
   public void mainLoop() {
     Superstructure.update();
