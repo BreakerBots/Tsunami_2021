@@ -145,13 +145,16 @@ public class Hood extends ServoSubsystem {
 //      return 0;
     double x = visionFilter.getDoubleOutput();
     if (x <= -13) {
-      return 0;
+      return 20;
     }
     else if (x < -5) {
       return 6;
     }
-    else {
+    else if (x < 3){
       return 5.8;
+    }
+    else {
+      return 0;
     }
 //    else {
 //      return -0.00638178 * x * x * x - 0.297426 * x * x - 3.24309 * x + Constants.hood.EQ_CONST;
