@@ -94,16 +94,26 @@ public class Dashboard extends WebSocketServer {
       } catch (IllegalAccessException e) { CrashHandler.log(e); }
     }
     else if (url.indexOf("/tuner") != -1) {
-      String query = url.substring("/tuner?target=".length());
-      if (SubsystemManager.getSubsystems() != null) {
-        for (Subsystem subsystem : SubsystemManager.getSubsystems()) {
-          if (subsystem.getClass().getSimpleName().equals(query)) {
-            pageData.put("name", query);
-            pageData.put("meta", subsystem);
-            pageData.put("constants", subsystem.getConstants());
+      if (url.length() > 6) {
+        String query = url.substring(14);
+        if (SubsystemManager.getSubsystems() != null) {
+          for (Subsystem subsystem : SubsystemManager.getSubsystems()) {
+            if (subsystem.getClass().getSimpleName().equals(query)) {
+              pageData.put("name", query);
+              pageData.put("meta", subsystem);
+              pageData.put("constants", subsystem.getConstants());
+            }
           }
         }
       }
+
+      Subsystem[] subsystems = SubsystemManager.getSubsystems();
+      int size = subsystems.length;
+      String[] subsystemNames = new String[size];
+      for (int i = 0; i < size; i++) {
+        subsystemNames[i] = subsystems[i].getClass().getSimpleName();
+      }
+      pageData.put("subsystems", subsystemNames);
     }
     else if (url.indexOf("/devices") != -1) {
       if (SubsystemManager.getSubsystems() != null) {
