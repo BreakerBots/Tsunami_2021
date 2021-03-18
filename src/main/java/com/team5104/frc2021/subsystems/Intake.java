@@ -6,6 +6,7 @@ import com.team5104.frc2021.Constants;
 import com.team5104.frc2021.Ports;
 import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.Mode;
+import com.team5104.frc2021.teleop.SuperstructureController;
 import com.team5104.lib.devices.Solenoid;
 import com.team5104.lib.subsystem.Subsystem;
 

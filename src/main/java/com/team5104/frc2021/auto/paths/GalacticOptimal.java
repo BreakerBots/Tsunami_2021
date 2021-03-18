@@ -17,7 +17,7 @@ public class GalacticOptimal extends AutoPath {
   //Start
   public void start() {
     //Set position relative to field
-    Odometry.reset(new Position(0, 10));
+    Odometry.reset(new Position(2.5, 10));
 
     //?
     if (pathChoice == 0) {
@@ -26,7 +26,7 @@ public class GalacticOptimal extends AutoPath {
 
       //?
       run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
-          new Position(0, 10, 0), // Start
+          new Position(2.5, 10, 0), // Start
           new Position(7.5, 10, -90) // B3
       ));
 

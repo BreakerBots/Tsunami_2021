@@ -2,6 +2,8 @@
 package com.team5104.frc2021;
 
 import com.team5104.frc2021.auto.paths.AutoNavBounce;
+import com.team5104.frc2021.auto.paths.GalacticDefault2;
+import com.team5104.frc2021.auto.paths.GalacticOptimal;
 import com.team5104.frc2021.subsystems.*;
 import com.team5104.frc2021.teleop.DriveController;
 import com.team5104.frc2021.teleop.SuperstructureController;
@@ -44,7 +46,7 @@ public class Robot extends RobotController.Robot {
     //Other
     Limelight.init(false);
     Odometry.init();
-    AutoManager.setTargetPath(new AutoNavBounce());
+    AutoManager.setTargetPath(new GalacticDefault2());
     Compressor.stop();
   }
 
