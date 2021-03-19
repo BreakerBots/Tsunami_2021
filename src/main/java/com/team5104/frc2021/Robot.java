@@ -1,9 +1,7 @@
 /*BreakerBots Robotics Team 2020*/
 package com.team5104.frc2021;
 
-import com.team5104.frc2021.auto.paths.AutoNavBounce;
 import com.team5104.frc2021.auto.paths.GalacticDefault2;
-import com.team5104.frc2021.auto.paths.GalacticOptimal;
 import com.team5104.frc2021.subsystems.*;
 import com.team5104.frc2021.teleop.DriveController;
 import com.team5104.frc2021.teleop.SuperstructureController;
@@ -14,6 +12,7 @@ import com.team5104.lib.controller.XboxController;
 import com.team5104.lib.dashboard.Dashboard;
 import com.team5104.lib.devices.Limelight;
 import com.team5104.lib.setup.RobotController;
+import com.team5104.lib.setup.RobotState;
 import com.team5104.lib.subsystem.SubsystemManager;
 import com.team5104.lib.teleop.TeleopManager;
 
@@ -93,6 +92,10 @@ public class Robot extends RobotController.Robot {
     Superstructure.update();
     SubsystemManager.update();
     XboxController.update();
+
+    if (RobotState.isDisabled()) {
+      Drive.zero();
+    }
   }
   public void mainShutdown() {
     Dashboard.close();
