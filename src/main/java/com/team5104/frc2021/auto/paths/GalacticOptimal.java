@@ -10,8 +10,8 @@ import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.auto.Position;
 
 public class GalacticOptimal extends AutoPath {
-  final double MAX_VEL = 6;
-  final double MAX_ACC = 4;
+  final double MAX_VEL = 2; //OG : 6 and 4
+  final double MAX_ACC = 2;
   final int WAIT_TIME = 2000;
   int pathChoice = 0;
 
@@ -20,6 +20,7 @@ public class GalacticOptimal extends AutoPath {
     //Set position relative to field
     Odometry.reset(new Position(2.5, 10));
 
+    System.out.println(pathChoice);
     //?
     if (pathChoice == 0) {
       //intake
@@ -34,6 +35,7 @@ public class GalacticOptimal extends AutoPath {
 
       //?
       if (intaked || run(new PickupBall(WAIT_TIME))) {
+        System.out.println("Running path B-Red");
         runBRed();
         /* Ran B-Red (Green cells)
            Next path is A-Red (Red cells) */

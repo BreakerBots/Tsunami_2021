@@ -33,7 +33,7 @@ public class Hood extends ServoSubsystem {
 
 //    System.out.println(getAngle() + ", " + targetAngle);
 //    System.out.println(visionFilter.getDoubleOutput());
-      System.out.println(visionFilter.getDoubleOutput() + ", " + getAngle() + ", " + getTargetVisionAngle());
+//      System.out.println(visionFilter.getDoubleOutput() + ", " + getAngle() + ", " + getTargetVisionAngle());
 
     //Automatic
     if (Superstructure.isEnabled()) {

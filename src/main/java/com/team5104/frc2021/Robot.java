@@ -26,7 +26,7 @@ public class Robot extends RobotController.Robot {
     SubsystemManager.attach(
       new Drive(),
       new Intake(),
-      new Turret(),
+//      new Turret(),
       new Flywheel(),
       new Hopper(),
       new Hood(),
@@ -46,7 +46,7 @@ public class Robot extends RobotController.Robot {
     //Other
     Limelight.init(false);
     Odometry.init();
-    AutoManager.setTargetPath(new GalacticDefault2());
+    AutoManager.setTargetPath(new GalacticOptimal());
     Compressor.stop();
   }
 
