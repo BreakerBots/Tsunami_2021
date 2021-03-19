@@ -92,7 +92,7 @@ public class DriveTrajectory extends AutoAction {
   public void init() {
     Set.create("RunTrajectoryTime");
     console.log("Running Trajectory");
-    lastTime = 0;
+    lastTime = -1;
     Trajectory.State initialState = trajectory.sample(0);
     lastSpeeds = kinematics.toWheelSpeeds(
       new ChassisSpeeds(
@@ -110,6 +110,12 @@ public class DriveTrajectory extends AutoAction {
   public void update() {
     double curTime = timer.get();
     double dt = curTime - lastTime;
+
+    if (lastTime < 0) {
+      Drive.set(DriveSignal.STOPPED);
+      lastTime = curTime;
+      return;
+    }
 
     DifferentialDriveWheelSpeeds targetWheelSpeeds = kinematics.toWheelSpeeds(
         follower.calculate(
@@ -150,12 +156,12 @@ public class DriveTrajectory extends AutoAction {
   }
 
   public boolean isFinished() {
-    return timer.hasPeriodPassed(trajectory.getTotalTimeSeconds());
+    return timer.hasElapsed(trajectory.getTotalTimeSeconds());
   }
 
   public void end() {
     timer.stop();
-    Drive.set(new DriveSignal()); //stop
+    Drive.set(DriveSignal.STOPPED);
     if (!AutoManager.pathThreadInterrupted) {
       console.log(
           "Trajectory Finished in ",

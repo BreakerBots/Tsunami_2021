@@ -28,7 +28,7 @@ public class Drive extends ServoSubsystem {
   private static Gyro gyro;
 
   //Update
-  private static DriveSignal signal = new DriveSignal();
+  private static DriveSignal signal = DriveSignal.STOPPED;
   public void update() {
     setFiniteState(signal.mode.toString());
     if (RobotState.isEnabled() && signal.mode == DriveMode.DRIVING) {
@@ -39,7 +39,7 @@ public class Drive extends ServoSubsystem {
       stop();
     }
 
-    signal = new DriveSignal();
+    signal = DriveSignal.STOPPED;
 
     if (RobotState.isSimulation())
       updateSim();

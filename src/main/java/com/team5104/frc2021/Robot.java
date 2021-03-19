@@ -1,7 +1,7 @@
 /*BreakerBots Robotics Team 2020*/
 package com.team5104.frc2021;
 
-import com.team5104.frc2021.auto.paths.GalacticDefault2;
+import com.team5104.frc2021.auto.paths.GalacticOptimal;
 import com.team5104.frc2021.subsystems.*;
 import com.team5104.frc2021.teleop.DriveController;
 import com.team5104.frc2021.teleop.SuperstructureController;

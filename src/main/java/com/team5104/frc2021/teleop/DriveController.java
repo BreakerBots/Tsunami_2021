@@ -79,17 +79,21 @@ public class DriveController extends TeleopController {
         DRIVING, STOPPED
       }
 
+      //saved
+      public static DriveSignal STOPPED =
+          new DriveSignal(0, 0, DriveMode.STOPPED);
+
+      //variables
       public double leftVolts, rightVolts;
       public DriveMode mode;
 
-      public DriveSignal() {
-          this.mode = DriveMode.STOPPED;
-      }
-
       public DriveSignal(double leftVolts, double rightVolts) {
+        this(leftVolts, rightVolts, DriveMode.DRIVING);
+      }
+      private DriveSignal(double leftVolts, double rightVolts, DriveMode mode) {
           this.leftVolts = leftVolts;
           this.rightVolts = rightVolts;
-          this.mode = DriveMode.DRIVING;
+          this.mode = mode;
       }
 
       public String toString() {

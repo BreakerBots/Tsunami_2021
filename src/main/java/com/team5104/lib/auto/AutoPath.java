@@ -32,7 +32,7 @@ public abstract class AutoPath {
       catch (InterruptedException e) { }
     }
     boolean value = false;
-    if (currentAction != null && !AutoManager.pathThreadInterrupted) {
+    if (currentAction != null) {
       currentAction.end();
       value = currentAction.getValue();
       currentAction = null;
