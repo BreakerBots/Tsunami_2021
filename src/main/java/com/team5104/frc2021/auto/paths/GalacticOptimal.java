@@ -3,6 +3,7 @@ package com.team5104.frc2021.auto.paths;
 import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.Mode;
 import com.team5104.frc2021.auto.actions.DriveTrajectory;
+import com.team5104.frc2021.auto.actions.DriveTrajectoryAndPickupBall;
 import com.team5104.frc2021.auto.actions.PickupBall;
 import com.team5104.lib.auto.AutoPath;
 import com.team5104.lib.auto.Odometry;
@@ -25,13 +26,14 @@ public class GalacticOptimal extends AutoPath {
       Superstructure.set(Mode.INTAKING);
 
       //?
-      run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
+      boolean intaked = run(new DriveTrajectoryAndPickupBall(
+          false, MAX_VEL, MAX_ACC,
           new Position(2.5, 10, 0), // Start
           new Position(7.5, 10, -90) // B3
       ));
 
       //?
-      if (run(new PickupBall(WAIT_TIME))) {
+      if (intaked || run(new PickupBall(WAIT_TIME))) {
         runBRed();
         /* Ran B-Red (Green cells)
            Next path is A-Red (Red cells) */
