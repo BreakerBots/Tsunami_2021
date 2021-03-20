@@ -15,7 +15,9 @@ public class GalacticDefault2 extends AutoPath {
     //Set position relative to field
     Odometry.reset(new Position(2.5, 10));
 
-    //Superstructure.set(Superstructure.Mode.INTAKING);
+    System.out.println("We are supposed to be intaking now idk tho");
+    Superstructure.set(Superstructure.Mode.INTAKING);
+
     run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
         new Position(2.5, 10, 0), // Start
         new Position(7.5, 10, -90), // B3

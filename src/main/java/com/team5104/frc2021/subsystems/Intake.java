@@ -20,6 +20,7 @@ public class Intake extends Subsystem {
     if (Superstructure.isEnabled()) {
       if (Superstructure.is(Mode.INTAKING)) {
         setFiniteState("Intaking");
+//        System.out.println("intaking pls?");
         setPercentOutput(Constants.intake.INTAKING_SPEED);
       }
       else if (Superstructure.is(Mode.SHOOTING)) {
