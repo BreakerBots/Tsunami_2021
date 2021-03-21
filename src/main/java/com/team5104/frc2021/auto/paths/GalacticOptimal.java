@@ -94,25 +94,25 @@ public class GalacticOptimal extends AutoPath {
 
     // A-Red or Red path
     else if (pathChoice == 1) {
-      System.out.println("We are in the wrong spot aaaaaaaa");
+      System.out.println("We are running second path: A-Red");
       runARed();
     }
 
     // B-Red or Green path
     else if (pathChoice == 2) {
-      System.out.println("We are in the wrong spot aaaaaaaa");
+      System.out.println("We are running second path: B-red");
       runBRed();
     }
 
     // B-Blue or Blue path
     else if (pathChoice == 3) {
-      System.out.println("We are in the wrong spot aaaaaaaa");
+      System.out.println("We are running second path: B-Blue");
       runBBlue();
     }
 
     // A-Blue or Yellow path
     else if (pathChoice == 4) {
-      System.out.println("We are in the wrong spot aaaaaaaa");
+      System.out.println("We are running second path: A-Blue");
       runABlueSolo();
     }
   }
@@ -120,6 +120,7 @@ public class GalacticOptimal extends AutoPath {
   //A-Red
   public void runARed() {
     run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
+            new Position(2.5, 10, 0), // Start
         new Position(7.5, 7.5, -90), // C3
         new Position(12.5, 4.5, 0), // D5
         new Position(14.5, 12.5, 90), // A6
@@ -130,6 +131,7 @@ public class GalacticOptimal extends AutoPath {
   //B-Red
   public void runBRed() {
     run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
+            new Position(2.5, 10, 0), // Start
         new Position(7.5, 10, -90), // B3, last position
         new Position(12.5, 5, 0), // D5
         new Position(17.5, 10.5, 0), // B7
@@ -140,6 +142,7 @@ public class GalacticOptimal extends AutoPath {
   //B-Blue
   public void runBBlue() {
     run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
+            new Position(2.5, 10, 0), // Start
         new Position(15, 5, 0), // D6, last position
         new Position(20, 10.5, 0), // B8
         new Position(25, 5, -45), // D10
@@ -150,6 +153,7 @@ public class GalacticOptimal extends AutoPath {
   //A-Blue
   public void runABlue() {
     run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
+            new Position(2.5, 10, 0), // Start
         new Position(15, 5, 0), // D6, last position
         new Position(15, 2.5, -90), // E6
         new Position(10, 7.5, 90), // Swoop point
