@@ -148,10 +148,10 @@ public class Hood extends ServoSubsystem {
       return 20;
     }
     else if (x < -5) {
-      return 6;
+      return 10;
     }
     else if (x < 3){
-      return 5.8;
+      return 10;
     }
     else {
       return 0;

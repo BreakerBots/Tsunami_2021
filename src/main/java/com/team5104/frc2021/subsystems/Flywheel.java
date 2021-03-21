@@ -29,7 +29,7 @@ public class Flywheel extends ServoSubsystem {
   //Loop
   public void update() {
 
-//    System.out.println(getRPM() + ", " + getTargetRPM());
+    System.out.println(getRPM() + ", " + getTargetRPM());
 
     if (Superstructure.isEnabled() && state == FlywheelState.SPINNING) {
       setFiniteState("Spinning");
@@ -39,7 +39,7 @@ public class Flywheel extends ServoSubsystem {
 //          setFiniteState("Low");
           setPercentOutput(0.42);
         } else {
-          setPercentOutput(1.0);
+          setPercentOutput(0.60);
         }
       }
       else setSpeed(getTargetRPM());
@@ -89,7 +89,7 @@ public class Flywheel extends ServoSubsystem {
     return (motor1 == null) ? 0 : avgRPM.getDoubleOutput();
   }
   public static double getTargetRPM() {
-    return (Hood.isTrenchMode()) ? 11000 : 9000;
+    return (Hood.isTrenchMode()) ? 11000 : 6400;
   }
   public static boolean isSpedUp() {
     if (motor1 == null)

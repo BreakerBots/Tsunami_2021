@@ -8,7 +8,7 @@ import com.team5104.lib.teleop.TeleopController;
 public class DriveController extends TeleopController {
   private static final double MIN_SPEED_FORWARD = 0.055; //volts
   private static final double MIN_SPEED_TURN = 0.055; //volts
-  private static final double KICKSTAND_SCALAR = 0.4; //percent
+  private static final double KICKSTAND_SCALAR = 0.5; //percent
   private static final double TURN_SPEED_ADJ = 0.2; //percent - reduces turning bases on forward velocity
   private boolean kickstand = false;
 

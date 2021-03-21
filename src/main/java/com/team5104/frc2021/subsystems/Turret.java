@@ -33,21 +33,22 @@ public class Turret extends ServoSubsystem {
     //Automatic
     if (Superstructure.isEnabled()) {
 
-      //Homing
-      if (is(SubsystemMode.HOMING)) {
-        System.out.println("We are trying to home the turret");
-        setFiniteState("Homing");
-        enableSoftLimits(false);
-        setVoltage(Constants.turret.HOMING_SPEED);
-      }
+     // Homing
+//      if (is(SubsystemMode.HOMING)) {
+//        System.out.println("We are trying to home the turret");
+//        setFiniteState("Homing");
+//        enableSoftLimits(false);
+//        setVoltage(Constants.turret.HOMING_SPEED);
+//      }
+//
+//      //Characterizing
+//      else if (is(SubsystemMode.CHARACTERIZING)) {
+//        setFiniteState("Characterizing");
+//        //do nothing
+//      }
 
-      //Characterizing
-      else if (is(SubsystemMode.CHARACTERIZING)) {
-        setFiniteState("Characterizing");
-        //do nothing
-      }
-
-      else if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
+        //else if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
+        if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
         setFiniteState("Vision");
         if (/*Limelight.hasTarget() &&*/ Superstructure.is(Mode.AIMING)) {
           setAngle(

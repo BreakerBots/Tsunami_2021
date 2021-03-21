@@ -20,6 +20,7 @@ public class GalacticOptimal extends AutoPath {
     System.out.println("running yay pls good things pls!");
     //Set position relative to field
     Odometry.reset(new Position(2.5, 10));
+    // try 2.5, 15, -45
 
     System.out.println(pathChoice);
     //?
