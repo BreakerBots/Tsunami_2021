@@ -5,9 +5,11 @@ package com.team5104.lib.auto;
  * A framework for all actions inside frc.team5104.auto.actions
  */
 public abstract class AutoAction {
+  boolean hasInitialized = false, hasFinished = false;
+
   /** Called when action is started to be run */
   public abstract void init();
-  
+
   /** Called periodically when the action is being run */
   public abstract void update();
 

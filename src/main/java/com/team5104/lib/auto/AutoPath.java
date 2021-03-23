@@ -25,25 +25,42 @@ public abstract class AutoPath {
       return false;
 
     currentAction = action;
-    currentAction.init();
+    currentAction.hasInitialized = false;
+    currentAction.hasFinished = false;
+
     while (currentAction != null && !currentAction.isFinished() && !AutoManager.pathThreadInterrupted) {
-      try { Thread.sleep(RobotState.getLoopPeriod()); }
       //no code in the loop (just waiting until currentAction is finished)
+
+      try { Thread.sleep(RobotState.getLoopPeriod()); }
       catch (InterruptedException e) { }
     }
-    boolean value = false;
+
     if (currentAction != null) {
-      currentAction.end();
-      value = currentAction.getValue();
+      boolean val = currentAction.getValue();
       currentAction = null;
+      return val;
     }
-    return value;
+
+    return false;
   }
 
   /** Updates the current action */
   public final void update() {
     if (currentAction != null && isRunning) {
+      //init
+      if (!currentAction.hasInitialized) {
+        currentAction.init();
+        currentAction.hasInitialized = true;
+      }
+
+      //update
       currentAction.update();
+
+      //finish
+      if (currentAction.isFinished() && !currentAction.hasFinished) {
+        currentAction.end();
+        currentAction.hasFinished = true;
+      }
     }
   }
 }
