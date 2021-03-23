@@ -1,12 +1,8 @@
 package com.team5104.frc2021.auto.paths;
 
-import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.Mode;
-import com.team5104.frc2021.auto.actions.DriveTrajectory;
-import com.team5104.frc2021.auto.actions.DriveTrajectoryAndPickupBall;
-import com.team5104.frc2021.auto.actions.PickupBall;
+import com.team5104.frc2021.auto.actions.*;
 import com.team5104.lib.auto.AutoPath;
-import com.team5104.lib.auto.Odometry;
 import com.team5104.lib.auto.Position;
 
 public class GalacticOptimal extends AutoPath {
@@ -19,14 +15,14 @@ public class GalacticOptimal extends AutoPath {
   public void start() {
     System.out.println("running yay pls good things pls!");
     //Set position relative to field
-    Odometry.reset(new Position(2.5, 10));
+    run(new ResetOdometry(2.5, 10));
     // try 2.5, 15, -45
 
     System.out.println(pathChoice);
     //?
     if (pathChoice == 0) {
       //intake
-      Superstructure.set(Mode.INTAKING);
+      run(new SetSuperstructureMode(Mode.INTAKING));
 
       //?
       System.out.println("Check B3!!");

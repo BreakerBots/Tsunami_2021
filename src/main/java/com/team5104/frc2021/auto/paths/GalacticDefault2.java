@@ -1,11 +1,11 @@
 package com.team5104.frc2021.auto.paths;
 
-import com.team5104.frc2021.Superstructure;
-import com.team5104.frc2021.auto.actions.PickupBall;
-import com.team5104.lib.auto.AutoPath;
-import com.team5104.lib.auto.Odometry;
-import com.team5104.lib.auto.Position;
+import com.team5104.frc2021.Superstructure.Mode;
 import com.team5104.frc2021.auto.actions.DriveTrajectory;
+import com.team5104.frc2021.auto.actions.ResetOdometry;
+import com.team5104.frc2021.auto.actions.SetSuperstructureMode;
+import com.team5104.lib.auto.AutoPath;
+import com.team5104.lib.auto.Position;
 
 public class GalacticDefault2 extends AutoPath {
   final double MAX_VEL = 2; // Originally 6 and 4
@@ -13,10 +13,10 @@ public class GalacticDefault2 extends AutoPath {
 
   public void start() {
     //Set position relative to field
-    Odometry.reset(new Position(2.5, 10));
+    run(new ResetOdometry(2.5, 10));
 
     System.out.println("We are supposed to be intaking now idk tho");
-    Superstructure.set(Superstructure.Mode.INTAKING);
+    run(new SetSuperstructureMode(Mode.INTAKING));
 
     run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
         new Position(2.5, 10, 0), // Start
