@@ -24,14 +24,14 @@ public class Robot extends RobotController.Robot {
 
     //Subsystems
     SubsystemManager.attach(
-      new Drive(),
-      new Intake(),
-      new Turret(),
-      new Flywheel(),
-      new Hopper(),
-      new Hood(),
-      new Climber(),
-      new Paneler()
+      new Drive()//,
+//      new Intake(),
+//      new Turret(),
+//      new Flywheel(),
+//      new Hopper(),
+//      new Hood(),
+//      new Climber(),
+//      new Paneler()
     );
 
     //Teleop Controllers
