@@ -103,7 +103,7 @@ public class Hopper extends ServoSubsystem {
     indexEncoder.reset();
   }
   public static boolean isEntrySensorTrippedAvg() {
-    return entrySensorAverage.getBooleanOutput();
+    return entrySensorAverage != null && entrySensorAverage.getBooleanOutput();
   }
   public static boolean isEndSensorTripped() {
     return endSensor.get();

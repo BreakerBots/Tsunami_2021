@@ -28,7 +28,10 @@ public abstract class AutoPath {
     currentAction.hasInitialized = false;
     currentAction.hasFinished = false;
 
-    while (currentAction != null && !currentAction.isFinished() && !AutoManager.pathThreadInterrupted) {
+    while (currentAction != null &&
+          !(currentAction.isFinished() && currentAction.hasFinished) &&
+          !AutoManager.pathThreadInterrupted
+      ) {
       //no code in the loop (just waiting until currentAction is finished)
 
       try { Thread.sleep(RobotState.getLoopPeriod()); }
