@@ -29,7 +29,7 @@ public class Flywheel extends ServoSubsystem {
   //Loop
   public void update() {
 
-    System.out.println(getRPM() + ", " + getTargetRPM());
+    //System.out.println(getRPM() + ", " + getTargetRPM());
 
     if (Superstructure.isEnabled() && state == FlywheelState.SPINNING) {
       setFiniteState("Spinning");

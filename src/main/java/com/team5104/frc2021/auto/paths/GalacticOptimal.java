@@ -13,9 +13,8 @@ public class GalacticOptimal extends AutoPath {
 
   //Start
   public void start() {
-    System.out.println("running yay pls good things pls!");
     //Set position relative to field
-    run(new ResetOdometry(2.5, 10));
+    run(new ResetOdometry(2.5, 10)); // Started at 2.5, 10
     // try 2.5, 15, -45
 
     System.out.println(pathChoice);
@@ -23,17 +22,19 @@ public class GalacticOptimal extends AutoPath {
     if (pathChoice == 0) {
       //intake
       run(new SetSuperstructureMode(Mode.INTAKING));
-
+      System.out.println("Turning on intake");
       //?
+      System.out.println("Let's get it!");
       System.out.println("Check B3!!");
       boolean intaked = run(new DriveTrajectoryAndPickupBall(
           false, MAX_VEL, MAX_ACC,
           new Position(2.5, 10, 0), // Start
-          new Position(7.5, 10, -90) // B3
+          new Position(7.5, 10, 0) // B3
       ));
       System.out.println(intaked);
 
       //?
+      //if (intaked) {
       if (intaked || run(new PickupBall(WAIT_TIME))) {
         System.out.println("Running path B-Red");
         runBRed();
@@ -47,7 +48,7 @@ public class GalacticOptimal extends AutoPath {
         //?
         System.out.println("Check C3!!");
         intaked = run(new DriveTrajectoryAndPickupBall(false, MAX_VEL, MAX_ACC,
-            new Position(7.5, 10, -90), // B3, last position
+            new Position(7.5, 10, 0), // B3, last position
             new Position(7.5, 7.5, -90) // C3
         ));
         System.out.println(intaked);
@@ -90,24 +91,28 @@ public class GalacticOptimal extends AutoPath {
 
     // A-Red or Red path
     else if (pathChoice == 1) {
+      run(new SetSuperstructureMode(Mode.INTAKING));
       System.out.println("We are running second path: A-Red");
-      runARed();
+      runARed2();
     }
 
     // B-Red or Green path
     else if (pathChoice == 2) {
+      run(new SetSuperstructureMode(Mode.INTAKING));
       System.out.println("We are running second path: B-red");
       runBRed();
     }
 
     // B-Blue or Blue path
     else if (pathChoice == 3) {
+      run(new SetSuperstructureMode(Mode.INTAKING));
       System.out.println("We are running second path: B-Blue");
       runBBlue();
     }
 
     // A-Blue or Yellow path
     else if (pathChoice == 4) {
+      run(new SetSuperstructureMode(Mode.INTAKING));
       System.out.println("We are running second path: A-Blue");
       runABlueSolo();
     }
@@ -116,7 +121,7 @@ public class GalacticOptimal extends AutoPath {
   //A-Red
   public void runARed() {
     run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
-            new Position(2.5, 10, 0), // Start
+            //new Position(2.5, 10, 0), // Start
         new Position(7.5, 7.5, -90), // C3
         new Position(12.5, 4.5, 0), // D5
         new Position(14.5, 12.5, 90), // A6
@@ -124,21 +129,31 @@ public class GalacticOptimal extends AutoPath {
     ));
   }
 
+  public void runARed2() {
+    run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
+            new Position(2.5, 10, 0), // Start
+            new Position(7.5, 7.5, -90), // C3
+            new Position(12.5, 4.5, 0), // D5
+            new Position(14.5, 12.5, 90), // A6
+            new Position(30, 10, 0) // Finish
+    ));
+  }
+
   //B-Red
   public void runBRed() {
     run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
-            new Position(2.5, 10, 0), // Start
-        new Position(7.5, 10, -90), // B3, last position
+            //new Position(2.5, 10, 0), // Start
+        new Position(7.5, 10, 0), // B3, last position
         new Position(12.5, 5, 0), // D5
         new Position(17.5, 10.5, 0), // B7
-        new Position(30, 12, 0) // Finish
+        new Position(30, 10.5, 0) // Finish
     ));
   }
 
   //B-Blue
   public void runBBlue() {
     run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
-            new Position(2.5, 10, 0), // Start
+            //new Position(2.5, 10, 0), // Start
         new Position(15, 5, 0), // D6, last position
         new Position(20, 10.5, 0), // B8
         new Position(25, 5, -45), // D10
@@ -148,15 +163,16 @@ public class GalacticOptimal extends AutoPath {
 
   //A-Blue
   public void runABlue() {
-    run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
-            new Position(2.5, 10, 0), // Start
-        new Position(15, 5, 0), // D6, last position
-        new Position(15, 2.5, -90), // E6
-        new Position(10, 7.5, 90), // Swoop point
-        new Position(17.5, 10, 0), // B7
-        new Position(22.5, 7.5, -45), // C9
-        new Position(30, 5, 0) // Finish
-    ));
+//    run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
+//            //new Position(2.5, 10, 0), // Start
+//        new Position(15, 5, 0), // D6, last position
+//        new Position(15, 2.5, -90), // E6
+//        new Position(10, 7.5, 90), // Swoop point
+//        new Position(17.5, 10, 0), // B7
+//        new Position(22.5, 7.5, -45), // C9
+//        new Position(30, 5, 0) // Finish
+//    ));
+    System.out.println("In A-Blue!");
   }
 
   //A-Blue Solo
