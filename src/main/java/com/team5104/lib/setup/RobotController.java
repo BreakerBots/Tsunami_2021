@@ -24,6 +24,9 @@ public class RobotController extends RobotBase {
 
   //Init Robot
   public void startCompetition() {
+    //Console
+    console.init();
+
     //HAL
     HAL.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Timed);
     HAL.observeUserProgramStarting();
@@ -41,7 +44,7 @@ public class RobotController extends RobotBase {
     Set.create("RobotInit");
     if (Constants.robot.name.length() < 4)
       console.error("no robot.txt found! Use Filer.saveRobotFile() to specify the robot");
-    console.log("initializing ", Constants.robot.name, " code...");
+    console.log("initializing", Constants.robot.name, "code...");
 
     //Set Robot Class
     try {
@@ -51,7 +54,7 @@ public class RobotController extends RobotBase {
     } catch (Exception e) { CrashHandler.log(e); }
 
     //Init Time
-    console.log("initialization took ", Set.getTime("RobotInit"), "seconds");
+    console.log("initialization took", Set.getTime("RobotInit"), "seconds");
 
     //Loop
     expirationTime = RobotState.getFPGATimestamp() + RobotState.getLoopPeriod();
