@@ -6,32 +6,35 @@ import com.team5104.lib.auto.AutoPath;
 import com.team5104.lib.auto.Position;
 
 public class AutoNavBarrel extends AutoPath {
-  final double MAX_VEL = 6;
+  final double MAX_VEL = 8;
   final double MAX_ACC = 4;
 
   public void start() {
     //Set position relative to field
-    run(new ResetOdometry(5, 7.5));
+    run(new ResetOdometry(3, 7.5));
 
     // Evading Marker D5
     run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
-        new Position(5, 7.5, 0), // Start
-        new Position(9.1, 7.5, 0),
-        new Position(17, 5, -90),
-        new Position(10.9, 2.9, 90),
+        new Position(3, 7.5, 0), // Start
+        new Position(7.1, 7.5, 0),
+        new Position(14.5, 5, -90),
+        new Position(12.5, 2.5, -180),
+        new Position(8, 5, 90),
     // Evading Marker B8
-        new Position(10.9, 5, 90),
-        new Position(21.9, 7.6, 0),
-        new Position(23.6, 11.0, 110),
-        new Position(18.4, 13.2, 180),
+       // new Position(10.9, 5, 90),
+        new Position(20, 7.5, 0),
+        new Position(22, 10.0, 90),
+        new Position(20, 13, 180),
+        new Position(15.5, 10, 270),
     // Evading Marker D10
-        new Position(17, 8.5, 290),
-        new Position(20.3, 3.9, 325),
-        new Position(26.5, 2.6, 0),
-        new Position(29, 5.7, 120),
-        new Position(22, 7.35, 195),
-        new Position(15.4, 7, 165),
-        new Position(2.5, 7, 180) // Finish
+        new Position(21, 3.5, -45),
+        new Position(26, 3.5, 45),
+            new Position(26, 7.5, 135),
+        new Position(20, 7.5, 180),
+
+       // new Position(22, 7.35, 195),
+        //new Position(15.4, 7.35, 165),
+        new Position(-2.5, 7.5, 180) // Finish change x back to 2.5
     ));
   }
 }

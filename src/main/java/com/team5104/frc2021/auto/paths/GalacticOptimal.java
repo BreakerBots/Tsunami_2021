@@ -6,9 +6,9 @@ import com.team5104.lib.auto.AutoPath;
 import com.team5104.lib.auto.Position;
 
 public class GalacticOptimal extends AutoPath {
-  final double MAX_VEL = 2; //OG : 6 and 4
-  final double MAX_ACC = 2;
-  final int WAIT_TIME = 2000;
+  final double MAX_VEL =6; //OG : 6 and 4
+  final double MAX_ACC =4;
+  final int WAIT_TIME = 0;
   int pathChoice = 0;
 
   //Start
@@ -156,8 +156,8 @@ public class GalacticOptimal extends AutoPath {
             //new Position(2.5, 10, 0), // Start
         new Position(15, 5, 0), // D6, last position
         new Position(20, 10.5, 0), // B8
-        new Position(25, 5, -45), // D10
-        new Position(30, 3, 0) // Finish
+        new Position(24, 5, 0), // D10
+        new Position(30, 5, 0) // Finish
     ));
   }
 
@@ -178,10 +178,13 @@ public class GalacticOptimal extends AutoPath {
   //A-Blue Solo
   public void runABlueSolo() {
     run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
+            new Position(2.5, 10, 0),
         new Position(15, 2.5, 0), // E6 -- note to smol: back up first, no loop
         new Position(17.5, 10, 0), // B7
-        new Position(22.5, 7.5, -45), // C9
-        new Position(30, 5, 0) // Finish
+        new Position(22.5, 6.5, -90), // C9
+            new Position(22.5, 4, -90), // C9
+
+        new Position(30, 2, 0) // Finish
     ));
   }
 }
