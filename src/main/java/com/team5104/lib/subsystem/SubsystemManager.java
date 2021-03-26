@@ -29,7 +29,7 @@ public class SubsystemManager {
         subsystemNames.add(subsystem.getClass().getSimpleName());
       } catch (Exception e) { CrashHandler.log(e); }
     }
-    console.log("running subsystems: ", subsystemNames);
+    console.log("running subsystems:", subsystemNames);
 
     //Fast Update
     Looper.attach(() -> {

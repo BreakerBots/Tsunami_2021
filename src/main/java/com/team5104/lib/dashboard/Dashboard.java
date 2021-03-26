@@ -61,7 +61,7 @@ public class Dashboard extends WebSocketServer {
       data.put("robotData", robotData);
 
       //logs
-      data.put("logs", new ArrayList(console.readBuffer()));
+      //data.put("logs", new ArrayList(console.readBuffer()));
 
       //#sendit
       sendMessage(data.toString());
@@ -196,7 +196,7 @@ public class Dashboard extends WebSocketServer {
       //console.log("new connection");
     }
 
-    console.resetBuffer();
+    //console.resetBuffer();
 
     //welcome package
     JSONConstructor data = new JSONConstructor();

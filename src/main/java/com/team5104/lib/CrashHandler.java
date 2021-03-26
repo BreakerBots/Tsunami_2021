@@ -10,7 +10,7 @@ public class CrashHandler {
       SavedCrash crash = new SavedCrash(exception);
       console.error(
           crash.getLoopName(),
-          " loop crashed!",
+          "loop crashed!",
           crash.getErrorMessage()
       );
     } catch (Exception e) {
@@ -43,17 +43,18 @@ public class CrashHandler {
         if (message == null)
           message = exception.toString();
         builder.append(message);
-        builder.append("<br>");
+        builder.append("\n");
 
         int stackCount = 0;
         StackTraceElement[] rawTrace = exception.getStackTrace();
         int size = rawTrace.length - stackCount;
         for (int i = 0; i < size; i++) {
           StackTraceElement el = rawTrace[i + stackCount];
+          builder.append(" @");
           builder.append(el.getClassName().substring(el.getClassName().lastIndexOf(".") + 1));
           builder.append(":");
           builder.append(el.getLineNumber());
-          builder.append("<br>");
+          builder.append("\n");
         }
       } catch (Exception e) { console.error("error in SavedCrash.getErrorMessage()", e.getMessage()); }
       return builder.toString();

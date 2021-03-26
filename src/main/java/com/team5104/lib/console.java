@@ -1,90 +1,119 @@
 /* BreakerBots Robotics Team (FRC 5104) 2020 */
 package com.team5104.lib;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.team5104.lib.Looper.TimedLoop;
 import edu.wpi.first.wpilibj.Timer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
-/** Handles all robot logging
- * Outputs to the Dashboard (pref) or Driver Station console (System.out) */
+/**
+ * <h1>Console</h1>
+ * A class for handling logging/printing
+ */
 public class console {
 
-    // Types
+    /** Types of Logging */
     private enum Type {
-        ERROR, INFO, WARN;
+        ERROR("ERROR "), INFO(""), WARNING("WARNING ");
+        String message;
+
+        Type(String message) { this.message = message; }
     }
 
-    // Logging Methods
+    // -- Logging Methods
+
     /** Prints out text in a separate thread (lowest priority) and adds prints to a text file (if Console.logFile.isLogging)
      * Examples:
      * 2.12 [Robot]: Message
      * 90.12 ERROR [subsystems.Turret]: Message */
     private static void logBase(int stackCount, Type type, Object... data) {
-        Log log = new Log(
-            Timer.getFPGATimestamp(),
-            type,
-            stackCount + 1,
-            data,
-            1
-        );
+        StackTraceElement trace = new Throwable().getStackTrace()[stackCount];
+        String simpleClassName = trace.getFileName();
+        simpleClassName = simpleClassName.substring(0, simpleClassName.indexOf('.'));
 
-        int lastLogIndex = logs.size() - 1;
-        if (logs.size() > 0 && logs.get(lastLogIndex).equals(log)) {
-            //group and add to counter
-            log.count = logs.get(lastLogIndex).count + 1;
-            logs.set(lastLogIndex, log);
-            if (bufferIndex > lastLogIndex) {
-                bufferIndex = lastLogIndex;
-            }
-        }
-        else {
-            //add log
-            addToLogs(log);
-        }
+        StringBuilder out = new StringBuilder();
+        out.append(round(Timer.getFPGATimestamp(), 2));
+        out.append(" ");
+        out.append(type.message);
+        out.append("[");
+        out.append(simpleClassName);
+        out.append(":");
+        out.append(trace.getLineNumber());
+        out.append("] ");
+        out.append(parseAndRound(2, data));
+        addToPrintBuffer(out.toString());
     }
     /** Prints out text to the console under the type "INFO" and category "OTHER" */
     public static void log(Object... data) { logBase(2, Type.INFO, data); }
     /** Prints out text to the console under the type "ERROR" and category "OTHER" */
     public static void error(Object... data) { logBase(2, Type.ERROR, data); }
     /** Prints out text to the console under the type "WARN" and category "OTHER" */
-    public static void warn(Object... data) { logBase(2, Type.WARN, data); }
+    public static void warn(Object... data) { logBase(2, Type.WARNING, data); }
 
-    // System Logging/Thread/Loop
-    private static final int MAX_ELEMENTS = 500;
-    private volatile static List<Log> logs = new ArrayList<Log>();
-    private volatile static int bufferIndex = 0;
-    public static void addToLogs(Log log) {
-        logs.add(log);
-        if (logs.size() > MAX_ELEMENTS) {
-            /* cap size to save memory
-              @ ~64 bytes per log */
-            logs.remove(0);
-            if (bufferIndex > 0) {
-                bufferIndex--;
+
+    // -- Parse
+
+    /** Parses multiple objects into one string (no rounding). The same function as used when normally calling console.log() */
+    public static String parse(Object... data) {
+        StringBuilder out = new StringBuilder();
+        for (int dataIndex = 0; dataIndex < data.length; dataIndex++) {
+            out.append(data[dataIndex]);
+            if (dataIndex != data.length - 1) {
+                out.append(" ");
             }
         }
-    }
-    public static List<Log> readBuffer() {
-        int logsSize = logs.size();
-        if (bufferIndex <= logsSize) {
-            int bufferIndexTemp = Util.limitBottom(bufferIndex, 0);
-            bufferIndex = logsSize;
-            return logs.subList(bufferIndexTemp, logsSize);
-        }
-        return new ArrayList<Log>();
-    }
-    public static void resetBuffer() {
-        bufferIndex = 0;
+        return out.toString();
     }
 
-    // Timing Groups/Sets
+    /** Rounds all doubles, then parses multiple objects into one string. The same function as used when normally calling console.log(). */
+    public static String parseAndRound(int decimalPlaces, Object... data) {
+        StringBuilder out = new StringBuilder();
+        for (int dataIndex = 0; dataIndex < data.length; dataIndex++) {
+            if (data[dataIndex] instanceof Double) {
+                out.append(round(((Double) data[dataIndex]).doubleValue(), decimalPlaces));
+            }
+            else out.append(data[dataIndex]);
+
+            if (dataIndex != data.length - 1) {
+                out.append(" ");
+            }
+        }
+        return out.toString();
+    }
+
+    // -- Rounding
+
+    /** Rounds a number to 2 decimal places */
+    public static String round(double number) { return round(number, 2); }
+
+    /** Rounds a number to N decimal places */
+    public static String round(double number, int decimalPlaces) {
+        return String.format("%." + ((int) Util.limit(decimalPlaces, 0, 10)) + "f", number);
+    }
+
+    // -- System Logging/Thread/Loop
+    private static volatile List<String> buffer = Collections.synchronizedList(new ArrayList<String>());
+    public static void init() {
+        Looper.registerLoop(new TimedLoop("Console", () -> {
+            try {
+                StringBuilder build = new StringBuilder();
+                for (Iterator<String> iterator = buffer.iterator(); iterator.hasNext();) {
+                    build.append(iterator.next() + "\n");
+                }
+                buffer.clear();
+                System.out.print(build.toString());
+            } catch (Exception e) {}
+        }, 1, 100));
+    }
+    public static void addToPrintBuffer(String line) {
+        buffer.add(line);
+    }
+
+    // -- Timing Groups/Sets
     public static class Set {
-        // TODO: Plz rewrite
         public static final int MaxSets = 10;
         public static String[] sn = new String[MaxSets];
         public static long[] sv = new long[MaxSets];
@@ -145,78 +174,12 @@ public class console {
                 }
             }
         }
-    }
 
-    //Log Object
-    @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
-    public static class Log {
-        @JsonProperty("timestamp")
-        private double timestamp;
-        @JsonProperty("type")
-        private Type type;
-        @JsonProperty("trace")
-        private TraceElement[] trace;
-        @JsonProperty("data")
-        private Object[] data;
-        @JsonProperty("count")
-        int count;
-
-        public Log(double timestamp, Type type, int stackCount, Object[] data, int count) {
-            this.timestamp = timestamp;
-            this.type = type;
-
-            StackTraceElement[] rawTrace = new Throwable().getStackTrace();
-            int size = Math.min(rawTrace.length - stackCount, 3);
-            this.trace = new TraceElement[size];
-            for (int i = 0; i < size; i++) {
-                this.trace[i] = new TraceElement(rawTrace[i + stackCount]);
-            }
-
-            this.data = data;
-            this.count = count;
-        }
-
-        public boolean equals(Log log) {
-            return this.type == log.type &&
-                   this.trace[0].className.equals(log.trace[0].className) &&
-                   this.trace[0].lineNumber == log.trace[0].lineNumber;
-        }
-
-        public String getLogString() {
-            StringBuilder builder = new StringBuilder();
-            builder.append(type.name());
-            builder.append(" [");
-            builder.append(trace[0].className);
-            builder.append("]: ");
-            builder.append(Arrays.toString(data));
-            return builder.toString();
-        }
-    }
-    @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
-    public static class TraceElement {
-        @JsonProperty("className")
-        private String className;
-        @JsonProperty("lineNumber")
-        private int lineNumber;
-
-        public TraceElement(StackTraceElement stackTraceElement) {
-            if (stackTraceElement == null)
-                return;
-
-            this.className = stackTraceElement.getClassName();
-            this.lineNumber = stackTraceElement.getLineNumber();
+        /** Similar to normal "console.log" with the time of a timing group/set appended
+         * @param a               The text to print out
+         * @param timingGroupName The name of the timing group/set */
+        public static void log(String timingGroupName, Object... a) {
+            console.logBase(2, Type.INFO, parse(a) + " " + String.format("%.2f", getTime(timingGroupName)) + "s");
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
