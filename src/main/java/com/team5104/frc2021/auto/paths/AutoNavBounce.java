@@ -6,8 +6,8 @@ import com.team5104.lib.auto.AutoPath;
 import com.team5104.lib.auto.Position;
 
 public class AutoNavBounce extends AutoPath {
-  final double MAX_VEL = 6;
-  final double MAX_ACC = 4;
+  final double MAX_VEL = 10; //OG: 6
+  final double MAX_ACC = 3; //OG: 4
 
   public void start() {
     //Set position relative to field
@@ -19,6 +19,7 @@ public class AutoNavBounce extends AutoPath {
         // Starts Marker 1
         new Position(8.7, 12.9, 90)
     ));
+
     // Hit Marker 1 (Reverse)
     run(new DriveTrajectory(true, MAX_VEL, MAX_ACC,
         new Position(8.7, 12.9, 90), // Last point

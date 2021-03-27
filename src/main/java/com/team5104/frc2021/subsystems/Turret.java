@@ -23,7 +23,7 @@ public class Turret extends ServoSubsystem {
   private LatencyCompensator latencyCompensator;
   private MovingAverage outputAverage;
   private static double targetAngle = 0,
-                        fieldOrientedOffset = 0;
+                        fieldOrientedOffset = -20;
   private static LatchedBoolean onTargetTrigger = new LatchedBoolean();
 
   //Loop
@@ -33,19 +33,19 @@ public class Turret extends ServoSubsystem {
     //Automatic
     if (Superstructure.isEnabled()) {
 
-     // Homing
-//      if (is(SubsystemMode.HOMING)) {
-//        System.out.println("We are trying to home the turret");
-//        setFiniteState("Homing");
-//        enableSoftLimits(false);
-//        setVoltage(Constants.turret.HOMING_SPEED);
-//      }
-//
-//      //Characterizing
-//      else if (is(SubsystemMode.CHARACTERIZING)) {
-//        setFiniteState("Characterizing");
-//        //do nothing
-//      }
+      //Homing
+      if (is(SubsystemMode.HOMING)) {
+        System.out.println("We are trying to home the turret");
+        setFiniteState("Homing");
+        enableSoftLimits(false);
+        setVoltage(Constants.turret.HOMING_SPEED);
+      }
+
+      //Characterizing
+      else if (is(SubsystemMode.CHARACTERIZING)) {
+        setFiniteState("Characterizing");
+        //do nothing
+      }
 
         //else if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
         if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
@@ -84,7 +84,7 @@ public class Turret extends ServoSubsystem {
   public void fastUpdate() {
     //Exit Homing
     if (is(SubsystemMode.HOMING) && leftLimitHit()) {
-      //console.log("finished homing");
+      console.log("finished homing");
       Filer.createFile("/tmp/turret_homed.txt");
       setMode(SubsystemMode.OPERATING, true);
       System.out.println("finished homing!");
