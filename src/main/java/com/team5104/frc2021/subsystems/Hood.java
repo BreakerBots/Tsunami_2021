@@ -35,6 +35,7 @@ public class Hood extends ServoSubsystem {
 //    System.out.println(visionFilter.getDoubleOutput());
 //    System.out.println(visionFilter.getDoubleOutput() + ", " + getAngle() + ", " + getTargetVisionAngle());
 
+
     //Automatic
     if (Superstructure.isEnabled()) {
       if (is(SubsystemMode.HOMING)) {
@@ -144,16 +145,29 @@ public class Hood extends ServoSubsystem {
 //    if (isTrenchMode())
 //      return 0;
     double x = visionFilter.getDoubleOutput();
+    System.out.print("X is ");
     if (x <= -13) {
-      return 20;
+      //System.out.println(x);
+      System.out.printf("%.2f\n", x);
+      System.out.println("Hood angle is 15");
+      return 15;
     }
-    else if (x < -5) {
-      return 10;
+    else if (x < -5) { // Blue
+      //System.out.println(x);
+      System.out.printf("%.2f\n", x);
+      System.out.println("Hood angle is 11");
+      return 11;
     }
-    else if (x < 3){
+    else if (x < 3){ // Yellow
+      //System.out.println(x);
+      System.out.printf("%.2f\n", x);
+      System.out.println("Hood angle is 10");
       return 10;
     }
     else {
+      //System.out.println(x);
+      System.out.printf("%.2f\n", x);
+      System.out.println("Hood angle is 0");
       return 0;
     }
 //    else {

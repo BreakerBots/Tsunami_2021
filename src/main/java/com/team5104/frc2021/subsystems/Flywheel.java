@@ -11,6 +11,7 @@ import com.team5104.lib.MovingAverage;
 import com.team5104.lib.Util;
 import com.team5104.lib.console;
 import com.team5104.lib.devices.Encoder.FalconEncoder;
+import com.team5104.lib.devices.Limelight;
 import com.team5104.lib.motion.VelocityController;
 import com.team5104.lib.subsystem.ServoSubsystem;
 
@@ -29,7 +30,7 @@ public class Flywheel extends ServoSubsystem {
   //Loop
   public void update() {
 
-    //System.out.println(getRPM() + ", " + getTargetRPM());
+//    System.out.println(getRPM() + ", " + getTargetRPM());
 
     if (Superstructure.isEnabled() && state == FlywheelState.SPINNING) {
       setFiniteState("Spinning");
@@ -38,6 +39,8 @@ public class Flywheel extends ServoSubsystem {
         if (Hood.getTargetAngle() >= 39) {
 //          setFiniteState("Low");
           setPercentOutput(0.42);
+        } else if (Limelight.getTargetY() < -15){
+          setPercentOutput(0.80);
         } else {
           setPercentOutput(0.60);
         }
@@ -89,7 +92,7 @@ public class Flywheel extends ServoSubsystem {
     return (motor1 == null) ? 0 : avgRPM.getDoubleOutput();
   }
   public static double getTargetRPM() {
-    return (Hood.isTrenchMode()) ? 11000 : 6400;
+    return (Hood.isTrenchMode()) ? 9000 : 6400;
   }
   public static boolean isSpedUp() {
     if (motor1 == null)

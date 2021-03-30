@@ -47,8 +47,8 @@ public class Turret extends ServoSubsystem {
         //do nothing
       }
 
-        //else if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
-        if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
+        else if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
+        //if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
         setFiniteState("Vision");
         if (/*Limelight.hasTarget() &&*/ Superstructure.is(Mode.AIMING)) {
           setAngle(
