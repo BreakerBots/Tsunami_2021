@@ -30,7 +30,7 @@ public class Flywheel extends ServoSubsystem {
   //Loop
   public void update() {
 
-//    System.out.println(getRPM() + ", " + getTargetRPM());
+    System.out.println(getRPM() + ", " + getTargetRPM());
 
     if (Superstructure.isEnabled() && state == FlywheelState.SPINNING) {
       setFiniteState("Spinning");
@@ -40,8 +40,10 @@ public class Flywheel extends ServoSubsystem {
 //          setFiniteState("Low");
           setPercentOutput(0.42);
         } else if (Limelight.getTargetY() < -15){
-          setPercentOutput(0.80);
+          //System.out.println("Percent output: 90%");
+          setPercentOutput(0.90);
         } else {
+          //System.out.println("Percent output: 60%");
           setPercentOutput(0.60);
         }
       }

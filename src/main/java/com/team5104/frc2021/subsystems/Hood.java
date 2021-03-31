@@ -146,23 +146,23 @@ public class Hood extends ServoSubsystem {
 //      return 0;
     double x = visionFilter.getDoubleOutput();
     System.out.print("X is ");
-    if (x <= -13) {
+    if (x <= -13) { // Red
       //System.out.println(x);
       System.out.printf("%.2f\n", x);
-      System.out.println("Hood angle is 15");
-      return 15;
+      System.out.println("Hood angle is 13");
+      return 13;
     }
     else if (x < -5) { // Blue
       //System.out.println(x);
       System.out.printf("%.2f\n", x);
-      System.out.println("Hood angle is 11");
-      return 11;
+      System.out.println("Hood angle is 9");
+      return 9;
     }
     else if (x < 3){ // Yellow
       //System.out.println(x);
       System.out.printf("%.2f\n", x);
-      System.out.println("Hood angle is 10");
-      return 10;
+      System.out.println("Hood angle is 6");
+      return 6;
     }
     else {
       //System.out.println(x);
