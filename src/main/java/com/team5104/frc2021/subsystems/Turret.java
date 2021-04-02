@@ -47,6 +47,8 @@ public class Turret extends ServoSubsystem {
         //do nothing
       }
 
+
+
         else if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
         //if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
         setFiniteState("Vision");

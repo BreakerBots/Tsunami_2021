@@ -52,7 +52,7 @@ public class Hood extends ServoSubsystem {
       else if (target == HoodTarget.LOW) {
         setFiniteState("Low");
         setAngle(40);
-      }
+       }
 
       //Vision
       else if (Superstructure.is(Mode.AIMING) || Superstructure.is(Mode.SHOOTING)) {
@@ -155,14 +155,14 @@ public class Hood extends ServoSubsystem {
     else if (x < -5) { // Blue
       //System.out.println(x);
       System.out.printf("%.2f\n", x);
-      System.out.println("Hood angle is 9");
-      return 9;
+      System.out.println("Hood angle is 11");
+      return 11;
     }
     else if (x < 3){ // Yellow
       //System.out.println(x);
       System.out.printf("%.2f\n", x);
-      System.out.println("Hood angle is 6");
-      return 6;
+      System.out.println("Hood angle is 8");
+      return 8;
     }
     else {
       //System.out.println(x);
