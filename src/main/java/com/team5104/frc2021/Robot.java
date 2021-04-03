@@ -1,10 +1,7 @@
 /*BreakerBots Robotics Team 2020*/
 package com.team5104.frc2021;
 
-import com.team5104.frc2021.auto.paths.AutoNavBarrel;
-import com.team5104.frc2021.auto.paths.AutoNavBounce;
-import com.team5104.frc2021.auto.paths.AutoNavSlalom;
-import com.team5104.frc2021.auto.paths.GalacticOptimal;
+import com.team5104.frc2021.auto.paths.*;
 import com.team5104.frc2021.subsystems.*;
 import com.team5104.frc2021.teleop.DriveController;
 import com.team5104.frc2021.teleop.SuperstructureController;
@@ -28,7 +25,7 @@ public class Robot extends RobotController.Robot {
     SubsystemManager.attach(
       new Drive(),
       new Intake(),
-      new Turret(),
+      //new Turret(),
       new Flywheel(),
       new Hopper(),
       new Hood()
@@ -48,7 +45,7 @@ public class Robot extends RobotController.Robot {
     //Other
     Limelight.init(false);
     Odometry.init();
-    AutoManager.setTargetPath(new AutoNavBounce());
+    AutoManager.setTargetPath(new Bounce2());
     Compressor.stop();
   }
 
