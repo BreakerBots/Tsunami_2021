@@ -23,7 +23,7 @@ public class Turret extends ServoSubsystem {
   private LatencyCompensator latencyCompensator;
   private MovingAverage outputAverage;
   private static double targetAngle = 0,
-                        fieldOrientedOffset = -10;
+                        fieldOrientedOffset = 0;
   private static LatchedBoolean onTargetTrigger = new LatchedBoolean();
 
   //Loop

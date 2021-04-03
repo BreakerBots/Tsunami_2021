@@ -7,41 +7,39 @@ import com.team5104.lib.auto.AutoPath;
 import com.team5104.lib.auto.Position;
 
 public class Bounce2 extends AutoPath {
-  final double MAX_VEL = 10; //OG: 6
-  final double MAX_ACC = 3; //OG: 4
+  final double MAX_VEL = 9; //OG: 6
+  final double MAX_ACC = 6; //OG: 4
 
   final AutoAction[] trajectories = {
           new DriveTrajectory(false, MAX_VEL, MAX_ACC,
                   new Position(1, 7.5, 0), // Start
                   // Starts Marker 1
-                  new Position(8.7, 12.9, 90)
+                  new Position(8, 12.9, 90)
           ),
           // Hit Marker 1 (Reverse)
           new DriveTrajectory(true, MAX_VEL, MAX_ACC,
                   new Position(8.7, 12.9, 90), // Last point
-                  //new Position(13.6, 2.5, 120),
-                  //new Position(15.5, 3.8, 265),
                   new Position(9, 10, 120),
-                  new Position(11.5, 5, 120),
-                  //new Position(12.5, 2.5, 180),
-                  new Position (15, 3, 220),
+                  new Position(10.5, 5, 120),
+                  new Position(13.5, 2.5, 180),
+                  new Position(16.5, 5, 225),
                   // Ends Marker 1, starts Marker 2
-                  new Position(15.5, 15, 270)
+                  new Position(16.5,15, 270)
           ),
           // Hit Marker 2 (Forward)
           new DriveTrajectory(false, MAX_VEL, MAX_ACC,
-                  new Position(15.5, 15, 270), // Last point
+                  new Position(16.5,15, 270), // Last point
                   new Position(16.5, 7, 275),
-                  new Position(24.5, 5.4, 45),
+                  new Position(23, 5.4, 45),
 //                  new Position(24.3, 9.6, 95),
                   // Ends Marker 2, starts Marker 3
-                  new Position(24, 17, 100)
+                  new Position(23.5, 17, 100)
           ),
           // Hit Marker 3 and finish (Reverse)
           new DriveTrajectory(true, MAX_VEL, MAX_ACC,
-                  new Position(24, 17, 100), // Last point
+                  new Position(23.5, 17, 100), // Last point
                   //new Position(22, 9.2, 150),
-                  new Position(27.5, 13, 180) // Finish
+                  new Position(27.5, 11.5, 180) // Finish
           ),
   };
 

@@ -39,9 +39,9 @@ public class Flywheel extends ServoSubsystem {
         if (Hood.getTargetAngle() >= 39) {
 //          setFiniteState("Low");
           setPercentOutput(0.42);
-        } else if (Limelight.getTargetY() < -15){
-          //System.out.println("Percent output: 90%");
-          setPercentOutput(0.90);
+//        } else if (Limelight.getTargetY() < -15){
+//          //System.out.println("Percent output: 90%");
+//          setPercentOutput(0.90);
         } else {
           //System.out.println("Percent output: 60%");
           setPercentOutput(0.60);
