@@ -34,25 +34,25 @@ public class SuperstructureController extends TeleopController {
 //        console.log("deploying paneler");
 //      }
 //    }
-    if (Controls.PANEL_SPIN.get()) {
-      if (Superstructure.is(Mode.PANEL_DEPLOYING)) {
-        Superstructure.set(Mode.PANELING);
-        if (Paneler.target == PanelerTarget.POSITION)
-          console.log("panel running position control");
-        else console.log("panel running rotation control");
-      } else if (Superstructure.is(Mode.PANELING)) {
-        Superstructure.set(Mode.PANEL_DEPLOYING);
-        console.log("deploying paneler");
-      }
-    }
-    if (Controls.PANEL_POSITION.get()) {
-      Paneler.target = PanelerTarget.POSITION;
-      console.log("setting panel mode to position");
-    }
-    if (Controls.PANEL_ROTATION.get()) {
-      Paneler.target = PanelerTarget.ROTATION;
-      console.log("setting panel mode to rotation");
-    }
+//    if (Controls.PANEL_SPIN.get()) {
+//      if (Superstructure.is(Mode.PANEL_DEPLOYING)) {
+//        Superstructure.set(Mode.PANELING);
+//        if (Paneler.target == PanelerTarget.POSITION)
+//          console.log("panel running position control");
+//        else console.log("panel running rotation control");
+//      } else if (Superstructure.is(Mode.PANELING)) {
+//        Superstructure.set(Mode.PANEL_DEPLOYING);
+//        console.log("deploying paneler");
+//      }
+//    }
+//    if (Controls.PANEL_POSITION.get()) {
+//      Paneler.target = PanelerTarget.POSITION;
+//      console.log("setting panel mode to position");
+//    }
+//    if (Controls.PANEL_ROTATION.get()) {
+//      Paneler.target = PanelerTarget.ROTATION;
+//      console.log("setting panel mode to rotation");
+//    }
 
     // Intake
     if (Controls.INTAKE.get()) {
