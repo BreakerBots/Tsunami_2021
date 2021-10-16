@@ -25,15 +25,15 @@ public class SuperstructureController extends TeleopController {
     }
 
     // Panel
-    if (Controls.PANEL_DEPLOY.get()) {
-      if (Superstructure.is(Mode.PANEL_DEPLOYING) || Superstructure.is(Mode.PANELING)) {
-        Superstructure.set(Mode.IDLE);
-        console.log("manually exiting paneling... idling");
-      } else {
-        Superstructure.set(Mode.PANEL_DEPLOYING);
-        console.log("deploying paneler");
-      }
-    }
+//    if (Controls.PANEL_DEPLOY.get()) {
+//      if (Superstructure.is(Mode.PANEL_DEPLOYING) || Superstructure.is(Mode.PANELING)) {
+//        Superstructure.set(Mode.IDLE);
+//        console.log("manually exiting paneling... idling");
+//      } else {
+//        Superstructure.set(Mode.PANEL_DEPLOYING);
+//        console.log("deploying paneler");
+//      }
+//    }
     if (Controls.PANEL_SPIN.get()) {
       if (Superstructure.is(Mode.PANEL_DEPLOYING)) {
         Superstructure.set(Mode.PANELING);
@@ -119,6 +119,11 @@ public class SuperstructureController extends TeleopController {
         Superstructure.set(Mode.CLIMBER_DEPLOYING);
         console.log("deploying climber!!!!");
       }
+    }
+
+    if (Controls.BRAKE.get()) {
+      Superstructure.set(Mode.BRAKE_IT_DOWN);
+      console.log("mode: breaking it down!!");
     }
 
     // Compressor

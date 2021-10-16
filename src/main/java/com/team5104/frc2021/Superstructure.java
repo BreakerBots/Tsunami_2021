@@ -17,7 +17,7 @@ public class Superstructure {
     IDLE,
     INTAKING, AIMING, SHOOTING,
     CLIMBER_DEPLOYING, CLIMBING,
-    PANEL_DEPLOYING, PANELING
+    PANEL_DEPLOYING, PANELING, BRAKE_IT_DOWN
   }
   private static Mode mode;
   private static MovingAverage readyToFire;

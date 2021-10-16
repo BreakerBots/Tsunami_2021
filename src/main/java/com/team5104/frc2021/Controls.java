@@ -30,7 +30,7 @@ public class Controls {
   public static Button SHOOT_HIGH = all.button(Slot.DIRECTION_PAD_RIGHT);
 
   //Panel
-  public static Button PANEL_DEPLOY = all.button(Slot.Y);
+//  public static Button PANEL_DEPLOY = all.button(Slot.Y);
   public static Button PANEL_SPIN = all.button(Slot.A);
   public static Button PANEL_ROTATION = all.button(Slot.DIRECTION_PAD_UP);
   public static Button PANEL_POSITION = all.button(Slot.DIRECTION_PAD_DOWN);
@@ -38,4 +38,5 @@ public class Controls {
   //Climb
   public static Button CLIMBER_DEPLOY = all.button(Slot.RIGHT_JOYSTICK_PRESS);
   public static Axis CLIMBER_WINCH = all.axis(Axis.Slot.RIGHT_JOYSTICK_Y, new Deadband(0.08));
+  public static Button BRAKE = all.button(Slot.Y);
 }
