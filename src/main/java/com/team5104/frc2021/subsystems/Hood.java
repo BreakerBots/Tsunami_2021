@@ -142,38 +142,42 @@ public class Hood extends ServoSubsystem {
     return visionFilter.getDoubleOutput() < -13;
   }
   public static double getTargetVisionAngle() {
-//    if (isTrenchMode())
-//      return 0;
+    if (isTrenchMode())
+      return 7;
     double x = visionFilter.getDoubleOutput();
-    //System.out.print("X is ");
-    if (x <= -13) { // Red
-//      System.out.println(x);
-//      System.out.printf("%.2f\n", x);
-//      System.out.println("Hood angle is 13");
-      return 13;
-    }
-    else if (x < -5) { // Blue
-      //System.out.println(x);
-//      System.out.printf("%.2f\n", x);
-//      System.out.println("Hood angle is 14");
-      return 14;
-    }
-    else if (x < 3){ // Yellow
-      //System.out.println(x);
-//      System.out.printf("%.2f\n", x);
-//      System.out.println("Hood angle is 8");
-//      return 8;
-      return 14;
-    }
-    else {
-      //System.out.println(x);
-//      System.out.printf("%.2f\n", x);
-//      System.out.println("Hood angle is 0");
-      return 0;
-    }
-//    else {
-//      return -0.00638178 * x * x * x - 0.297426 * x * x - 3.24309 * x + Constants.hood.EQ_CONST;
+    return -0.00638178 * x * x * x - 0.297426 * x * x - 3.24309 * x + Constants.hood.EQ_CONST;
+////    if (isTrenchMode())
+////      return 0;
+//    double x = visionFilter.getDoubleOutput();
+//    //System.out.print("X is ");
+//    if (x <= -13) { // Red
+////      System.out.println(x);
+////      System.out.printf("%.2f\n", x);
+////      System.out.println("Hood angle is 13");
+//      return 13;
 //    }
+//    else if (x < -5) { // Blue
+//      //System.out.println(x);
+////      System.out.printf("%.2f\n", x);
+////      System.out.println("Hood angle is 14");
+//      return 14;
+//    }
+//    else if (x < 3){ // Yellow
+//      //System.out.println(x);
+////      System.out.printf("%.2f\n", x);
+////      System.out.println("Hood angle is 8");
+////      return 8;
+//      return 14;
+//    }
+//    else {
+//      //System.out.println(x);
+////      System.out.printf("%.2f\n", x);
+////      System.out.println("Hood angle is 0");
+//      return 0;
+//    }
+////    else {
+////      return -0.00638178 * x * x * x - 0.297426 * x * x - 3.24309 * x + Constants.hood.EQ_CONST;
+////    }
   }
   public HoodTarget getTarget() {
     return target;

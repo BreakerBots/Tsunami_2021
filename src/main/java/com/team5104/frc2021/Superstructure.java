@@ -108,4 +108,5 @@ public class Superstructure {
   public static boolean isFiringState(Mode mode) {
     return mode == Mode.AIMING || mode == Mode.SHOOTING;
   }
+  public static boolean isIdle() { return is(Mode.IDLE);}
 }

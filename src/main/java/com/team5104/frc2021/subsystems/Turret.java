@@ -35,7 +35,7 @@ public class Turret extends ServoSubsystem {
 
       //Homing
       if (is(SubsystemMode.HOMING)) {
-        System.out.println("We are trying to home the turret");
+//        System.out.println("We are trying to home the turret");
         setFiniteState("Homing");
         enableSoftLimits(false);
         setVoltage(Constants.turret.HOMING_SPEED);

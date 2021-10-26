@@ -145,10 +145,12 @@ public class Drive extends ServoSubsystem {
             Constants.drive.KLV,
             Constants.drive.KLA,
             Constants.drive.KAV,
-            Constants.drive.KAA), //TODO: GET ACTUAL MEASUREMENT
+            Constants.drive.KAA), //TODO: GET ACTUAL MEASUREME[]\
+            // NT
         DCMotor.getFalcon500(2),
         Constants.drive.GEARING,
         edu.wpi.first.wpilibj.util.Units.feetToMeters(Constants.drive.TRACK_WIDTH),
+
         Units.feetToMeters(Constants.drive.WHEEL_DIAMETER) / 2.0,
         null//VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005) //TODO: GET ACTUAL MEASUREMENT
     );
