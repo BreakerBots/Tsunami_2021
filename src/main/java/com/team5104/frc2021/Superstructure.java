@@ -22,6 +22,9 @@ public class Superstructure {
   private static Mode mode;
   private static MovingAverage readyToFire;
 
+  private static FlywheelState shooterWheelState = FlywheelState.STOPPED;
+  public static void setFlywheelState(FlywheelState shooterWheelState) { Superstructure.shooterWheelState = shooterWheelState;}
+
   //Loop
   protected static void update() {
     //Exit Paneling

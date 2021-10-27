@@ -1,18 +1,18 @@
+/* BreakerBots Robotics Team (FRC 5104) 2020 */
 package com.team5104.frc2021.auto.actions;
 
 import com.team5104.frc2021.Superstructure;
 import com.team5104.frc2021.Superstructure.Mode;
 import com.team5104.lib.auto.AutoAction;
 
-
-public class ShootAction extends AutoAction {
-    public ShootAction() {
+public class IdleAction extends AutoAction {
+    public IdleAction() {
 
     }
 
     public void init() {
-        System.out.println("firing!");
-        Superstructure.set(Mode.AIMING);
+        System.out.println("idling");
+        Superstructure.set(Mode.IDLE);
     }
 
     public void update() {
@@ -20,13 +20,12 @@ public class ShootAction extends AutoAction {
     }
 
     public void end() {
-        System.out.println("finished firing");
+
     }
 
     @Override
     public boolean isFinished() {
-//        return Superstructure.isIdle();
-        return true;
-        //exit when hopper is empty
+        return Superstructure.isIdle();
     }
 }
+

@@ -3,7 +3,7 @@ package com.team5104.lib.dashboard;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.team5104.frc2021.auto.actions.DriveTrajectory;
-import com.team5104.frc2021.auto.paths.ExamplePath;
+import com.team5104.frc2021.auto.unused.ExamplePath;
 import com.team5104.lib.auto.AutoManager;
 import com.team5104.lib.auto.AutoPath;
 import com.team5104.lib.auto.Odometry;
