@@ -45,7 +45,7 @@ public class Robot extends RobotController.Robot {
     //Other
     Limelight.init(false);
     Odometry.init();
-    AutoManager.setTargetPath(new FiveBall_Right());
+    AutoManager.setTargetPath(new ThreeBall_Reverse());
     Compressor.stop();
   }
 
