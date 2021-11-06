@@ -27,8 +27,6 @@ public class Turret extends ServoSubsystem {
   private static LatchedBoolean onTargetTrigger = new LatchedBoolean();
   int SKETCHY_ANGLE_ADJUSTMENT = -2;
 
-  int SKETCHY_ANGLE_ADJUSTMENT = -2;
-
   //Loop
   public void update() {
 
