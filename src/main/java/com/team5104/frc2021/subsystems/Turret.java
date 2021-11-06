@@ -25,6 +25,7 @@ public class Turret extends ServoSubsystem {
   private static double targetAngle = 0,
                         fieldOrientedOffset = 0;
   private static LatchedBoolean onTargetTrigger = new LatchedBoolean();
+  int SKETCHY_ANGLE_ADJUSTMENT = -2;
 
   int SKETCHY_ANGLE_ADJUSTMENT = -2;
 
