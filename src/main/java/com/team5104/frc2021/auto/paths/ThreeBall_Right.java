@@ -1,7 +1,5 @@
-/* BreakerBots Robotics Team (FRC 5104) 2020 */
 package com.team5104.frc2021.auto.paths;
 
-import com.team5104.frc2021.Superstructure.Mode;
 import com.team5104.frc2021.auto.actions.*;
 import com.team5104.lib.auto.AutoPath;
 import com.team5104.lib.auto.Position;
@@ -10,26 +8,26 @@ import com.team5104.frc2021.auto.actions.ResetOdometry;
 
 
 /**
- * @startingPosition Front of Power Port
- * Drives forward (toward power port) 5 feet
+ * @startingPosition Right of the Field
  * Shoots 3 balls
+ * Drives and intakes 3 balls from trench
  */
-public class ThreeBall_Forward extends AutoPath {
+public class ThreeBall_Right extends AutoPath {
+
     final double MAX_VEL = 8;
     final double MAX_ACC = 4;
 
     public void start() {
-        //Set position relative to field
+
         run(new ResetOdometry(0, 0));
-
-        run(new DelayAction(2000));
-
+        run(new DelayAction(1000));
         run(new ShootAction());
 
-        run(new DriveTrajectory(true, MAX_VEL, MAX_ACC,
+        run(new IntakeAction());
+        run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
                 new Position(0, 0, 0),
-                new Position(-5, 0, 0)));
+                new Position(16, 0, 0)
+        ));
 
     }
 }
-

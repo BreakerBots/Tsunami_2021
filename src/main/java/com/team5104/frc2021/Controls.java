@@ -18,7 +18,7 @@ public class Controls {
   public static Axis DRIVE_TURN = driver.axis(Axis.Slot.LEFT_JOYSTICK_X, new Deadband(0.08), new BezierCurve(.8, .32, .75, .27));
   public static Axis DRIVE_FORWARD = driver.axis(Axis.Slot.RIGHT_TRIGGER, new Deadband(0.01));
   public static Axis DRIVE_REVERSE = driver.axis(Axis.Slot.LEFT_TRIGGER, new Deadband(0.01));
-  public static Button DRIVE_KICKSTAND = driver.button(Slot.LEFT_JOYSTICK_PRESS);
+  public static Button DRIVE_KICKSTAND = all.button(Slot.A);
 
   //Intake
   public static Button INTAKE = all.button(Slot.X);
@@ -31,7 +31,7 @@ public class Controls {
 
   //Panel
 //  public static Button PANEL_DEPLOY = all.button(Slot.Y);
-  public static Button PANEL_SPIN = all.button(Slot.A);
+//  public static Button PANEL_SPIN = all.button(Slot.A);
   public static Button PANEL_ROTATION = all.button(Slot.DIRECTION_PAD_UP);
 //  public static Button PANEL_POSITION = all.button(Slot.DIRECTION_PAD_DOWN);
 

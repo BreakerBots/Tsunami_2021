@@ -63,6 +63,7 @@ public class Superstructure {
   //Update Mode
   public static void updateMode(Mode lastMode, Mode newMode) {
     //turn on/off limelight
+
     if (isFiringState(lastMode) != isFiringState(newMode)) {
       Limelight.setLEDMode(isFiringState(newMode));
     }

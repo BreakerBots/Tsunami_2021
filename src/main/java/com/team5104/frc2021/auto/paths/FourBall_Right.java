@@ -18,6 +18,7 @@ public class FourBall_Right extends AutoPath {
 
     public void start() {
 
+        run(new ResetOdometry(0, 0));
         run(new IntakeAction());
         run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
                 new Position(0, 0, 0),

@@ -103,7 +103,7 @@ public class Constants {
     //Intake
     public static IntakeConstants intake = new IntakeConstants();
     public static class IntakeConstants {
-        public double INTAKING_SPEED = 0.50;
+        public double INTAKING_SPEED = 0.75;
         public double FIRING_SPEED = 0;//0.25
         public double REJECTING_SPEED = 0;//.25
     }
