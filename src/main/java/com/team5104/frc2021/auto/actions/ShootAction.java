@@ -25,8 +25,6 @@ public class ShootAction extends AutoAction {
 
     @Override
     public boolean isFinished() {
-//        return Superstructure.isIdle();
-        return true;
-        //exit when hopper is empty
+        return Superstructure.isIdle();
     }
 }

@@ -24,11 +24,11 @@ public class ThreeBall_Forward extends AutoPath {
 
         run(new DelayAction(500));
 
+        run(new ShootAction());
+
         run(new DriveTrajectory(true, MAX_VEL, MAX_ACC,
                 new Position(0, 0, 0),
                 new Position(-5, 0, 0)));
-
-        run(new ShootAction());
 
     }
 }

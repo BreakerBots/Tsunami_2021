@@ -18,16 +18,15 @@
 
         public void start() {
 
-            run(new ShootAction());
             run(new IntakeAction());
             run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
                     new Position(0, 0, 0),
-                    new Position(15, 0, 0)
+                    new Position(11, 0, 0)
             ));
             run(new IdleAction());
             run(new ChargeFlywheelAction());
             run(new DriveTrajectory(true, MAX_VEL + 2, MAX_ACC,
-                    new Position(15, 0, 0),
+                    new Position(11, 0, 0),
                     new Position(2, -3.75, 45)
             ));
 

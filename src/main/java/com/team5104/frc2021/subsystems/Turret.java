@@ -26,6 +26,8 @@ public class Turret extends ServoSubsystem {
                         fieldOrientedOffset = 0;
   private static LatchedBoolean onTargetTrigger = new LatchedBoolean();
 
+  int SKETCHY_ANGLE_ADJUSTMENT = -2;
+
   //Loop
   public void update() {
 
@@ -54,7 +56,7 @@ public class Turret extends ServoSubsystem {
         setFiniteState("Vision");
         if (/*Limelight.hasTarget() &&*/ Superstructure.is(Mode.AIMING)) {
           setAngle(
-              latencyCompensator.getValueInHistory(Limelight.getLatency()) - Limelight.getTargetX()
+              latencyCompensator.getValueInHistory(Limelight.getLatency()) - Limelight.getTargetX() + SKETCHY_ANGLE_ADJUSTMENT
           );
         }
         else setAngle(targetAngle);

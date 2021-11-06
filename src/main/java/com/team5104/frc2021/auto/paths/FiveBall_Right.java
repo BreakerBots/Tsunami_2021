@@ -18,7 +18,6 @@ public class FiveBall_Right extends AutoPath {
 
     public void start() {
 
-        run(new ShootAction());
         run(new IntakeAction());
         run(new DriveTrajectory(false, MAX_VEL, MAX_ACC,
                 new Position(0, 0, 0),
